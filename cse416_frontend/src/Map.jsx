@@ -25,20 +25,22 @@ function Map({activeState}){
     // TODO: Load the GeoJSON for the districting map
     // For Map 1 only: Map 2 does not have districting map
     // I will use GA for the prototype, although this may or may not be carried over to the final product
+    // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
+    // in accordance with the Navbar
     <div className="leaflet-containerset">
       <div className='leaflet-container-big'>
         <h1>Voting Rights Act</h1>
-        <MapContainer center={[latitude, longitude]} zoom={7} className="leaflet-container">
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)} zoom={7} className="leaflet-container">
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={geojsonData} />
+          <GeoJSON data={geojsonData} key={JSON.stringify(geojsonData)}/>
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
       <h1>Race Blind Voting</h1>
-        <MapContainer center={[latitude, longitude]} zoom={7} className="leaflet-container">
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)} zoom={7} className="leaflet-container">
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
