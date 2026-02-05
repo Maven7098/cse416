@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function BasicExample() {
+function MainNavbar() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -11,8 +11,8 @@ function BasicExample() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#nonpreclearance">NonPreclearanceState</Nav.Link>
-            <Nav.Link href="#preclearance">PreclearanceState</Nav.Link>
+            <Nav.Link href="#nonpreclearance">NonPreclearanceState (Iowa - IA)</Nav.Link>
+            <Nav.Link href="#preclearance">PreclearanceState (Georgia - GA)</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -20,4 +20,4 @@ function BasicExample() {
   );
 }
 
-export default BasicExample;
+export default MainNavbar;
