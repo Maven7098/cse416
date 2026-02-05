@@ -6,7 +6,6 @@ import geojsonDataGA from './GA-Congress-2023-shape.json'
 
 function Map({activeState}){
   let latitude, longitude, geojsonData;
-  print(activeState)
   // Iowa (IA) - Non-Preclearance
     if(activeState == "ia"){
       latitude=41.8780;
