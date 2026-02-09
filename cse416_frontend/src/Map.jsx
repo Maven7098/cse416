@@ -1,8 +1,8 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
-import geojsonDataIA from './IA-Congress-2022-shape.json'
-import geojsonDataGA from './GA-Congress-2023-shape.json'
+import geojsonDataIA from './assets/IA-Congress-2022-shape.json'
+import geojsonDataGA from './assets/GA-Congress-2023-shape.json'
 
 function Map({activeState}){
   let latitude, longitude, geojsonData;

@@ -1,0 +1,18 @@
+.stateContainer {
+  width: 100vw;
+  height: 70vh;
+  display:flex;
+  flex-direction: row;
+}
+.smallStateContainer{
+  width: 100%;
+  display:flex;
+  text-align: center;
+  flex-direction: column;
+}
+img {
+    width: 60%;
+    height: auto;
+    margin: auto;
+}
+h1 { text-align: center; }
