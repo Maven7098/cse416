@@ -2,40 +2,24 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
-// Those are to be imported from the server for the next part
+
+// Data to be imported from the server
 import axios from 'axios';
-// import geojsonDataIA from './assets/IA-Congress-2022-shape.json'
-// import geojsonDataGA from './assets/GA-Congress-2023-shape.json'
 
 function Map({activeState}){
-  // Receive GeoJSON with this useEffect()
-  // Should I set activeState with this as well, or just the GeoJSON?
-  // Also, how to prevent "redownload" of GeoJSON?
-
-  let latitude, longitude;
-  // Iowa (IA) - Non-Preclearance
-  if(activeState == "ia"){
-    latitude=41.8780;
-    longitude=-93.0977;
-  }
-  // Georgia (GA) - Preclearance
-  else if(activeState == "ga"){
-    latitude=33.2478;
-    longitude=-83.4411;
-  }
-  
   const [geojsonData, setgeojsonData] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
 
-  console.log(activeState);
   useEffect(() => {
-    axios.get(`https://localhost:3000/api/${activeState}/geojson`)
-      .then(response => setgeojsonData(response.data))
+    axios.get(`http://localhost:3000/api/${activeState}/geojson`)
+      .then(response => {setgeojsonData(response.data[0]); setLatitude(response.data[1]); setLongitude(response.data[2])})
       .catch(error => console.log(error.response.data))
-    }, []);
+    }, [activeState]);
+
+    console.log(geojsonData)
 
   // Also what should I receive from the server?
-  // GeoJSON (${activeState}/geojson)
-  // Coordinates (Latitude and Longitude) of the state? ()
   // - Should the coordinates be downloaded from the server or hard-coded?
   // Data... What other data? (${activeState}/data)
   // - Party Splits (${activeState}/data/split)
