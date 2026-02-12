@@ -26,6 +26,49 @@ function Map({activeState}){
   // - (${activeState}/data/)
   // -
 
+  function getColor(d) {
+    return d > 1000000 ? '#800026' :
+           d > 500000  ? '#BD0026' :
+           d > 200000  ? '#E31A1C' :
+           d > 100000  ? '#FC4E2A' :
+           d > 50000   ? '#FD8D3C' :
+           d > 20000   ? '#FEB24C' :
+           d > 10000   ? '#FED976' :
+                      '#FFEDA0';
+}
+
+// On click, show district number
+
+function style(feature) {
+    // switch (feature.properties.DISTRICT_L) {
+    //         case 'Republican': return {color: "#ff0000"};
+    //         case 'Democrat':   return {color: "#0000ff"};
+    //     }
+    return {
+        fillColor: getColor(feature.properties.POPULATION),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+function onEachFeature(feature, layer) {
+    // does this feature have a property named popupContent?
+    if (feature.properties) {
+        layer.bindPopup(feature.properties.DISTRICT);
+    }
+    layer.on("click", (e) => {
+      handleClick(e, layer);
+    });
+}
+function handleClick(event, layer) {
+  const bounds = layer.getBounds();
+  console.log(bounds);
+}
+
+
   return (
     // Load the GeoJSON for the districting map
     // For Map 1 only: Map 2 does not have districting map
@@ -40,7 +83,7 @@ function Map({activeState}){
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={geojsonData} key={JSON.stringify(geojsonData)}/>
+          <GeoJSON data={geojsonData} style={style} onEachFeature={onEachFeature} key={JSON.stringify(geojsonData)}/>
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
