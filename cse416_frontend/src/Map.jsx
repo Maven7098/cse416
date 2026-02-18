@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
+import Population from './Population.jsx';
 
 // Data to be imported from the server
 import axios from 'axios';
@@ -10,6 +11,7 @@ function Map({activeState}){
   const [geojsonData, setgeojsonData] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+  const [districtData, setDistrictData] = useState("");
 
   useEffect(() => {
     axios.get(`http://localhost:3000/api/${activeState}/geojson`)
@@ -17,7 +19,7 @@ function Map({activeState}){
       .catch(error => console.log(error.response.data))
     }, [activeState]);
 
-    console.log(geojsonData)
+    // console.log(geojsonData)
 
   // Also what should I receive from the server?
   // - Should the coordinates be downloaded from the server or hard-coded?
@@ -40,12 +42,15 @@ function Map({activeState}){
 // On click, show district number
 
 function style(feature) {
-    // switch (feature.properties.DISTRICT_L) {
-    //         case 'Republican': return {color: "#ff0000"};
-    //         case 'Democrat':   return {color: "#0000ff"};
-    //     }
+    // Need to find data on which President won which district
+    // No third party won any district in Georgia or Iowa, so I only keep 2 values
+    switch (feature.properties.WINNER) {
+            case 'R': return {color: "#ff0000"};
+            case 'D': return {color: "#0000ff"};
+    }
     return {
-        fillColor: getColor(feature.properties.POPULATION),
+        // property type should be chosen later on (after graph rendering is done)
+        fillColor: getColor(feature.properties.BLACK),
         weight: 2,
         opacity: 1,
         color: 'white',
@@ -55,17 +60,19 @@ function style(feature) {
 }
 
 function onEachFeature(feature, layer) {
-    // does this feature have a property named popupContent?
     if (feature.properties) {
         layer.bindPopup(feature.properties.DISTRICT);
     }
+    // Send properties of the feature to Population.jsx
     layer.on("click", (e) => {
       handleClick(e, layer);
+      setDistrictData(feature.properties);
     });
 }
 function handleClick(event, layer) {
-  const bounds = layer.getBounds();
-  console.log(bounds);
+  const bounds = layer.get
+  // Send properties of tBounds();
+  // console.log(bounds);
 }
 
 
@@ -77,7 +84,7 @@ function handleClick(event, layer) {
     // in accordance with the Navbar
     <div className="leaflet-containerset">
       <div className='leaflet-container-big'>
-        <h1>Voting Rights Act</h1>
+        <h1>Select District</h1>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)} zoom={7} className="leaflet-container">
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -87,13 +94,8 @@ function handleClick(event, layer) {
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
-      <h1>Race Blind Voting</h1>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)} zoom={7} className="leaflet-container">
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-        </MapContainer>
+      <h1>District Information</h1>
+        <Population districtData={districtData} />
       </div>
     </div>
   );

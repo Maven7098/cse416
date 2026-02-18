@@ -2,8 +2,8 @@
 
 import express from 'express';
 let router = express.Router();
-import geojsonGa from './assets/ga/GA-Congress-2023-shape.json' with { type: 'json' };
-import geojsonIa from './assets/ia/IA-Congress-2022-shape.json' with { type: 'json' };
+import geojsonGa from './assets/ga/GA-Congress.json' with { type: 'json' };
+import geojsonIa from './assets/ia/IA-Congress.json' with { type: 'json' };
 
 // GET - MainMenu
 // Get the image of the 2 states
