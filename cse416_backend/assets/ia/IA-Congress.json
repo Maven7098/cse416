@@ -13,7 +13,8 @@
 	"BLACK": 33499,
 	"ASIAN": 18707,
 	"WHITE": 675726,
-	"OTHER": 25055
+	"OTHER": 25055,
+	"WINNER": "R"
       },
       "geometry": {
         "type": "Polygon",
@@ -34895,7 +34896,8 @@
 	"BLACK": 31663,
 	"ASIAN": 12956,
 	"WHITE": 692578,
-	"OTHER": 25604
+	"OTHER": 25604,
+	"WINNER": "R"
       },
       "geometry": {
         "type": "Polygon",
@@ -63909,7 +63911,8 @@
 	"BLACK": 42735,
 	"ASIAN": 31957,
 	"WHITE": 647435,
-	"OTHER": 23550
+	"OTHER": 23550,
+	"WINNER": "R"
       },
       "geometry": {
         "type": "Polygon",
@@ -94295,7 +94298,8 @@
 	"BLACK": 15610,
 	"ASIAN": 16528,
 	"WHITE": 659906,
-	"OTHER": 23286
+	"OTHER": 23286,
+	"WINNER": "R"
       },
       "geometry": {
         "type": "Polygon",
