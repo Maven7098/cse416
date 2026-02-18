@@ -4,7 +4,7 @@ import * as d3 from "d3";
 const MARGIN = { top: 0, right: 30, bottom: 30, left: 30 };
 const BAR_PADDING = 0.3;
 
-export const Population = ({ districtData }) => {
+function Population({ districtData }){
   // bounds = area inside the graph axis = calculated by substracting the margins
   const width = 960; const height = 360;
   const boundsWidth = width - MARGIN.right - MARGIN.left;
@@ -133,3 +133,5 @@ export const Population = ({ districtData }) => {
     </div>
   );
 };
+
+export default Population;
