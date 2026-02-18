@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
 
-const MARGIN = { top: 30, right: 30, bottom: 30, left: 30 };
+const MARGIN = { top: 0, right: 30, bottom: 30, left: 30 };
 const BAR_PADDING = 0.3;
 
 export const Population = ({ districtData }) => {
   // bounds = area inside the graph axis = calculated by substracting the margins
-  const width = 960; const height = 400;
+  const width = 960; const height = 360;
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
@@ -118,6 +118,8 @@ export const Population = ({ districtData }) => {
 
   return (
     <div>
+        <h1>District No.: {districtData.DISTRICT}</h1>
+        <h3>District GeoID: {districtData.GEOID}</h3>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}
