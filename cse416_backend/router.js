@@ -4,6 +4,8 @@ import express from 'express';
 let router = express.Router();
 import geojsonGa from './assets/ga/GA-Congress.json' with { type: 'json' };
 import geojsonIa from './assets/ia/IA-Congress.json' with { type: 'json' };
+import dataGa from './assets/ga/GA.json' with { type: 'json' };
+import dataIa from './assets/ia/IA.json' with { type: 'json' };
 
 // GET - MainMenu
 // Get the image of the 2 states
@@ -27,7 +29,7 @@ router.get('/', async (req,res)=>{
 router.get('/ia/geojson', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [geojsonIa,41.8780,-93.0977]
+        const result = [geojsonIa,41.8780,-93.0977,dataIa]
         res.send(result)
       } catch (err) {
         res.status(500).send({
@@ -40,7 +42,7 @@ router.get('/ia/geojson', async (req,res)=>{
 router.get('/ga/geojson', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [geojsonGa,33.2478,-83.4411]
+        const result = [geojsonGa,33.2478,-83.4411,dataGa]
         res.send(result)
       } catch (err) {
         res.status(500).send({

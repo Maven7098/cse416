@@ -14,7 +14,10 @@
 	"ASIAN": 18707,
 	"WHITE": 675726,
 	"OTHER": 25055,
-	"WINNER": "R"
+	"WINNER": "R",
+  "REPRESENT": "Mariannette Miller-Meeks (R)",
+  "RRACE": "White",
+  "WMARGIN": "0.2%"
       },
       "geometry": {
         "type": "Polygon",
@@ -34897,7 +34900,10 @@
 	"ASIAN": 12956,
 	"WHITE": 692578,
 	"OTHER": 25604,
-	"WINNER": "R"
+	"WINNER": "R",
+  "REPRESENT": "Ashley Hinson (R)",
+  "RRACE": "White",
+  "WMARGIN": "15.6%"
       },
       "geometry": {
         "type": "Polygon",
@@ -63912,7 +63918,10 @@
 	"ASIAN": 31957,
 	"WHITE": 647435,
 	"OTHER": 23550,
-	"WINNER": "R"
+	"WINNER": "R",
+  "REPRESENT": "Zach Nunn (R)",
+  "RRACE": "White",
+  "WMARGIN": "3.9%"
       },
       "geometry": {
         "type": "Polygon",
@@ -94299,7 +94308,10 @@
 	"ASIAN": 16528,
 	"WHITE": 659906,
 	"OTHER": 23286,
-	"WINNER": "R"
+	"WINNER": "R",
+  "REPRESENT": "Randy Feenstra (R)",
+  "RRACE": "White",
+  "WMARGIN": "34.3%"
       },
       "geometry": {
         "type": "Polygon",

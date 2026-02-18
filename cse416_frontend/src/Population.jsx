@@ -10,12 +10,18 @@ function Population({ districtData }){
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
+  // TODO Today (Feb 18):
+  // Catch 2 birds in 1 stone - GUI-3 and GUI-6
+  // How can we display the state data alongside the district data?
+  // Ideally we should implement a go back button as well
+  // Additionally, if we change state maps, the districtData should also be wiped out
+
     useEffect(()=>{
         console.log(districtData)
     },[districtData])
 
     // Process districtData to only leave numerical values
-    const {ID, AREA, DISTRICT, GEOID, WINNER, ...popData} = districtData;
+    const {ID, AREA, DISTRICT, GEOID, WINNER, REPRESENT, RRACE, WMARGIN, ...popData} = districtData;
     // popData should be converted to Key/Value pairs of arrays to work w/ D3 
     const data = Object.keys(popData).map(key => ({
         key: key,
@@ -130,6 +136,7 @@ function Population({ districtData }){
           {allShapes}
         </g>
       </svg>
+      <p>This district was won by {districtData.REPRESENT}, who is {districtData.RRACE}, with a margin of {districtData.WMARGIN}</p>
     </div>
   );
 };

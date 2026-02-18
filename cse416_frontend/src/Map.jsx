@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
+import State from './State.jsx';
 import Population from './Population.jsx';
 
 // Data to be imported from the server
@@ -12,11 +13,17 @@ function Map({activeState}){
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [districtData, setDistrictData] = useState("");
+  const [currentState, setCurrentState] = useState("");
 
   useEffect(() => {
     axios.get(`http://localhost:3000/api/${activeState}/geojson`)
-      .then(response => {setgeojsonData(response.data[0]); setLatitude(response.data[1]); setLongitude(response.data[2])})
+      .then(response => {setgeojsonData(response.data[0]);
+        setLatitude(response.data[1]);
+        setLongitude(response.data[2]);
+        setCurrentState(response.data[3])})
       .catch(error => console.log(error.response.data))
+    // If Active State changes, then also reset districtData
+      setDistrictData("")
     }, [activeState]);
 
     // console.log(geojsonData)
@@ -45,6 +52,11 @@ function Map({activeState}){
     }
   }
 
+  var highlightStyle = {
+    weight: 6
+  };
+
+
 // On click, show district number
 
 function style(feature) {
@@ -70,6 +82,14 @@ function onEachFeature(feature, layer) {
       handleClick(e, layer);
       setDistrictData(feature.properties);
     });
+
+    layer.on("mouseover", (e) => {
+      layer.setStyle(highlightStyle);
+        layer.on("mouseout", (e) => {
+        // Start by reverting the style back
+        layer.setStyle({weight: 2});
+      });
+    })
 }
 function handleClick(event, layer) {
   const bounds = layer.get
@@ -96,8 +116,17 @@ function handleClick(event, layer) {
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
-      <h1>District Information</h1>
-        <Population districtData={districtData} />
+        {/* TODO Today: Use State Data if districtData is empty */}
+        {districtData ? (<>
+         <h1>District Information</h1>
+         <Population districtData={districtData} />
+        </>)
+         : (<>
+          <h1>State Information</h1>
+          <State activeState={currentState} />
+        </>)
+        }
+        
       </div>
     </div>
   );
