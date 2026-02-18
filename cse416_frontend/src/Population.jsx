@@ -9,7 +9,7 @@ function Population({districtData}){
     },[districtData])
 
     // Process districtData to only leave numerical values
-    const {ID, DISTRICT, GEOID, WINNER, ...popData} = districtData;
+    const {ID, AREA, DISTRICT, GEOID, WINNER, ...popData} = districtData;
     // popData should be converted to Key/Value pairs of arrays to work w/ D3 
     const data = Object.keys(popData).map(key => ({
         key: key,
@@ -37,7 +37,7 @@ function Population({districtData}){
         <div>
             <h1>District No.: {districtData.DISTRICT}</h1>
             <h3>District GeoID: {districtData.GEOID}</h3>
-            <svg width={width} height={height}>
+            <svg width={width} height="auto">
                 <g transform={`translate(${margin.left},${margin.top})`}>
                     {/* Bars */}
                     {data.map((d) => (

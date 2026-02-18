@@ -37,24 +37,26 @@ function Map({activeState}){
            d > 20000   ? '#FEB24C' :
            d > 10000   ? '#FED976' :
                       '#FFEDA0';
-}
+  }
+  function getWinner(d) {
+    switch (d) {
+            case 'R': return "#ff0000";
+            case 'D': return "#0000ff";
+    }
+  }
 
 // On click, show district number
 
 function style(feature) {
     // Need to find data on which President won which district
     // No third party won any district in Georgia or Iowa, so I only keep 2 values
-    switch (feature.properties.WINNER) {
-            case 'R': return {color: "#ff0000"};
-            case 'D': return {color: "#0000ff"};
-    }
+    
     return {
         // property type should be chosen later on (after graph rendering is done)
         fillColor: getColor(feature.properties.BLACK),
+        color: getWinner(feature.properties.WINNER),
         weight: 2,
         opacity: 1,
-        color: 'white',
-        dashArray: '3',
         fillOpacity: 0.7
     };
 }
