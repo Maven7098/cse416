@@ -7,6 +7,7 @@ import Population from './Population.jsx';
 
 // Data to be imported from the server
 import axios from 'axios';
+import Tab from './Tab.jsx';
 
 function Map({activeState}){
   const [geojsonData, setgeojsonData] = useState("");
@@ -104,6 +105,8 @@ function handleClick(event, layer) {
     // I will use GA for the prototype, although this may or may not be carried over to the final product
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
+    <>
+    <Tab />
     <div className="leaflet-containerset">
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
@@ -118,7 +121,7 @@ function handleClick(event, layer) {
       <div className='leaflet-container-big'>
         {/* TODO Today: Use State Data if districtData is empty */}
         {districtData ? (<>
-        <button onClick={() => setDistrictData("")}>Reset</button>
+        <button onClick={() => setDistrictData("")}>Go Back to State Information</button>
          <h1>District Information</h1>
          <Population districtData={districtData} />
         </>)
@@ -130,6 +133,7 @@ function handleClick(event, layer) {
         
       </div>
     </div>
+    </>
   );
 };
 

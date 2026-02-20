@@ -6,7 +6,7 @@ const BAR_PADDING = 0.3;
 
 function State({ activeState }){
   // bounds = area inside the graph axis = calculated by substracting the margins
-  const width = 960; const height = 340;
+  const width = 960; const height = 300;
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
@@ -19,7 +19,7 @@ function State({ activeState }){
     },[activeState])
 
     // Process activeState to only leave numerical values
-    const {NAME, DSEAT, RSEAT, ...popData} = activeState;
+    const {NAME, DSEAT, RSEAT, TOTAL, ...popData} = activeState;
     // popData should be converted to Key/Value pairs of arrays to work w/ D3 
     const data = Object.keys(popData).map(key => ({
         key: key,
@@ -127,6 +127,7 @@ function State({ activeState }){
             <h3>Democrats: {activeState.DSEAT}</h3>
             <h3>Republicans: {activeState.RSEAT}</h3>
         </div>
+        <h3>Total Population: {activeState.TOTAL}</h3>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}

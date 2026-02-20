@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import {Link, Outlet} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function MainNavbar({setActiveState}) {
+function MainNavbar() {
   return (
     <>
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -18,6 +18,10 @@ function MainNavbar({setActiveState}) {
               NonPreclearanceState (Iowa - IA)</Nav.Link>
             <Nav.Link as={Link} to="/georgia">
               PreclearanceState (Georgia - GA)</Nav.Link>
+              <Nav.Link as={Link} to="/iowa-proposed">
+              NonPreclearanceState (Iowa - IA) - District Ensembles</Nav.Link>
+            <Nav.Link as={Link} to="/georgia-proposed">
+              PreclearanceState (Georgia - GA) - District Ensembles</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

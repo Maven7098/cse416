@@ -21,7 +21,7 @@ function Population({ districtData }){
     },[districtData])
 
     // Process districtData to only leave numerical values
-    const {ID, AREA, DISTRICT, GEOID, WINNER, REPRESENT, RRACE, WMARGIN, ...popData} = districtData;
+    const {ID, AREA, DISTRICT, GEOID, WINNER, REPRESENT, RRACE, WMARGIN, TOTAL, ...popData} = districtData;
     // popData should be converted to Key/Value pairs of arrays to work w/ D3 
     const data = Object.keys(popData).map(key => ({
         key: key,
