@@ -118,6 +118,7 @@ function handleClick(event, layer) {
       <div className='leaflet-container-big'>
         {/* TODO Today: Use State Data if districtData is empty */}
         {districtData ? (<>
+        <button onClick={() => setDistrictData("")}>Reset</button>
          <h1>District Information</h1>
          <Population districtData={districtData} />
         </>)
