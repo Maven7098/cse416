@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainNavbar from './Navbar.jsx'
 import Home from "./Home.jsx";
-import Map from "./Map.jsx";
+import MapTab from "./MapTab.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -14,8 +14,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainNavbar />}>
           <Route index element={<Home />} />
-          <Route path="iowa" element={<Map activeState={"ia"} />} />
-          <Route path="georgia" element={<Map activeState={"ga"} />} />
+          <Route path="iowa" element={<MapTab activeState={"ia"} />} />
+          <Route path="georgia" element={<MapTab activeState={"ga"} />} />
           {/* For any undefined pages, throw 404 error */}
           {/* <Route path="*" element={<NoPage />} /> */}
         </Route>

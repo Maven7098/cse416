@@ -7,7 +7,6 @@ import Population from './Population.jsx';
 
 // Data to be imported from the server
 import axios from 'axios';
-import Tab from './Tab.jsx';
 
 function Map({activeState}){
   const [geojsonData, setgeojsonData] = useState("");
@@ -106,7 +105,6 @@ function handleClick(event, layer) {
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
     <>
-    <Tab />
     <div className="leaflet-containerset">
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
