@@ -22,7 +22,7 @@ function kernelEpanechnikov(k) {
   };
 }
 
-export const DensityChart = ({ width, height, data }) => {
+export const EIKDE = ({ width, height, data }) => {
   const xScale = useMemo(() => {
     return d3
       .scaleLinear()
