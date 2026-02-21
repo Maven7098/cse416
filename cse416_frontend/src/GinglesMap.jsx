@@ -27,8 +27,8 @@ function GinglesMap({activeState}){
         }, [activeState]);
     
     const width = 700;
-    const height = 300;
-    const eiHeight = 200;
+    const height = 280;
+    const eiHeight = 210;
 
     return (
         // Load the GeoJSON for the districting map
