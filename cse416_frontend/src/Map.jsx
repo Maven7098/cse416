@@ -97,6 +97,9 @@ function handleClick(event, layer) {
   // console.log(bounds);
 }
 
+const width = 960;
+const heightPop = 280;
+const heightState = 300;
 
   return (
     // Load the GeoJSON for the districting map
@@ -121,11 +124,11 @@ function handleClick(event, layer) {
         {districtData ? (<>
         <button onClick={() => setDistrictData("")}>Go Back to State Information</button>
          <h1>District Information</h1>
-         <Population districtData={districtData} />
+         <Population districtData={districtData} width={width} height={heightPop} />
         </>)
          : (<>
           <h1>State Information</h1>
-          <State activeState={currentState} />
+          <State activeState={currentState} width={width} height={heightState} />
         </>)
         }
         

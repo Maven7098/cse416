@@ -4,9 +4,8 @@ import * as d3 from "d3";
 const MARGIN = { top: 0, right: 30, bottom: 30, left: 30 };
 const BAR_PADDING = 0.3;
 
-function State({ activeState }){
+function State({ width, height, activeState }){
   // bounds = area inside the graph axis = calculated by substracting the margins
-  const width = 960; const height = 300;
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 

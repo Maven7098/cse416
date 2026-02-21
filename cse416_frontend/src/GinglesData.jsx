@@ -7,10 +7,8 @@ import { useState } from "react";
 import Tooltip from "./Tooltip";
 
 const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
-const width = 400;
-const height = 300;
 
-function GinglesData ({ data }) {
+function GinglesData ({ width, height, data }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 

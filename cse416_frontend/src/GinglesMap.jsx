@@ -25,7 +25,10 @@ function GinglesMap({activeState}){
         .catch(error => console.log(error.response.data))
         // If Active State changes, then also reset districtData
         }, [activeState]);
-
+    
+    const width = 700;
+    const height = 300;
+    const eiHeight = 200;
 
     return (
         // Load the GeoJSON for the districting map
@@ -40,7 +43,7 @@ function GinglesMap({activeState}){
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
                     <h3>Gingles 2/3 Data</h3>
-                    <GinglesData data={gdata} />
+                    <GinglesData data={gdata} width={width} height={height} />
                     {/* Gingles Chart */}
                     <h3>Gingles 2/3 Table</h3>
                     {/* <GinglesChart /> */}
@@ -50,10 +53,10 @@ function GinglesMap({activeState}){
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     <h3>EI Analysis</h3>
                     {/* EI Analysis */}
-                    <EIAnalysis data={data} />
+                    <EIAnalysis data={data} width={width} height={eiHeight} />
                     <h3>EI KDE (Kernel Data) Results</h3>
                     {/* EI KDE Results */}
-                    <EIKDE data={data} />
+                    <EIKDE data={data} width={width} height={eiHeight} />
                 </div>
             </div>
         </div>
