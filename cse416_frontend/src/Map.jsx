@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import State from './State.jsx';
@@ -26,7 +26,15 @@ function Map({activeState}){
       setDistrictData("")
     }, [activeState]);
 
-    // console.log(geojsonData)
+    const resizeMap = (mapRef) => {
+      const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
+      const container = document.getElementById('map-container')
+      if (container) {
+        resizeObserver.observe(container)
+      }
+    }
+    const mapRef = useRef(null)
+
 
   // Also what should I receive from the server?
   // - Should the coordinates be downloaded from the server or hard-coded?
@@ -111,7 +119,9 @@ const heightState = 300;
     <div className="leaflet-containerset">
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)} zoom={7} className="leaflet-container">
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)}
+        zoom={7} className="leaflet-container" ref={mapRef} id="map-container"
+        whenReady={() => resizeMap(mapRef)}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
