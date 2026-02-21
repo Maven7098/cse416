@@ -1,4 +1,4 @@
-export const GinglesData = ({ data }) => {
+function GinglesChart ({ data }) {
     // I guess a simple table will do?
     // total population, population by region type
     // (rural, urban, suburban), minority non-white population, average household
@@ -42,3 +42,5 @@ export const GinglesData = ({ data }) => {
     </div>
   );
 };
+
+export default GinglesChart;

@@ -4,17 +4,17 @@ import * as d3 from "d3";
 import { AxisLeft } from "./AxisLeft";
 import { AxisBottom } from "./AxisBottom";
 import { useState } from "react";
-import { InteractionData, Tooltip } from "./Tooltip";
+import Tooltip from "./Tooltip";
 
 const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
 const width = 400;
 const height = 400;
 
-export const GinglesData = ({ data }) => {
+function GinglesData ({ data }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
-  const [hovered, setHovered] = useState<InteractionData | null>(null);
+  const [hovered, setHovered] = useState(null);
 
   // Scales
   const yScale = d3.scaleLinear().domain([35, 85]).range([boundsHeight, 0]);
@@ -94,3 +94,5 @@ export const GinglesData = ({ data }) => {
     </div>
   );
 };
+
+export default GinglesData;

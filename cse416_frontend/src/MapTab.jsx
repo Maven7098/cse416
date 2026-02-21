@@ -1,5 +1,6 @@
 import { Tabs, Tab } from 'react-bootstrap';
 import Map from './Map';
+import GinglesMap from './GinglesMap';
 
 
 function MapTab({activeState}) {
@@ -16,7 +17,7 @@ function MapTab({activeState}) {
 
       <Tab eventKey="gingles" title="Racial Polarization">
 
-        {/* <GinglesMap activeState={activeState} /> */}
+        <GinglesMap activeState={activeState} />
 
       </Tab>
 

@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 const TICK_LENGTH = 6;
 
 export const AxisLeft = ({ yScale, pixelsPerTick }) => {

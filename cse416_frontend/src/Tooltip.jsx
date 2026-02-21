@@ -2,7 +2,7 @@ import styles from "./tooltip.module.css";
 
 // Information needed to build the tooltip
 
-export const Tooltip = ({ interactionData }) => {
+function Tooltip({ interactionData }) {
   if (!interactionData) {
     return null;
   }
@@ -19,3 +19,5 @@ export const Tooltip = ({ interactionData }) => {
     </div>
   );
 };
+
+export default Tooltip;

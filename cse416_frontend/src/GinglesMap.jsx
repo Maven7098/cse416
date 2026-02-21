@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import GinglesData from './GinglesData.jsx'
 import GinglesChart from './GinglesChart.jsx'
 import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
-import data from './Data.js'
-import gdata from './GData.js';
+import { data } from './Data.js'
+import { gdata } from './GData.js';
 
 // Data to be imported from the server
 import axios from 'axios';
@@ -17,17 +17,13 @@ function GinglesMap({activeState}){
     // Top Right: EI Analysis (GUI-12)
     // Bottom Left: Gingles Data (GUI-10, GUI-11)
     // Bottom Right: EI KDE Results (GUI-15)
-
+    const [currentState, setCurrentState] = useState("");
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/${activeState}/gingles`)
-        .then(response => {setgeojsonData(response.data[0]);
-            setLatitude(response.data[1]);
-            setLongitude(response.data[2]);
-            setCurrentState(response.data[3])})
+        axios.get(`http://localhost:3000/api/${activeState}/geojson`)
+        .then(response => {setCurrentState(response.data[3])})
         .catch(error => console.log(error.response.data))
         // If Active State changes, then also reset districtData
-        setDistrictData("")
         }, [activeState]);
 
 
@@ -37,8 +33,11 @@ function GinglesMap({activeState}){
         // I will use GA for the prototype, although this may or may not be carried over to the final product
         // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
         // in accordance with the Navbar
+    <div>
+        <h1>Racial Polarization status of {currentState.NAME}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
+                <h3>Gingles 2/3 Data and Table</h3>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
                     <GinglesData data={gdata} />
@@ -48,13 +47,16 @@ function GinglesMap({activeState}){
             </div>
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <h3>EI Analysis</h3>
                     {/* EI Analysis */}
                     <EIAnalysis data={data} />
+                    <h3>EI KDE (Kernel Data) Results</h3>
                     {/* EI KDE Results */}
                     <EIKDE data={data} />
                 </div>
             </div>
         </div>
+    </div>
   );
 };
 
