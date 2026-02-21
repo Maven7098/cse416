@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
 import { AxisBottom } from "./AxisBottom";
+import { AxisLeft } from "./AxisLeft";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
 const width = 400;
-const height = 400;
+const height = 200;
 
 function EIKDE ({ data }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
@@ -53,6 +54,9 @@ function EIKDE ({ data }) {
           strokeWidth={1}
           strokeLinejoin="round"
         />
+
+        {/* Y axis */}
+        <AxisLeft yScale={yScale} pixelsPerTick={40} width={boundsWidth} />
 
         {/* X axis, use an additional translation to appear at the bottom */}
         <g transform={`translate(0, ${boundsHeight})`}>
