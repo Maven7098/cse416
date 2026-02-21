@@ -7,8 +7,10 @@ import { useState } from "react";
 import { InteractionData, Tooltip } from "./Tooltip";
 
 const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
+const width = 400;
+const height = 400;
 
-export const GinglesData = ({ width, height, data }) => {
+export const GinglesData = ({ data }) => {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 

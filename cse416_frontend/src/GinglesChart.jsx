@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export const GinglesData = ({ data }) => {
     // I guess a simple table will do?
     // total population, population by region type

@@ -5,6 +5,8 @@ import GinglesData from './GinglesData.jsx'
 import GinglesChart from './GinglesChart.jsx'
 import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
+import data from './Data.js'
+import gdata from './GData.js';
 
 // Data to be imported from the server
 import axios from 'axios';
@@ -39,17 +41,17 @@ function GinglesMap({activeState}){
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
-                    <GinglesData />
+                    <GinglesData data={gdata} />
                     {/* Gingles Chart */}
-                    <GinglesChart />
+                    {/* <GinglesChart /> */}
                 </div>
             </div>
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* EI Analysis */}
-                    <EIAnalysis />
+                    <EIAnalysis data={data} />
                     {/* EI KDE Results */}
-                    <EIKDE />
+                    <EIKDE data={data} />
                 </div>
             </div>
         </div>
