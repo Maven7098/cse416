@@ -37,11 +37,12 @@ function GinglesMap({activeState}){
         <h1>Racial Polarization status of {currentState.NAME}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
-                <h3>Gingles 2/3 Data and Table</h3>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
+                    <h3>Gingles 2/3 Data</h3>
                     <GinglesData data={gdata} />
                     {/* Gingles Chart */}
+                    <h3>Gingles 2/3 Table</h3>
                     {/* <GinglesChart /> */}
                 </div>
             </div>
