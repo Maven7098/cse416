@@ -8,7 +8,7 @@ import Population from './Population.jsx';
 // Data to be imported from the server
 import axios from 'axios';
 
-function Map({activeState}){
+function Map({activeState, activeRace}){
   const [geojsonData, setgeojsonData] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
@@ -70,10 +70,23 @@ function Map({activeState}){
 function style(feature) {
     // Need to find data on which President won which district
     // No third party won any district in Georgia or Iowa, so I only keep 2 values
+    let mapRace;
+
+    switch (activeRace) {
+      case "HISPANIC":
+        mapRace = feature.properties.HISPANIC;
+        break;
+      case "BLACK":
+        mapRace = feature.properties.BLACK;
+        break;
+      case "ASIAN":
+        mapRace = feature.properties.ASIAN;
+        break;
+    }
     
     return {
         // property type should be chosen later on (after graph rendering is done)
-        fillColor: getColor(feature.properties.BLACK),
+        fillColor: getColor(mapRace),
         color: getWinner(feature.properties.WINNER),
         weight: 2,
         opacity: 1,
