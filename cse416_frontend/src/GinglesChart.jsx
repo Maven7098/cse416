@@ -7,6 +7,7 @@ function GinglesChart ({ data, race }) {
     <div>
          <table width="100%" height= "100%" 
          style={{fontSize: "smaller"}}>
+            <thead>
             <tr>
                 <th>Total Population</th>
                 <th>Urban Population</th>
@@ -20,10 +21,12 @@ function GinglesChart ({ data, race }) {
                 <th>Democratic Votes</th>
                 <th>Republican Votes</th>
             </tr>
+            </thead>
             {
                 data.map(function(precinct) {
                     return (
-                        <tr key={precinct.ID}>
+                        <tbody key={precinct.ID}>
+                        <tr>
                             <td>{precinct.TOTAL}</td>
                             <td>{precinct.URBAN}</td>
                             <td>{precinct.SUBURBAN}</td>
@@ -36,6 +39,7 @@ function GinglesChart ({ data, race }) {
                             <td>{precinct.DEMOCRATIC}</td>
                             <td>{precinct.REPUBLICAN}</td>
                         </tr>
+                        </tbody>
                     )
                 })
             }
