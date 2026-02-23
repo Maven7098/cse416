@@ -8,13 +8,26 @@ import { useState } from 'react';
 function MapTab({activeState}) {
   const [activeRace, setActiveRace] = useState("BLACK");
 
+  let currentRace = "Black / African American"
+  switch (activeRace) {
+      case "HISPANIC":
+        currentRace = "Hispanic / Latino"
+        break;
+      case "BLACK":
+        currentRace = "Black / African American"
+        break;
+      case "ASIAN":
+        currentRace = "Asian / Asian American"
+        break;
+    }
+
   return (
     <>
     <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
       <h3 style={{margin: "0 0.5em"}}> Select Race: </h3>
       <Dropdown>
         <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary'>
-          {activeRace}
+          {currentRace}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>

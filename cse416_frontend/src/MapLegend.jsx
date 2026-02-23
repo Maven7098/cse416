@@ -22,12 +22,12 @@ const Legend = ({ grades, colors, title }) => {
         // Loop through our density intervals and generate a label with a colored square for each interval
         for (let i = 0; i < grades.length; i++) {
           labels.push(
-            `<i style="background: ${colors[i]}"></i>` +
+            "<br />" + `<i style="background:${colors[i]}"></i>` +
             grades[i] + (grades[i + 1] ? ` &ndash; ${grades[i + 1]}` : '+')
           );
         }
 
-        div.innerHTML = labels.join('<br>');
+        div.innerHTML = labels.join('');
         return div;
       };
 

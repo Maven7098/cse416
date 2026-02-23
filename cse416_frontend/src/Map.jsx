@@ -65,7 +65,19 @@ function Map({activeState, activeRace}){
   };
 
 
-// On click, show district number
+// "Softening" the interface - No longer using all caps
+let currentRace = "Black / African American"
+  switch (activeRace) {
+      case "HISPANIC":
+        currentRace = "Hispanic / Latino<br /> Population"
+        break;
+      case "BLACK":
+        currentRace = "Black / African American<br /> Population"
+        break;
+      case "ASIAN":
+        currentRace = "Asian / Asian American<br /> Population"
+        break;
+    }
 
 function style(feature) {
     // Need to find data on which President won which district
@@ -139,7 +151,7 @@ const heightState = 300;
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)}
         zoom={7} className="leaflet-container" ref={mapRef} id="map-container"
         whenReady={() => resizeMap(mapRef)}>
-          <Legend grades={grades} colors={colors} />
+          <Legend grades={grades} colors={colors} title={currentRace}/>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
