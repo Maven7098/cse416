@@ -1,35 +1,42 @@
-import { Tabs, Tab } from 'react-bootstrap';
+import { Tabs, Tab, DropdownButton, Dropdown } from 'react-bootstrap';
 import Map from './Map';
 import GinglesMap from './GinglesMap';
 import EIMap from './EIMap';
+import { useState } from 'react';
 
 
 function MapTab({activeState}) {
+  const [activeRace, setActiveRace] = useState("BLACK");
 
   return (
+    <>
+    <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+      <h3 style={{margin: "0 0.5em"}}> Select Race: </h3>
+      <Dropdown>
+        <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary'>
+          {activeRace}
+        </Dropdown.Toggle>
 
-    <Tabs defaultActiveKey="info" id="uncontrolled-tab-example">
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => setActiveRace("BLACK")}>Black / African American</Dropdown.Item>
+          <Dropdown.Item onClick={() => setActiveRace("HISPANIC")}>Hispanic / Latino</Dropdown.Item>
+          <Dropdown.Item onClick={() => setActiveRace("ASIAN")}>Asian / Asian American</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
 
+    <Tabs defaultActiveKey="info" id="uncontrolled-tab-example" fill>
       <Tab eventKey="info" title="State Information">
-
-        <Map activeState={activeState} />
-
+        <Map activeState={activeState} activeRace={activeRace} />
       </Tab>
-
       <Tab eventKey="gingles" title="Racial Polarization">
-
-        <GinglesMap activeState={activeState} />
-
+        <GinglesMap activeState={activeState} activeRace={activeRace} />
       </Tab>
-
       <Tab eventKey="ei" title="Ecological Inference">
-
-        <EIMap activeState={activeState} />
-
+        <EIMap activeState={activeState} activeRace={activeRace} />
       </Tab>
-
     </Tabs>
-
+    </>
   );
 
 }

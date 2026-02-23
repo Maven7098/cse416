@@ -7,7 +7,7 @@ import GinglesChart from './GinglesChart.jsx'
 // Data to be imported from the server
 import axios from 'axios';
 
-function GinglesMap({activeState}){
+function GinglesMap({activeState, activeRace}){
     // What type of data will we need for GinglesMap.jsx?
     // Left: Gingles Analysis Results (GUI-9)
     // Right: Gingles Data (GUI-10, GUI-11)
@@ -32,20 +32,20 @@ function GinglesMap({activeState}){
         // in accordance with the Navbar
     <div>
         {ginglesData ? <>
-        <h1>Racial Polarization status of {activeState}</h1>
+        <h1>Racial Polarization status of {activeState.toUpperCase()}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
                     <h3>Gingles 2/3 Data</h3>
-                    <GinglesData data={ginglesData} width={width} height={height} />
+                    <GinglesData data={ginglesData} race={activeRace} width={width} height={height} />
                     {/* Gingles Chart */}
                 </div>
             </div>
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
                     <h3>Gingles 2/3 Table</h3>
-                    <GinglesChart data={ginglesData} />
+                    <GinglesChart data={ginglesData} race={activeRace}/>
                 </div>
             </div>
         </div>

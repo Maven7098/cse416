@@ -8,7 +8,7 @@ import Tooltip from "./Tooltip";
 
 const MARGIN = { top: 20, right: 30, bottom: 60, left: 30 };
 
-function GinglesData ({ width, height, data }) {
+function GinglesData ({ width, height, data, race }) {
   console.log(data)
 
   const boundsWidth = width - MARGIN.right - MARGIN.left;
@@ -28,18 +28,32 @@ function GinglesData ({ width, height, data }) {
 
   // Build the shapes
   const allShapes = data.map((d, i) => {
+    let activeRace = d.BLACK;
+
+    switch (race) {
+      case "HISPANIC":
+        activeRace = d.HISPANIC;
+        break;
+      case "BLACK":
+        activeRace = d.BLACK;
+        break;
+      case "ASIAN":
+        activeRace = d.ASIAN;
+        break;
+    }
+
     return (
       <circle
         key={i}
         r={8}
-        cx={xScale(100 * (d.BLACK / d.TOTAL))}
+        cx={xScale(100 * (activeRace / d.TOTAL))}
         cy={yScale(100 * (d.DEMOCRATIC / d.TOTAL))}
         stroke={(d.DEMOCRATIC > d.REPUBLICAN ? "#0000ff" : "#ff0000")}
         fill={(d.DEMOCRATIC > d.REPUBLICAN ? "#0000ff" : "#ff0000")}
         fillOpacity={0.7}
         onMouseEnter={() =>
           setHovered({
-            xPos: xScale(100 * (d.BLACK / d.TOTAL)),
+            xPos: xScale(100 * (activeRace / d.TOTAL)),
             yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
             name: d.ID,
           })

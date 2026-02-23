@@ -9,7 +9,7 @@ import { data } from './Data.js'
 // Data to be imported from the server
 import axios from 'axios';
 
-function EIMap({activeState}){
+function EIMap({activeState, activeRace}){
     // What type of data will we need for GinglesMap.jsx?
     // Left: Choropleth Map (GUI-14)
     // Top Right: EI Analysis (GUI-12)

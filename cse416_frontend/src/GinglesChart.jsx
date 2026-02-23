@@ -1,4 +1,4 @@
-function GinglesChart ({ data }) {
+function GinglesChart ({ data, race }) {
     // I guess a simple table will do?
     // total population, population by region type
     // (rural, urban, suburban), minority non-white population, average household
@@ -28,9 +28,9 @@ function GinglesChart ({ data }) {
                             <td>{precinct.URBAN}</td>
                             <td>{precinct.SUBURBAN}</td>
                             <td>{precinct.RURAL}</td>
-                            <td>{precinct.HISPANIC}</td>
-                            <td>{precinct.BLACK}</td>
-                            <td>{precinct.ASIAN}</td>
+                            {race == "HISPANIC" ? <td style={{fontWeight: "bold"}}>{precinct.HISPANIC}</td> : <td>{precinct.HISPANIC}</td>}
+                            {race == "BLACK" ? <td style={{fontWeight: "bold"}}>{precinct.BLACK}</td> : <td>{precinct.BLACK}</td>}
+                            {race == "ASIAN" ? <td style={{fontWeight: "bold"}}>{precinct.ASIAN}</td> : <td>{precinct.ASIAN}</td>}
                             <td>{precinct.WHITE}</td>
                             <td>{precinct.INCOME}</td>
                             <td>{precinct.DEMOCRATIC}</td>
