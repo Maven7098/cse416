@@ -5,7 +5,8 @@ function GinglesChart ({ data }) {
     // income, Republican votes, and Democratic votes
   return (
     <div>
-         <table>
+         <table width="100%" height= "100%" 
+         style={{fontSize: "smaller"}}>
             <tr>
                 <th>Total Population</th>
                 <th>Urban Population</th>

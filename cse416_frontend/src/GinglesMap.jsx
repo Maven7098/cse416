@@ -3,32 +3,26 @@ import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import GinglesData from './GinglesData.jsx'
 import GinglesChart from './GinglesChart.jsx'
-import EIAnalysis from './EIAnalysis.jsx'
-import EIKDE from './EIKDE.jsx'
-import { data } from './Data.js'
-import { gdata } from './GData.js';
 
 // Data to be imported from the server
 import axios from 'axios';
 
 function GinglesMap({activeState}){
     // What type of data will we need for GinglesMap.jsx?
-    // Top Left: Gingles Analysis Results (GUI-9)
+    // Left: Gingles Analysis Results (GUI-9)
+    // Right: Gingles Data (GUI-10, GUI-11)
     // Top Right: EI Analysis (GUI-12)
-    // Bottom Left: Gingles Data (GUI-10, GUI-11)
-    // Bottom Right: EI KDE Results (GUI-15)
-    const [currentState, setCurrentState] = useState("");
+    const [ginglesData, setGinglesData] = useState("");
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/api/${activeState}/geojson`)
-        .then(response => {setCurrentState(response.data[3])})
+        axios.get(`http://localhost:3000/api/${activeState}/gingles`)
+        .then(response => {setGinglesData(response.data)})
         .catch(error => console.log(error.response.data))
         // If Active State changes, then also reset districtData
         }, [activeState]);
     
     const width = 700;
-    const height = 280;
-    const eiHeight = 210;
+    const height = 380;
 
     return (
         // Load the GeoJSON for the districting map
@@ -37,29 +31,27 @@ function GinglesMap({activeState}){
         // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
         // in accordance with the Navbar
     <div>
-        <h1>Racial Polarization status of {currentState.NAME}</h1>
+        {ginglesData ? <>
+        <h1>Racial Polarization status of {activeState}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
                     <h3>Gingles 2/3 Data</h3>
-                    <GinglesData data={gdata} width={width} height={height} />
+                    <GinglesData data={ginglesData} width={width} height={height} />
                     {/* Gingles Chart */}
-                    <h3>Gingles 2/3 Table</h3>
-                    {/* <GinglesChart /> */}
                 </div>
             </div>
             <div className='leaflet-container-big'>
-                <div style={{display: 'flex', flexDirection: 'column'}}>
-                    <h3>EI Analysis</h3>
-                    {/* EI Analysis */}
-                    <EIAnalysis data={data} width={width} height={eiHeight} />
-                    <h3>EI KDE (Kernel Data) Results</h3>
-                    {/* EI KDE Results */}
-                    <EIKDE data={data} width={width} height={eiHeight} />
+                <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
+                    <h3>Gingles 2/3 Table</h3>
+                    <GinglesChart data={ginglesData} />
                 </div>
             </div>
         </div>
+        </> :
+        <></>}
+        
     </div>
   );
 };

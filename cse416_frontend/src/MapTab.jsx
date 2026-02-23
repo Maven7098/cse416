@@ -1,6 +1,7 @@
 import { Tabs, Tab } from 'react-bootstrap';
 import Map from './Map';
 import GinglesMap from './GinglesMap';
+import EIMap from './EIMap';
 
 
 function MapTab({activeState}) {
@@ -18,6 +19,12 @@ function MapTab({activeState}) {
       <Tab eventKey="gingles" title="Racial Polarization">
 
         <GinglesMap activeState={activeState} />
+
+      </Tab>
+
+      <Tab eventKey="ei" title="Ecological Inference">
+
+        <EIMap activeState={activeState} />
 
       </Tab>
 

@@ -6,6 +6,8 @@ import geojsonGa from './assets/ga/GA-Congress.json' with { type: 'json' };
 import geojsonIa from './assets/ia/IA-Congress.json' with { type: 'json' };
 import dataGa from './assets/ga/GA.json' with { type: 'json' };
 import dataIa from './assets/ia/IA.json' with { type: 'json' };
+import ginglesGa from './assets/ga/ga_precinct_output.json' with { type: 'json' };
+import ginglesIa from './assets/ia/ia_precinct_output.json' with { type: 'json' };
 
 // GET - MainMenu
 // Get the image of the 2 states
@@ -51,6 +53,33 @@ router.get('/ga/geojson', async (req,res)=>{
         })
       }
 });
+
+router.get('/ga/gingles', async (req,res)=>{
+    try {
+      // Send the GeoJSON file, latitude and longitude
+        const result = ginglesGa
+        res.send(result)
+      } catch (err) {
+        res.status(500).send({
+          success: false,
+          error: err,
+        })
+      }
+});
+
+router.get('/ia/gingles', async (req,res)=>{
+    try {
+      // Send the GeoJSON file, latitude and longitude
+        const result = ginglesIa
+        res.send(result)
+      } catch (err) {
+        res.status(500).send({
+          success: false,
+          error: err,
+        })
+      }
+});
+
 
 // Future:
 

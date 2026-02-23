@@ -6,25 +6,25 @@ import { AxisBottom } from "./AxisBottom";
 import { useState } from "react";
 import Tooltip from "./Tooltip";
 
-const MARGIN = { top: 20, right: 60, bottom: 60, left: 60 };
+const MARGIN = { top: 20, right: 30, bottom: 60, left: 30 };
 
 function GinglesData ({ width, height, data }) {
+  console.log(data)
+
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
   const [hovered, setHovered] = useState(null);
 
+  // X Axis: Minority Percent
+  // Y Axis: Vote Share (Democratic)
+
   // Scales
-  const yScale = d3.scaleLinear().domain([35, 85]).range([boundsHeight, 0]);
+  const yScale = d3.scaleLinear().domain([0, 100]).range([boundsHeight, 0]);
   const xScale = d3
     .scaleLinear()
-    .domain([-3000, 50000])
+    .domain([0, 100])
     .range([0, boundsWidth]);
-  const allGroups = data.map((d) => String(d.group));
-  const colorScale = d3
-    .scaleOrdinal()
-    .domain(allGroups)
-    .range(["#e0ac2b", "#e85252", "#6689c6", "#9a6fb0", "#a53253"]);
 
   // Build the shapes
   const allShapes = data.map((d, i) => {
@@ -32,16 +32,16 @@ function GinglesData ({ width, height, data }) {
       <circle
         key={i}
         r={8}
-        cx={xScale(d.x)}
-        cy={yScale(d.y)}
-        stroke={colorScale(d.group)}
-        fill={colorScale(d.group)}
+        cx={xScale(100 * (d.BLACK / d.TOTAL))}
+        cy={yScale(100 * (d.DEMOCRATIC / d.TOTAL))}
+        stroke={(d.DEMOCRATIC > d.REPUBLICAN ? "#0000ff" : "#ff0000")}
+        fill={(d.DEMOCRATIC > d.REPUBLICAN ? "#0000ff" : "#ff0000")}
         fillOpacity={0.7}
         onMouseEnter={() =>
           setHovered({
-            xPos: xScale(d.x),
-            yPos: yScale(d.y),
-            name: d.subGroup,
+            xPos: xScale(100 * (d.BLACK / d.TOTAL)),
+            yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
+            name: d.ID,
           })
         }
         onMouseLeave={() => setHovered(null)}
