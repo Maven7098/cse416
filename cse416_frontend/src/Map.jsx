@@ -7,6 +7,8 @@ import Population from './Population.jsx';
 
 // Data to be imported from the server
 import axios from 'axios';
+import Legend from './MapLegend.jsx';
+import { map } from 'leaflet';
 
 function Map({activeState, activeRace}){
   const [geojsonData, setgeojsonData] = useState("");
@@ -48,9 +50,7 @@ function Map({activeState, activeRace}){
            d > 500000  ? '#BD0026' :
            d > 200000  ? '#E31A1C' :
            d > 100000  ? '#FC4E2A' :
-           d > 50000   ? '#FD8D3C' :
-           d > 20000   ? '#FEB24C' :
-           d > 10000   ? '#FED976' :
+           d > 20000   ? '#FD8D3C' :
                       '#FFEDA0';
   }
   function getWinner(d) {
@@ -118,6 +118,10 @@ function handleClick(event, layer) {
   // console.log(bounds);
 }
 
+const grades = [0, 20000, 100000, 200000, 500000, 1000000];
+const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+
+
 const width = 960;
 const heightPop = 280;
 const heightState = 300;
@@ -135,6 +139,7 @@ const heightState = 300;
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)}
         zoom={7} className="leaflet-container" ref={mapRef} id="map-container"
         whenReady={() => resizeMap(mapRef)}>
+          <Legend grades={grades} colors={colors} />
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
