@@ -6,35 +6,15 @@ import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
 import { data } from './Data.js'
 
-// Data to be imported from the server
-import axios from 'axios';
-
-function EIMap({activeState, activeRace}){
+function EIMap({ activeRace, precinctGeoJsonData, latitude, longitude, currentStateName }){
     // What type of data will we need for GinglesMap.jsx?
     // Left: Choropleth Map (GUI-14)
     // Top Right: EI Analysis (GUI-12)
     // Bottom Right: EI KDE Results (GUI-15)
 
-    const [geojsonData, setgeojsonData] = useState("");
-    const [latitude, setLatitude] = useState("");
-    const [longitude, setLongitude] = useState("");
-    const [districtData, setDistrictData] = useState("");
-    const [currentState, setCurrentState] = useState("");
-
-    useEffect(() => {
-        axios.get(`http://localhost:3000/api/${activeState}/geojson`)
-        .then(response => {setgeojsonData(response.data[0]);
-            setLatitude(response.data[1]);
-            setLongitude(response.data[2]);
-            setCurrentState(response.data[3])})
-        .catch(error => console.log(error.response.data))
-        // If Active State changes, then also reset districtData
-        setDistrictData("")
-    }, [activeState]);
-
     const resizeMap = (mapRef) => {
         const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-        const container = document.getElementById('map-container')
+        const container = document.getElementById('map-container-2')
         if (container) {
         resizeObserver.observe(container)
         }
@@ -83,19 +63,19 @@ function EIMap({activeState, activeRace}){
         // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
         // in accordance with the Navbar
     <div>
-        <h1>Racial Polarization status of {currentState.NAME}</h1>
+        <h1>Racial Polarization status of {currentStateName}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
                 <h1>Select Precinct</h1>
-                <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)}
-                zoom={7} className="leaflet-container" ref={mapRef} id="map-container"
+                <MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
+                zoom={7} className="leaflet-container" ref={mapRef} id="map-container-2"
                 whenReady={() => resizeMap(mapRef)}>
                     <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
                     {/* Afraid of rendering a precinct file too large (I ran out of memory) */}
-                    {/* <GeoJSON data={geojsonData} style={style} onEachFeature={onEachFeature} key={JSON.stringify(geojsonData)}/> */}
+                    {/* <GeoJSON data={precinctGeoJsonData} style={style} onEachFeature={onEachFeature} key={JSON.stringify(geojsonData)}/> */}
                 </MapContainer>
             </div>
             <div className='leaflet-container-big'>

@@ -2,11 +2,37 @@ import { Tabs, Tab, DropdownButton, Dropdown } from 'react-bootstrap';
 import Map from './Map';
 import GinglesMap from './GinglesMap';
 import EIMap from './EIMap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+// Data to be imported from the server
+import axios from 'axios';
 
 
 function MapTab({activeState}) {
   const [activeRace, setActiveRace] = useState("BLACK");
+  const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [districtData, setDistrictData] = useState("");
+  const [currentState, setCurrentState] = useState("");
+  const [currentStateName, setCurrentStateName] = useState("");
+
+  // Set Current State - GeoJSON
+  useEffect(() => {
+      axios.get(`http://localhost:3000/api/${activeState}/geojson`)
+      .then(response => {setDistrictGeoJsonData(response.data[0]);
+          setLatitude(response.data[1]);
+          setLongitude(response.data[2]);
+          setCurrentState(response.data[3])})
+      .catch(error => console.log(error.response.data))
+      // If Active State changes, then also reset districtData
+      setDistrictData("")
+  }, [activeState]);
+
+  // Set Current State name
+  useEffect(() => {
+    setCurrentStateName(currentState.NAME)
+  }, [currentState]);
 
   let currentRace = "Black / African American"
   switch (activeRace) {
@@ -40,13 +66,14 @@ function MapTab({activeState}) {
 
     <Tabs defaultActiveKey="info" id="uncontrolled-tab-example" fill>
       <Tab eventKey="info" title="State Information">
-        <Map activeState={activeState} activeRace={activeRace} />
+        <Map activeRace={activeRace} districtGeoJsonData={districtGeoJsonData} latitude={latitude} longitude={longitude}
+        districtData={districtData} setDistrictData={setDistrictData} currentState={currentState} />
       </Tab>
       <Tab eventKey="gingles" title="Racial Polarization">
-        <GinglesMap activeState={activeState} activeRace={activeRace} />
+        <GinglesMap activeState={activeState} activeRace={activeRace} currentStateName={currentStateName} />
       </Tab>
       <Tab eventKey="ei" title="Ecological Inference">
-        <EIMap activeState={activeState} activeRace={activeRace} />
+        <EIMap activeRace={activeRace} precinctGeoJsonData={districtGeoJsonData} latitude={latitude} longitude={longitude} currentStateName={currentStateName} />
       </Tab>
     </Tabs>
     </>

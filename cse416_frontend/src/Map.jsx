@@ -5,28 +5,9 @@ import './Map.css';
 import State from './State.jsx';
 import Population from './Population.jsx';
 
-// Data to be imported from the server
-import axios from 'axios';
 import Legend from './MapLegend.jsx';
-import { map } from 'leaflet';
 
-function Map({activeState, activeRace}){
-  const [geojsonData, setgeojsonData] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [districtData, setDistrictData] = useState("");
-  const [currentState, setCurrentState] = useState("");
-
-  useEffect(() => {
-    axios.get(`http://localhost:3000/api/${activeState}/geojson`)
-      .then(response => {setgeojsonData(response.data[0]);
-        setLatitude(response.data[1]);
-        setLongitude(response.data[2]);
-        setCurrentState(response.data[3])})
-      .catch(error => console.log(error.response.data))
-    // If Active State changes, then also reset districtData
-      setDistrictData("")
-    }, [activeState]);
+function Map({ activeRace, districtGeoJsonData, latitude, longitude, districtData, setDistrictData, currentState }){
 
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
@@ -36,14 +17,6 @@ function Map({activeState, activeRace}){
       }
     }
     const mapRef = useRef(null)
-
-
-  // Also what should I receive from the server?
-  // - Should the coordinates be downloaded from the server or hard-coded?
-  // Data... What other data? (${activeState}/data)
-  // - Party Splits (${activeState}/data/split)
-  // - (${activeState}/data/)
-  // -
 
   function getColor(d) {
     return d > 1000000 ? '#800026' :
@@ -65,8 +38,8 @@ function Map({activeState, activeRace}){
   };
 
 
-// "Softening" the interface - No longer using all caps
-let currentRace = "Black / African American"
+  // "Softening" the interface - No longer using all caps
+  let currentRace = "Black / African American"
   switch (activeRace) {
       case "HISPANIC":
         currentRace = "Hispanic / Latino<br /> Population"
@@ -79,7 +52,7 @@ let currentRace = "Black / African American"
         break;
     }
 
-function style(feature) {
+  function style(feature) {
     // Need to find data on which President won which district
     // No third party won any district in Georgia or Iowa, so I only keep 2 values
     let mapRace;
@@ -104,9 +77,9 @@ function style(feature) {
         opacity: 1,
         fillOpacity: 0.7
     };
-}
+  }
 
-function onEachFeature(feature, layer) {
+  function onEachFeature(feature, layer) {
     if (feature.properties) {
         layer.bindPopup(feature.properties.DISTRICT);
     }
@@ -123,20 +96,19 @@ function onEachFeature(feature, layer) {
         layer.setStyle({weight: 2});
       });
     })
-}
-function handleClick(event, layer) {
-  const bounds = layer.get
-  // Send properties of tBounds();
-  // console.log(bounds);
-}
+  }
+  function handleClick(event, layer) {
+    const bounds = layer.get
+    // Send properties of tBounds();
+    // console.log(bounds);
+  }
 
-const grades = [0, 20000, 100000, 200000, 500000, 1000000];
-const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+  const grades = [0, 20000, 100000, 200000, 500000, 1000000];
+  const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
 
-
-const width = 960;
-const heightPop = 280;
-const heightState = 300;
+  const width = 960;
+  const heightPop = 280;
+  const heightState = 300;
 
   return (
     // Load the GeoJSON for the districting map
@@ -148,7 +120,7 @@ const heightState = 300;
     <div className="leaflet-containerset">
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(geojsonData)}
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
         zoom={7} className="leaflet-container" ref={mapRef} id="map-container"
         whenReady={() => resizeMap(mapRef)}>
           <Legend grades={grades} colors={colors} title={currentRace}/>
@@ -156,7 +128,7 @@ const heightState = 300;
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={geojsonData} style={style} onEachFeature={onEachFeature} key={JSON.stringify(geojsonData)}/>
+          <GeoJSON data={districtGeoJsonData} style={style} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
