@@ -1,38 +1,23 @@
-import { Tabs, Tab, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Tabs, Tab, Dropdown } from 'react-bootstrap';
 import Map from './Map';
 import GinglesMap from './GinglesMap';
 import EIMap from './EIMap';
-import { useState, useEffect } from 'react';
-
-// Data to be imported from the server
-import axios from 'axios';
+import { useState } from 'react';
 
 
 function MapTab({activeState}) {
   const [activeRace, setActiveRace] = useState("BLACK");
-  const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [districtData, setDistrictData] = useState("");
-  const [currentState, setCurrentState] = useState("");
-  const [currentStateName, setCurrentStateName] = useState("");
+  let activeStateName = ""
+  let latitude=0;
+  let longitude=0;
 
-  // Set Current State - GeoJSON
-  useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/geojson`)
-      .then(response => {setDistrictGeoJsonData(response.data[0]);
-          setLatitude(response.data[1]);
-          setLongitude(response.data[2]);
-          setCurrentState(response.data[3])})
-      .catch(error => console.log(error.response.data))
-      // If Active State changes, then also reset districtData
-      setDistrictData("")
-  }, [activeState]);
-
-  // Set Current State name
-  useEffect(() => {
-    setCurrentStateName(currentState.NAME)
-  }, [currentState]);
+  // Set Current State - Name, Latitude, Longitude
+  // I have initially thought of setting this on the server
+  // But why do we need to do that? Is the latitude or longitude important?
+  switch (activeState) {
+      case 'ia': activeStateName="Iowa"; latitude=41.8780; longitude=-93.0977; break;
+      case 'ga': activeStateName="Georgia"; latitude=33.2478; longitude=-83.4411; break;
+    }
 
   let currentRace = "Black / African American"
   switch (activeRace) {
@@ -66,14 +51,13 @@ function MapTab({activeState}) {
 
     <Tabs defaultActiveKey="info" id="uncontrolled-tab-example" fill>
       <Tab eventKey="info" title="State Information">
-        <Map activeRace={activeRace} districtGeoJsonData={districtGeoJsonData} latitude={latitude} longitude={longitude}
-        districtData={districtData} setDistrictData={setDistrictData} currentState={currentState} />
+        <Map activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} />
       </Tab>
       <Tab eventKey="gingles" title="Racial Polarization">
-        <GinglesMap activeState={activeState} activeRace={activeRace} currentStateName={currentStateName} />
+        <GinglesMap activeState={activeState} activeRace={activeRace} activeStateName={activeStateName} />
       </Tab>
       <Tab eventKey="ei" title="Ecological Inference">
-        <EIMap activeRace={activeRace} precinctGeoJsonData={districtGeoJsonData} latitude={latitude} longitude={longitude} currentStateName={currentStateName} />
+        <EIMap activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} activeStateName={activeStateName} />
       </Tab>
     </Tabs>
     </>

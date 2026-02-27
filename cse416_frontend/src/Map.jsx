@@ -6,12 +6,25 @@ import State from './State.jsx';
 import Population from './Population.jsx';
 
 import Legend from './MapLegend.jsx';
+import axios from 'axios';
 
-function Map({ activeRace, districtGeoJsonData, latitude, longitude, districtData, setDistrictData, currentState }){
+function Map({ activeState, activeRace, latitude, longitude }){
+  const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
+  const [districtData, setDistrictData] = useState("");
+  const [currentState, setCurrentState] = useState("");
+
+  useEffect(() => {
+      axios.get(`http://localhost:3000/api/${activeState}/district`)
+      .then(response => {setDistrictGeoJsonData(response.data[0]);
+            setCurrentState(response.data[1])})
+      .catch(error => console.log(error.response.data))
+      // If Active State changes, then also reset districtData
+      setDistrictData("")
+  }, [activeState]);
 
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-      const container = document.getElementById('map-container')
+      const container = document.getElementById('map-container-district')
       if (container) {
         resizeObserver.observe(container)
       }
@@ -121,7 +134,7 @@ function Map({ activeRace, districtGeoJsonData, latitude, longitude, districtDat
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
-        zoom={7} className="leaflet-container" ref={mapRef} id="map-container"
+        zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
         whenReady={() => resizeMap(mapRef)}>
           <Legend grades={grades} colors={colors} title={currentRace}/>
           <TileLayer

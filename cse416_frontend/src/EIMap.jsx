@@ -6,7 +6,17 @@ import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
 import { data } from './Data.js'
 
-function EIMap({ activeRace, precinctGeoJsonData, latitude, longitude, currentStateName }){
+import axios from 'axios';
+
+function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }){
+    const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
+
+  useEffect(() => {
+      axios.get(`http://localhost:3000/api/${activeState}/precinct`)
+      .then(response => {setPrecinctGeoJsonData(response.data)})
+      .catch(error => console.log(error.response.data))
+  }, [activeState]);
+
     // What type of data will we need for GinglesMap.jsx?
     // Left: Choropleth Map (GUI-14)
     // Top Right: EI Analysis (GUI-12)
@@ -14,13 +24,13 @@ function EIMap({ activeRace, precinctGeoJsonData, latitude, longitude, currentSt
 
     const resizeMap = (mapRef) => {
         const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-        const container = document.getElementById('map-container-2')
+        const container = document.getElementById('map-container-precinct')
         if (container) {
         resizeObserver.observe(container)
         }
     }
     const mapRef = useRef(null)
-
+/*
     function getColor(d) {
     return d > 1000000 ? '#800026' :
            d > 500000  ? '#BD0026' :
@@ -42,16 +52,30 @@ function EIMap({ activeRace, precinctGeoJsonData, latitude, longitude, currentSt
     function style(feature) {
         // Need to find data on which President won which district
         // No third party won any district in Georgia or Iowa, so I only keep 2 values
+        let mapRace;
+
+        switch (activeRace) {
+        case "HISPANIC":
+            mapRace = feature.properties.HISPANIC;
+            break;
+        case "BLACK":
+            mapRace = feature.properties.BLACK;
+            break;
+        case "ASIAN":
+            mapRace = feature.properties.ASIAN;
+            break;
+        }
         
         return {
             // property type should be chosen later on (after graph rendering is done)
-            fillColor: getColor(feature.properties.BLACK),
+            fillColor: getColor(mapRace),
             color: getWinner(feature.properties.WINNER),
             weight: 2,
             opacity: 1,
             fillOpacity: 0.7
         };
     }
+*/
     
     const width = 900;
     const eiHeight = 210;
@@ -63,19 +87,19 @@ function EIMap({ activeRace, precinctGeoJsonData, latitude, longitude, currentSt
         // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
         // in accordance with the Navbar
     <div>
-        <h1>Racial Polarization status of {currentStateName}</h1>
+        <h1>Racial Polarization status of {activeStateName}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
                 <h1>Select Precinct</h1>
                 <MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
-                zoom={7} className="leaflet-container" ref={mapRef} id="map-container-2"
+                zoom={7} className="leaflet-container" ref={mapRef} id="map-container-precinct"
                 whenReady={() => resizeMap(mapRef)}>
                     <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
                     {/* Afraid of rendering a precinct file too large (I ran out of memory) */}
-                    {/* <GeoJSON data={precinctGeoJsonData} style={style} onEachFeature={onEachFeature} key={JSON.stringify(geojsonData)}/> */}
+                    <GeoJSON data={precinctGeoJsonData} key={JSON.stringify(precinctGeoJsonData)}/>
                 </MapContainer>
             </div>
             <div className='leaflet-container-big'>
