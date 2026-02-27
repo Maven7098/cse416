@@ -123,9 +123,10 @@ function State({ width, height, activeState }){
     <div>
         <h1>{activeState.NAME}</h1>
         <div style={{ display: "flex", alignItems: "center", justifyContent:"space-evenly", flexDirection: "row", textAlign: "center"}}>
-            <h3>Democrats: {activeState.DSEAT}</h3>
-            <h3>Republicans: {activeState.RSEAT}</h3>
+            <h3>Democrats: {activeState.DSEAT}, {activeState.DVOTE}%</h3>
+            <h3>Republicans: {activeState.RSEAT}, {activeState.RVOTE}%</h3>
         </div>
+        <p>Current Districting Party: {activeState.PARTY}</p>
         <h3>Total Population: {activeState.TOTAL}</h3>
       <svg width={width} height={height}>
         <g
