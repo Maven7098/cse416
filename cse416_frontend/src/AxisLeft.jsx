@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 const TICK_LENGTH = 6;
 
-export const AxisLeft = ({ yScale, pixelsPerTick }) => {
+export const AxisLeft = ({ yScale, pixelsPerTick, label="" }) => {
   const range = yScale.range();
 
   const ticks = useMemo(() => {

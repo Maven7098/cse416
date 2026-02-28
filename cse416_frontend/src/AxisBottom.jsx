@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 const TICK_LENGTH = 6;
 
-export const AxisBottom = ({ xScale, pixelsPerTick }) => {
+export const AxisBottom = ({ xScale, pixelsPerTick, label="" }) => {
   const range = xScale.range();
 
   const ticks = useMemo(() => {
@@ -17,6 +17,19 @@ export const AxisBottom = ({ xScale, pixelsPerTick }) => {
 
   return (
     <>
+      {label && (
+        <g data-test-id="bottom-axis-label-group" transform={{ dy: '0.71em' }}>
+          <text
+            data-test-id="bottom-axis-label"
+            stroke="none"
+            fill="currentColor"
+            role="presentation"
+            aria-hidden
+          >
+            {label}
+          </text>
+        </g>
+      )}
       {/* Main horizontal line */}
       <path
         d={["M", range[0], 0, "L", range[1], 0].join(" ")}

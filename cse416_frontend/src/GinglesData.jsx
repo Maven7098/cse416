@@ -5,8 +5,9 @@ import { AxisLeft } from "./AxisLeft";
 import { AxisBottom } from "./AxisBottom";
 import { useState } from "react";
 import Tooltip from "./Tooltip";
+import Axis from "./Axis";
 
-const MARGIN = { top: 20, right: 30, bottom: 60, left: 30 };
+const MARGIN = { top: 20, right: 30, bottom: 60, left: 120 };
 
 function GinglesData ({ width, height, data, race }) {
   console.log(data)
@@ -18,6 +19,18 @@ function GinglesData ({ width, height, data, race }) {
 
   // X Axis: Minority Percent
   // Y Axis: Vote Share (Democratic)
+  let currentRace = "Black / African American"
+  switch (race) {
+      case "HISPANIC":
+        currentRace = "Hispanic / Latino";
+        break;
+      case "BLACK":
+        currentRace = "Black / African American";
+        break;
+      case "ASIAN":
+        currentRace = "Asian / Asian American";
+        break;
+    }
 
   // Scales
   const yScale = d3.scaleLinear().domain([0, 100]).range([boundsHeight, 0]);
@@ -55,7 +68,7 @@ function GinglesData ({ width, height, data, race }) {
           setHovered({
             xPos: xScale(100 * (activeRace / d.TOTAL)),
             yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
-            name: d.ID,
+            name: d.UNIQUE_ID,
           })
         }
         onMouseLeave={() => setHovered(null)}
@@ -71,21 +84,10 @@ function GinglesData ({ width, height, data, race }) {
           height={boundsHeight}
           transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
         >
-          {/* Y axis */}
-          <AxisLeft yScale={yScale} pixelsPerTick={40} width={boundsWidth} />
-
-          {/* X axis, use an additional translation to appear at the bottom */}
-          <g transform={`translate(0, ${boundsHeight})`}>
-            <AxisBottom
-              xScale={xScale}
-              pixelsPerTick={40}
-              height={boundsHeight}
-            />
-          </g>
-
           {/* Circles */}
           {allShapes}
         </g>
+        <Axis width={width} height={height} labelX={`${currentRace} Vote %`} labelY="Democratic Vote %" />
       </svg>
 
       {/* Tooltip */}
