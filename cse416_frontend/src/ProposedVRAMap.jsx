@@ -4,14 +4,12 @@ import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import EnsembleSplits from './EnsembleSplits.jsx'
 import BoxandWhiskerChart from './BoxandWhiskerChart.jsx'
-
-import Legend from './MapLegend.jsx';
 import axios from 'axios';
 
-function Map({ activeState, activeRace, mode, latitude, longitude }){
+function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
   const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
-  const [ensembleSplitData, setEnsembleSplitData] = useState("");
-  const [boxandWhiskerData, setBoxandWhiskerData] = useState("");
+  const [ensembleSplitData, setEnsembleSplitData] = useState([]);
+  const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
 
     // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
@@ -21,7 +19,7 @@ function Map({ activeState, activeRace, mode, latitude, longitude }){
             setBoxandWhiskerData(response.data[2])})
       .catch(error => console.log(error.response.data))
       // If Active State changes, then also reset districtData
-      setDistrictData("")
+      setDistrictGeoJsonData("")
   }, [activeState]);
 
     const resizeMap = (mapRef) => {
@@ -49,7 +47,7 @@ function Map({ activeState, activeRace, mode, latitude, longitude }){
     }
 
     const width = 900;
-    const proposedHeight = 210;
+    const proposedHeight = 170;
 
   return (
     // Load the GeoJSON for the districting map
@@ -65,7 +63,6 @@ function Map({ activeState, activeRace, mode, latitude, longitude }){
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
         zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${mode}`}
         whenReady={() => resizeMap(mapRef)}>
-          <Legend grades={grades} colors={colors} title={currentRace}/>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -88,4 +85,4 @@ function Map({ activeState, activeRace, mode, latitude, longitude }){
   );
 };
 
-export default Map;
+export default ProposedVRAMap;

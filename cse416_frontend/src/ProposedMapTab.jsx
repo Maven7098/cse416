@@ -50,10 +50,10 @@ function MapTab({activeState}) {
 
     <Tabs defaultActiveKey="vra" id="uncontrolled-tab-example" fill>
       <Tab eventKey="vra" title="Proposed Districts with Voting Rights Act">
-        <ProposedVRAMap activeState={activeState} activeRace={activeRace} mode={vra} latitude={latitude} longitude={longitude} />
+        <ProposedVRAMap activeState={activeState} activeRace={activeRace} mode="vra" latitude={latitude} longitude={longitude} />
       </Tab>
       <Tab eventKey="non-vra" title="Proposed Districts with Race Blind Districting">
-        <ProposedVRAMap activeState={activeState} activeRace={activeRace} mode={non-vra} latitude={latitude} longitude={longitude} />
+        <ProposedVRAMap activeState={activeState} activeRace={activeRace} mode="non-vra" latitude={latitude} longitude={longitude} />
       </Tab>
       <Tab eventKey="compare" title="Compare Districts">
         <CompareMap activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} activeStateName={activeStateName} />

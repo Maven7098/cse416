@@ -1,3 +1,5 @@
+// From https://www.react-graph-gallery.com/barplot
+
 import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
 
@@ -13,21 +15,14 @@ function State({ width, height, activeState }){
   // Catch 2 birds in 1 stone - GUI-3 and GUI-6
   // How can we display the state data alongside the district data?
   // Ideally we should implement a go back button as well
-    useEffect(()=>{
-        console.log(activeState)
-    },[activeState])
 
-    // Process activeState to only leave numerical values
-    const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, ...popData} = activeState;
-    // popData should be converted to Key/Value pairs of arrays to work w/ D3 
-    const data = Object.keys(popData).map(key => ({
-        key: key,
-        value: popData[key]
-    }));
-
-    useEffect(()=>{
-        console.log(data)
-    },[data])
+  // Process activeState to only leave numerical values
+  const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, ...popData} = activeState;
+  // popData should be converted to Key/Value pairs of arrays to work w/ D3 
+  const data = Object.keys(popData).map(key => ({
+      key: key,
+      value: popData[key]
+  }));
 
   // Y axis is for groups since the barplot is horizontal
   const groups = data.map((d) => d.key);
