@@ -18,7 +18,7 @@ function State({ width, height, activeState }){
     },[activeState])
 
     // Process activeState to only leave numerical values
-    const {NAME, DSEAT, RSEAT, TOTAL, ...popData} = activeState;
+    const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, ...popData} = activeState;
     // popData should be converted to Key/Value pairs of arrays to work w/ D3 
     const data = Object.keys(popData).map(key => ({
         key: key,

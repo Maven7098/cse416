@@ -2,14 +2,14 @@
 
 import express from 'express';
 let router = express.Router();
-import districtGa from './assets/ga/GA-Congress.json' with { type: 'json' };
-import districtIa from './assets/ia/IA-Congress.json' with { type: 'json' };
+import districtGa from './assets/ga/GA-Congress-District.json' with { type: 'json' };
+import districtIa from './assets/ia/IA-Congress-District.json' with { type: 'json' };
 import precinctGa from './assets/ga/GA-Congress-Precinct.json' with { type: 'json' };
 import precinctIa from './assets/ia/IA-Congress-Precinct.json' with { type: 'json' };
 import dataGa from './assets/ga/GA.json' with { type: 'json' };
 import dataIa from './assets/ia/IA.json' with { type: 'json' };
-import ginglesGa from './assets/ga/ga_precinct_output.json' with { type: 'json' };
-import ginglesIa from './assets/ia/ia_precinct_output.json' with { type: 'json' };
+import ginglesGa from './assets/ga/GA-Precinct-Output.json' with { type: 'json' };
+import ginglesIa from './assets/ia/IA-Precinct-Output.json' with { type: 'json' };
 
 // GET - MainMenu
 // Get the image of the 2 states
@@ -35,7 +35,7 @@ router.get('/', async (req,res)=>{
 router.get('/ia/district', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [districtIa,dataIa]
+        const result = [districtIa,precinctIa,dataIa]
         res.send(result)
       } catch (err) {
         res.status(500).send({
@@ -48,7 +48,7 @@ router.get('/ia/district', async (req,res)=>{
 router.get('/ga/district', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [districtGa,dataGa]
+        const result = [districtGa,precinctGa,dataGa]
         res.send(result)
       } catch (err) {
         res.status(500).send({

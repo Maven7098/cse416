@@ -10,13 +10,15 @@ import axios from 'axios';
 
 function Map({ activeState, activeRace, latitude, longitude }){
   const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
+  const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
   const [districtData, setDistrictData] = useState("");
   const [currentState, setCurrentState] = useState("");
 
   useEffect(() => {
       axios.get(`http://localhost:3000/api/${activeState}/district`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
-            setCurrentState(response.data[1])})
+            setPrecinctGeoJsonData(response.data[1])
+            setCurrentState(response.data[2])})
       .catch(error => console.log(error.response.data))
       // If Active State changes, then also reset districtData
       setDistrictData("")
@@ -32,11 +34,11 @@ function Map({ activeState, activeRace, latitude, longitude }){
     const mapRef = useRef(null)
 
   function getColor(d) {
-    return d > 1000000 ? '#800026' :
-           d > 500000  ? '#BD0026' :
-           d > 200000  ? '#E31A1C' :
-           d > 100000  ? '#FC4E2A' :
-           d > 20000   ? '#FD8D3C' :
+    return d > 1000 ? '#800026' :
+           d > 800  ? '#BD0026' :
+           d > 600  ? '#E31A1C' :
+           d > 400  ? '#FC4E2A' :
+           d > 200   ? '#FD8D3C' :
                       '#FFEDA0';
   }
   function getWinner(d) {
@@ -65,7 +67,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
         break;
     }
 
-  function style(feature) {
+  function precinctHeatMap(feature) {
     // Need to find data on which President won which district
     // No third party won any district in Georgia or Iowa, so I only keep 2 values
     let mapRace;
@@ -85,10 +87,17 @@ function Map({ activeState, activeRace, latitude, longitude }){
     return {
         // property type should be chosen later on (after graph rendering is done)
         fillColor: getColor(mapRace),
+        opacity: 0,
+        fillOpacity: 0.7
+    };
+  }
+
+  function districtWindow(feature){
+    return {
         color: getWinner(feature.properties.WINNER),
         weight: 2,
         opacity: 1,
-        fillOpacity: 0.7
+        fillOpacity: 0
     };
   }
 
@@ -116,12 +125,12 @@ function Map({ activeState, activeRace, latitude, longitude }){
     // console.log(bounds);
   }
 
-  const grades = [0, 20000, 100000, 200000, 500000, 1000000];
+  const grades = [0, 200, 400, 600, 800, 1000];
   const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
 
   const width = 960;
   const heightPop = 280;
-  const heightState = 300;
+  const heightState = 260;
 
   return (
     // Load the GeoJSON for the districting map
@@ -141,7 +150,8 @@ function Map({ activeState, activeRace, latitude, longitude }){
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={districtGeoJsonData} style={style} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
+          <GeoJSON data={precinctGeoJsonData} style={precinctHeatMap} key={JSON.stringify(precinctGeoJsonData)} />
+          <GeoJSON data={districtGeoJsonData} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
