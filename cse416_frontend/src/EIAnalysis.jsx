@@ -1,7 +1,5 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
-import { AxisBottom } from "./AxisBottom";
-import { AxisLeft } from "./AxisLeft";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
 
