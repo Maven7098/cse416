@@ -7,7 +7,7 @@ import Axis from "./Axis";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 120 };
 
-function GinglesData ({ width, height, data, race }) {
+function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   console.log(data)
 
   const boundsWidth = width - MARGIN.right - MARGIN.left;
@@ -66,6 +66,9 @@ function GinglesData ({ width, height, data, race }) {
             name: d.UNIQUE_ID,
           })
         }
+        onClick={() => {
+          setActivePrecinct(d.UNIQUE_ID)
+        }}
         onMouseLeave={() => setHovered(null)}
       />
     );

@@ -13,6 +13,10 @@ function GinglesMap({activeState, activeRace, activeStateName}){
     // Right: Gingles Data (GUI-10, GUI-11)
     // Top Right: EI Analysis (GUI-12)
     const [ginglesData, setGinglesData] = useState("");
+    // For GUI-11: Set Active Precinct on parent page
+    // Send them as Props to GinglesData
+    // And Render them on GinglesChart (Rename it to GinglesTable?)
+    const [activePrecinct, setActivePrecinct] = useState("");
 
     useEffect(() => {
         axios.get(`http://localhost:3000/api/${activeState}/gingles`)
@@ -38,14 +42,14 @@ function GinglesMap({activeState, activeRace, activeStateName}){
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
                     <h3>Gingles 2/3 Data</h3>
-                    <GinglesData data={ginglesData} race={activeRace} width={width} height={height} />
+                    <GinglesData data={ginglesData} race={activeRace} width={width} height={height} setActivePrecinct={setActivePrecinct} />
                     {/* Gingles Chart */}
                 </div>
             </div>
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
                     <h3>Gingles 2/3 Table</h3>
-                    <GinglesChart data={ginglesData} race={activeRace}/>
+                    <GinglesChart data={ginglesData} race={activeRace} activePrecinct={activePrecinct} setActivePrecinct={setActivePrecinct}/>
                 </div>
             </div>
         </div>
