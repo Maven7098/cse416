@@ -30,7 +30,9 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
         }
     }
     const mapRef = useRef(null)
-/*
+    
+    // GUI-14 (TODO Next)
+    /*
     function getColor(d) {
     return d > 1000000 ? '#800026' :
            d > 500000  ? '#BD0026' :
@@ -75,7 +77,7 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
             fillOpacity: 0.7
         };
     }
-*/
+    */
     
     const width = 900;
     const eiHeight = 210;

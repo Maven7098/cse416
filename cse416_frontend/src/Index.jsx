@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainNavbar from './Navbar.jsx'
 import Home from "./Home.jsx";
 import MapTab from "./MapTab.jsx";
+import ProposedMapTab from './ProposedMapTab.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 // import NoPage from "./pages/NoPage";
 
@@ -16,6 +16,8 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="iowa" element={<MapTab activeState={"ia"} />} />
           <Route path="georgia" element={<MapTab activeState={"ga"} />} />
+          <Route path="iowa" element={<ProposedMapTab activeState={"ia"} />} />
+          <Route path="georgia" element={<ProposedMapTab activeState={"ga"} />} />
           {/* For any undefined pages, throw 404 error */}
           {/* <Route path="*" element={<NoPage />} /> */}
         </Route>
