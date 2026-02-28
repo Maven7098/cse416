@@ -1,14 +1,38 @@
+// From https://galencasstevens.com/pagination-with-react-bootstrap/
+
+import { useState } from 'react';
+import PaginationHelper from './PaginationHelper.jsx';
+import Table from 'react-bootstrap/Table';
+
 function GinglesChart ({ data, race }) {
     // I guess a simple table will do?
     // total population, population by region type
     // (rural, urban, suburban), minority non-white population, average household
     // income, Republican votes, and Democratic votes
+
+    // TODO Today: Pagination
+    // Divide the charts by 15
+    const linePerPage = 6;
+    const lineCount = data.length;
+    const totalPages = Math.ceil(lineCount / linePerPage);
+    const [paginatedData, setPaginatedData] = useState(
+		data.slice(0, linePerPage)
+	);
+    const [activePage, setActivePage] = useState(1);
+
+    const paginate = (pageNumber) => {
+		const startIndex = (pageNumber - 1) * linePerPage;
+		const endIndex = pageNumber * linePerPage;
+		setActivePage(pageNumber);
+		setPaginatedData(data.slice(startIndex, endIndex));
+	};
+
   return (
     <div>
-         <table width="100%" height= "100%" 
-         style={{fontSize: "smaller"}}>
+         <table width={"100%"} style={{fontSize:"smaller"}}>
             <thead>
             <tr>
+                <th>ID</th>
                 <th>Total Population</th>
                 <th>Urban Population</th>
                 <th>Suburban Population</th>
@@ -23,10 +47,11 @@ function GinglesChart ({ data, race }) {
             </tr>
             </thead>
             {
-                data.map(function(precinct) {
+                paginatedData.map(function(precinct) {
                     return (
-                        <tbody key={precinct.ID}>
+                        <tbody key={precinct.UNIQUE_ID}>
                         <tr>
+                            <td>{precinct.UNIQUE_ID}</td>
                             <td>{precinct.TOTAL}</td>
                             <td>{precinct.URBAN}</td>
                             <td>{precinct.SUBURBAN}</td>
@@ -44,6 +69,13 @@ function GinglesChart ({ data, race }) {
                 })
             }
         </table> 
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <PaginationHelper
+                paginate={paginate}
+                active={activePage}
+                totalPages={totalPages}
+            />
+		</div>
     </div>
   );
 };
