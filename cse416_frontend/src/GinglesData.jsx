@@ -1,8 +1,6 @@
 // from https://www.react-graph-gallery.com/scatter-plot
 
 import * as d3 from "d3";
-import { AxisLeft } from "./AxisLeft";
-import { AxisBottom } from "./AxisBottom";
 import { useState } from "react";
 import Tooltip from "./Tooltip";
 import Axis from "./Axis";
@@ -34,10 +32,7 @@ function GinglesData ({ width, height, data, race }) {
 
   // Scales
   const yScale = d3.scaleLinear().domain([0, 100]).range([boundsHeight, 0]);
-  const xScale = d3
-    .scaleLinear()
-    .domain([0, 100])
-    .range([0, boundsWidth]);
+  const xScale = d3.scaleLinear().domain([0, 100]).range([0, boundsWidth]);
 
   // Build the shapes
   const allShapes = data.map((d, i) => {
@@ -87,7 +82,9 @@ function GinglesData ({ width, height, data, race }) {
           {/* Circles */}
           {allShapes}
         </g>
-        <Axis width={width} height={height} labelX={`${currentRace} Vote %`} labelY="Democratic Vote %" />
+        <Axis width={width} height={height}
+        xScale={xScale} yScale={yScale}
+        labelX={`${currentRace} Vote %`} labelY="Democratic Vote %" />
       </svg>
 
       {/* Tooltip */}

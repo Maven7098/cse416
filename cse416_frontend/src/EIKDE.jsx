@@ -5,9 +5,23 @@ import { AxisLeft } from "./AxisLeft";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
 
-function EIKDE ({ width, height, data }) {
+function EIKDE ({ width, height, data, race }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+  // X Axis: Minority Percent
+  // Y Axis: Vote Share (Democratic)
+  let currentRace = "Black / African American"
+  switch (race) {
+      case "HISPANIC":
+        currentRace = "Hispanic / Latino";
+        break;
+      case "BLACK":
+        currentRace = "Black / African American";
+        break;
+      case "ASIAN":
+        currentRace = "Asian / Asian American";
+        break;
+  }
 
   const xScale = useMemo(() => {
     // const max = Math.max(...data);
@@ -53,13 +67,10 @@ function EIKDE ({ width, height, data }) {
           strokeLinejoin="round"
         />
 
-        {/* Y axis */}
-        <AxisLeft yScale={yScale} pixelsPerTick={40} width={boundsWidth} />
-
-        {/* X axis, use an additional translation to appear at the bottom */}
-        <g transform={`translate(0, ${boundsHeight})`}>
-          <AxisBottom xScale={xScale} pixelsPerTick={40} />
-        </g>
+        {/* Generate X and Y Axis */}
+        <Axis width={width} height={height}
+        xScale={xScale} yScale={yScale}
+        labelX={`${currentRace} - Non ${currentRace} Vote for Democrat`} labelY="Density" />
       </g>
     </svg>
   );

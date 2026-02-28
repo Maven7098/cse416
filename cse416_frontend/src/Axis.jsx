@@ -3,7 +3,7 @@ import * as d3 from "d3";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 120 };
 
-function Axis({ width, height, labelX="", labelY="" }){
+function Axis({ width, height, xScale, yScale, labelX="", labelY="" }){
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
   const axesRef = useRef(null);
@@ -11,14 +11,14 @@ function Axis({ width, height, labelX="", labelY="" }){
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
   // X axis
-  const xScale = useMemo(() => {
-    return d3.scaleLinear().domain([0, 10]).range([0, boundsWidth]);
-  }, [width]);
+  // const xScale = useMemo(() => {
+  //   return d3.scaleLinear().domain([0, 10]).range([0, boundsWidth]);
+  // }, [width]);
 
   // Y axis
-  const yScale = useMemo(() => {
-    return d3.scaleLinear().domain([0, 10]).range([boundsHeight, 0]);
-  }, [height]);
+  // const yScale = useMemo(() => {
+  //   return d3.scaleLinear().domain([0, 10]).range([boundsHeight, 0]);
+  // }, [height]);
 
   // Render the X and Y axis using d3.js, not react
   useEffect(() => {

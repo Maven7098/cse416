@@ -53,13 +53,9 @@ function EIAnalysis ({ width, height, data }) {
           strokeLinejoin="round"
         />
 
-        {/* Y axis */}
-        <AxisLeft yScale={yScale} pixelsPerTick={40} width={boundsWidth} />
-
-        {/* X axis, use an additional translation to appear at the bottom */}
-        <g transform={`translate(0, ${boundsHeight})`}>
-          <AxisBottom xScale={xScale} pixelsPerTick={40} />
-        </g>
+        {/* Generate X and Y Axis */}
+        <Axis width={width} height={height}
+        xScale={xScale} yScale={yScale}/>
       </g>
     </svg>
   );
