@@ -25,9 +25,9 @@ import ensembleIaNonVra from './assets/ia/IA-Ensemble-Data-NonVRA.json' with { t
 // GeoJSON data for district candidates (proposed districts)
 // Until those data are available, they are resting for now
 // import districtGaVra from './assets/ga/GA-Congress-District-VRA.json' with { type: 'json' };
-// import districtGaNonVra from './assets/ga/GA-Congress-District-NonVRA.json' with { type: 'json' };
+import districtGaNonVra from './assets/ga/GA-Congress-District-NonVRA.json' with { type: 'json' };
 // import districtIaVra from './assets/ia/IA-Congress-District-VRA.json' with { type: 'json' };
-// import districtIaNonVra from './assets/ia/IA-Congress-District-NonVRA.json' with { type: 'json' };
+import districtIaNonVra from './assets/ia/IA-Congress-District-NonVRA.json' with { type: 'json' };
 
 // GET - MainMenu
 // Get the image of the 2 states
@@ -153,7 +153,7 @@ router.get('/ia/district-vra', async (req,res)=>{
 router.get('/ia/district-non-vra', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [districtIa,ensembleIaNonVra,boxIaNonVra]
+        const result = [districtIaNonVra,ensembleIaNonVra,boxIaNonVra]
         res.send(result)
       } catch (err) {
         res.status(500).send({
@@ -177,7 +177,7 @@ router.get('/ga/district-vra', async (req,res)=>{
 router.get('/ga/district-non-vra', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [districtGa,ensembleGaNonVra,boxGaNonVra]
+        const result = [districtGaNonVra,ensembleGaNonVra,boxGaNonVra]
         res.send(result)
       } catch (err) {
         res.status(500).send({
@@ -190,7 +190,7 @@ router.get('/ga/district-non-vra', async (req,res)=>{
 router.get('/ia/district-compare', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [districtIa,districtIa,districtIa]
+        const result = [districtIa,districtIa,districtIaNonVra]
         res.send(result)
       } catch (err) {
         res.status(500).send({
@@ -202,7 +202,7 @@ router.get('/ia/district-compare', async (req,res)=>{
 router.get('/ga/district-compare', async (req,res)=>{
     try {
       // Send the GeoJSON file, latitude and longitude
-        const result = [districtGa,districtGa,districtGa]
+        const result = [districtGa,districtGa,districtGaNonVra]
         res.send(result)
       } catch (err) {
         res.status(500).send({

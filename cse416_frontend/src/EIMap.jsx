@@ -111,7 +111,7 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
                     <EIAnalysis data={data} width={width} height={eiHeight} />
                     <h3>EI KDE (Kernel Data) Results</h3>
                     {/* EI KDE Results */}
-                    <EIKDE data={data} width={width} height={eiHeight} />
+                    <EIKDE data={data} width={width} height={eiHeight} race={activeRace}/>
                 </div>
             </div>
         </div>
