@@ -158,11 +158,9 @@ function Map({ activeState, activeRace, latitude, longitude }){
         {/* TODO Today: Use State Data if districtData is empty */}
         {districtData ? (<>
         <button onClick={() => setDistrictData("")}>Go Back to State Information</button>
-         <h1>District Information</h1>
          <Population districtData={districtData} width={width} height={heightPop} />
         </>)
          : (<>
-          <h1>State Information</h1>
           <State activeState={currentState} width={width} height={heightState} />
         </>)
         }

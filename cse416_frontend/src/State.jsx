@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
+import titleCase from './TitleCase.js'
 
 const MARGIN = { top: 0, right: 30, bottom: 30, left: 30 };
 const BAR_PADDING = 0.3;
@@ -20,7 +21,7 @@ function State({ width, height, activeState }){
   const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, ...popData} = activeState;
   // popData should be converted to Key/Value pairs of arrays to work w/ D3 
   const data = Object.keys(popData).map(key => ({
-      key: key,
+      key: titleCase(key),
       value: popData[key]
   }));
 
@@ -118,10 +119,18 @@ function State({ width, height, activeState }){
     <div>
         <h1>{activeState.NAME}</h1>
         <div style={{ display: "flex", alignItems: "center", justifyContent:"space-evenly", flexDirection: "row", textAlign: "center"}}>
-            <h3>Democrats: {activeState.DSEAT}, {activeState.DVOTE}%</h3>
-            <h3>Republicans: {activeState.RSEAT}, {activeState.RVOTE}%</h3>
+            <div style={{flexDirection: "column"}}>
+                <h3>Democrats:</h3>
+                <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.DSEAT}</p>
+                <p style={{marginBottom: "2px"}}>Voter %: {activeState.DVOTE}%</p>
+            </div>
+            <div style={{flexDirection: "column"}}>
+                <h3>Republicans:</h3>
+                <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.RSEAT}</p>
+                <p style={{marginBottom: "2px"}}>Voter %: {activeState.RVOTE}%</p>
+            </div>
         </div>
-        <p>Current Districting Party: {activeState.PARTY}</p>
+        <p style={{margin: "1em"}}>Current Districting Party: {activeState.PARTY}</p>
         <h3>Total Population: {activeState.TOTAL}</h3>
       <svg width={width} height={height}>
         <g

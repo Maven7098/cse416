@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
+import titleCase from './TitleCase.js'
 
 const MARGIN = { top: 0, right: 30, bottom: 30, left: 30 };
 const BAR_PADDING = 0.3;
@@ -23,13 +24,9 @@ function Population({ width, height, districtData }){
     const {ID, AREA, DISTRICT, GEOID, WINNER, REPRESENT, RRACE, WMARGIN, TOTAL, ...popData} = districtData;
     // popData should be converted to Key/Value pairs of arrays to work w/ D3 
     const data = Object.keys(popData).map(key => ({
-        key: key,
+        key: titleCase(key),
         value: popData[key]
     }));
-
-    useEffect(()=>{
-        console.log(data)
-    },[data])
 
   // Y axis is for groups since the barplot is horizontal
   const groups = data.map((d) => d.key);
@@ -135,7 +132,11 @@ function Population({ width, height, districtData }){
           {allShapes}
         </g>
       </svg>
-      <p>This district was won by {districtData.REPRESENT}, who is {districtData.RRACE}, with a margin of {districtData.WMARGIN}</p>
+      <div>
+        <p style={{marginBottom: "2px"}}>Current Representative: {districtData.REPRESENT}</p>
+        <p style={{marginBottom: "2px"}}>Race of Current Representative: {districtData.RRACE}</p>
+        <p style={{marginBottom: "2px"}}>Margin of Victory: {districtData.WMARGIN}</p>
+      </div>
     </div>
   );
 };
