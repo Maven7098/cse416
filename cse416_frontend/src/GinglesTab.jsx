@@ -1,0 +1,48 @@
+import { Tabs, Tab } from 'react-bootstrap';
+import GinglesMap from './GinglesMap';
+import EIMap from './EIMap';
+
+
+function GinglesTab({activeState, activeRace}) {
+  let activeStateName = ""
+  let latitude=0;
+  let longitude=0;
+
+  // Set Current State - Name, Latitude, Longitude
+  // I have initially thought of setting this on the server
+  // But why do we need to do that? Is the latitude or longitude important?
+  switch (activeState) {
+      case 'ia': activeStateName="Iowa"; latitude=41.8780; longitude=-93.0977; break;
+      case 'ga': activeStateName="Georgia"; latitude=33.2478; longitude=-83.4411; break;
+    }
+
+  let currentRace = "Black / African American"
+  switch (activeRace) {
+      case "HISPANIC":
+        currentRace = "Hispanic / Latino"
+        break;
+      case "BLACK":
+        currentRace = "Black / African American"
+        break;
+      case "ASIAN":
+        currentRace = "Asian / Asian American"
+        break;
+    }
+
+  return (
+    <div>
+      <Tabs defaultActiveKey="gingles" id="uncontrolled-tab-example" fill>
+        <Tab eventKey="gingles" title="Gingles Analysis">
+          <GinglesMap activeState={activeState} activeRace={activeRace} activeStateName={activeStateName} />
+        </Tab>
+        <Tab eventKey="ei" title="Ecological Inference">
+          <EIMap activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} activeStateName={activeStateName} />
+        </Tab>
+      </Tabs>
+    </div>
+  );
+
+}
+
+
+export default GinglesTab;
