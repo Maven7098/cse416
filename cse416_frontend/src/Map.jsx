@@ -129,8 +129,8 @@ function Map({ activeState, activeRace, latitude, longitude }){
   const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
 
   const width = 960;
-  const heightPop = 280;
-  const heightState = 260;
+  const heightPop = 270;
+  const heightState = 240;
 
   return (
     // Load the GeoJSON for the districting map
@@ -139,7 +139,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
     <>
-    <div className="leaflet-containerset">
+    <div className="leaflet-containerset" style={{height: "80.3vh"}}>
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
