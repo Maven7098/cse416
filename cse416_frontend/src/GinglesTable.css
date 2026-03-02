@@ -1,0 +1,18 @@
+.fixed-table {
+width: 100%; /* Table takes full container width */
+table-layout: fixed; /* Fix column widths */
+border-collapse: collapse;
+font-size: x-small;
+}
+
+.fixed-table th, 
+.fixed-table td {
+border: 1px solid #ddd;
+padding: 2px;
+overflow: hidden; /* Hide overflow */
+text-overflow: ellipsis; /* Add ellipsis for truncated text */
+}
+.fixed-table td{
+    table-layout: fixed;
+    overflow: hidden;
+}

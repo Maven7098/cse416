@@ -26,3 +26,5 @@ dist-ssr
 # Large files in assets
 assets/ga/*
 assets/ia/*
+# Helper scripts to help preprocessing - not used in actual code
+assets/*.py

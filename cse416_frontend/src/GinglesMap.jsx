@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import GinglesData from './GinglesData.jsx'
-import GinglesChart from './GinglesChart.jsx'
+import GinglesTable from './GinglesTable.jsx'
 
 // Data to be imported from the server
 import axios from 'axios';
@@ -16,7 +16,7 @@ function GinglesMap({activeState, activeRace, activeStateName}){
     // For GUI-11: Set Active Precinct on parent page
     // Send them as Props to GinglesData
     // And Render them on GinglesChart (Rename it to GinglesTable?)
-    const [activePrecinct, setActivePrecinct] = useState("");
+    const [activePrecinct, setActivePrecinct] = useState();
 
     useEffect(() => {
         axios.get(`http://localhost:3000/api/${activeState}/gingles`)
@@ -25,8 +25,8 @@ function GinglesMap({activeState, activeRace, activeStateName}){
         // If Active State changes, then also reset districtData
         }, [activeState]);
     
-    const width = 670;
-    const height = 430;
+    const width = 730;
+    const height = 450;
 
     return (
         // Load the GeoJSON for the districting map
@@ -49,7 +49,7 @@ function GinglesMap({activeState, activeRace, activeStateName}){
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
                     <h3>Gingles 2/3 Table</h3>
-                    <GinglesChart data={ginglesData} race={activeRace} activePrecinct={activePrecinct} setActivePrecinct={setActivePrecinct}/>
+                    <GinglesTable data={ginglesData} race={activeRace} activePrecinct={activePrecinct} setActivePrecinct={setActivePrecinct}/>
                 </div>
             </div>
         </div>
