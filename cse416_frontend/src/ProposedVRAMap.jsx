@@ -47,7 +47,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
     }
 
     const width = 900;
-    const proposedHeight = 170;
+    const proposedHeight = 200;
 
   return (
     // Load the GeoJSON for the districting map
@@ -56,7 +56,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
     <>
-    <div className="leaflet-containerset">
+    <div className="leaflet-containerset-big">
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
         <h1>Select District</h1>

@@ -46,7 +46,7 @@ function CompareMap({ activeState, latitude, longitude }){
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
     <>
-    <div className="leaflet-containerset">
+    <div className="leaflet-containerset-big">
         <h3 style={{margin: "0 0.5em"}}> Compare Districts: </h3>
         <Dropdown>
             <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary'>

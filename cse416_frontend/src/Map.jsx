@@ -138,8 +138,9 @@ function Map({ activeState, activeRace, latitude, longitude }){
     // I will use GA for the prototype, although this may or may not be carried over to the final product
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
-    <>
-    <div className="leaflet-containerset" style={{height: "80.3vh"}}>
+    <div style={{paddingTop: "5.7vh"}}>
+      <h1>{currentState ? currentState.NAME : "State Loading"}</h1>
+    <div className="leaflet-containerset">
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
@@ -167,7 +168,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
         
       </div>
     </div>
-    </>
+    </div>
   );
 };
 
