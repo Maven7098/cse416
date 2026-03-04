@@ -120,6 +120,11 @@ function Population({ width, height, districtData }){
     <div>
         <h1>District No.: {districtData.DISTRICT}</h1>
         <h3>District GeoID: {districtData.GEOID}</h3>
+      <div>
+        <p style={{margin: "2px"}}>Current Representative: {districtData.REPRESENT}</p>
+        <p style={{margin: "2px"}}>Race of Current Representative: {districtData.RRACE}</p>
+        <p style={{margin: "2px"}}>Margin of Victory: {districtData.WMARGIN}</p>
+      </div>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}
@@ -130,11 +135,6 @@ function Population({ width, height, districtData }){
           {allShapes}
         </g>
       </svg>
-      <div>
-        <p style={{marginBottom: "2px"}}>Current Representative: {districtData.REPRESENT}</p>
-        <p style={{marginBottom: "2px"}}>Race of Current Representative: {districtData.RRACE}</p>
-        <p style={{marginBottom: "2px"}}>Margin of Victory: {districtData.WMARGIN}</p>
-      </div>
     </div>
   );
 };

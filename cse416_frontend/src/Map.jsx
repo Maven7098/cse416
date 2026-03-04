@@ -98,20 +98,22 @@ function Map({ activeState, activeRace, latitude, longitude }){
 
   function onEachFeature(feature, layer) {
     if (feature.properties) {
-        layer.bindPopup(feature.properties.DISTRICT);
+        layer.bindPopup(`District No.: ${feature.properties.DISTRICT}`);
     }
     // Send properties of the feature to Population.jsx
-    layer.on("click", (e) => {
+    layer.on("click", function (e) {
       setDistrictData(feature.properties);
+      this.closePopup();
     });
 
-    layer.on("mouseover", (e) => {
-      layer.setStyle({weight: 6});
-        layer.on("mouseout", (e) => {
-        // Start by reverting the style back
-        layer.setStyle({weight: 2});
-      });
-    })
+    layer.on('mouseover', function (e) {
+        layer.setStyle({weight:6})
+        this.openPopup();
+    });
+    layer.on('mouseout', function (e) {
+        layer.setStyle({weight:2})
+        this.closePopup();
+    });
   }
 
   const grades = [0, 200, 400, 600, 800, 1000];
