@@ -47,7 +47,7 @@ function MapTab({activeState}) {
         </Dropdown>
       </div>
 
-      <Tabs defaultActiveKey="info" id="uncontrolled-tab-example" fill>
+      <Tabs className='customClass' defaultActiveKey="info" id="uncontrolled-tab-example" fill>
         <Tab eventKey="info" title="State Information">
           <Map activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} />
         </Tab>

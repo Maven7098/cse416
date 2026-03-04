@@ -1,0 +1,17 @@
+.nav{
+    --bs-nav-link-color: #000 !important;
+    --bs-nav-link-hover-color: #000 !important;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #000 !important;
+    font-weight: bolder;
+}
+
+.nav-link.active{
+    font-weight: bolder;
+}
+
+.row{
+    --bs-gutter-x: 0 !important;
+}
