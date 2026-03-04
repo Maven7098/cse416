@@ -29,7 +29,6 @@ function AxisBottomCategoric({ xScale }){
           <text
             key={value}
             style={{
-              fontSize: "10px",
               textAnchor: "middle",
               transform: "translateY(20px)",
             }}

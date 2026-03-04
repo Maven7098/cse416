@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
 
-const MARGIN = { top: 0, right: 30, bottom: 30, left: 30 };
+const MARGIN = { top: 0, right: 60, bottom: 30, left: 60 };
 const BAR_PADDING = 0.3;
 
 function EnsembleSplits({ width, height, data }){
@@ -61,16 +61,14 @@ function EnsembleSplits({ width, height, data }){
           y={yScale(d.value) - 10}
           textAnchor="middle"
           alignmentBaseline="central"
-          fontSize={12}
         >
           {d.value}
         </text>
         <text
           x={x + xScale.bandwidth() / 2}
-          y={boundsHeight + 10}
+          y={boundsHeight + 20}
           textAnchor="middle"
           alignmentBaseline="central"
-          fontSize={12}
         >
           {d.name}
         </text>
@@ -93,7 +91,6 @@ function EnsembleSplits({ width, height, data }){
         y={yScale(value)}
         textAnchor="middle"
         alignmentBaseline="central"
-        fontSize={9}
         stroke="#808080"
         opacity={0.8}
       >

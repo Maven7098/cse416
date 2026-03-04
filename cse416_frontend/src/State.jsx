@@ -66,16 +66,14 @@ function State({ width, height, activeState }){
           y={yScale(d.value) - 10}
           textAnchor="middle"
           alignmentBaseline="central"
-          fontSize={12}
         >
           {d.value}
         </text>
         <text
           x={x + xScale.bandwidth() / 2}
-          y={boundsHeight + 10}
+          y={boundsHeight + 20}
           textAnchor="middle"
           alignmentBaseline="central"
-          fontSize={12}
         >
           {d.name}
         </text>
@@ -98,7 +96,6 @@ function State({ width, height, activeState }){
         y={yScale(value)}
         textAnchor="middle"
         alignmentBaseline="central"
-        fontSize={9}
         stroke="#808080"
         opacity={0.8}
       >

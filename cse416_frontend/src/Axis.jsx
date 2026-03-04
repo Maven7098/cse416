@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 
-const MARGIN = { top: 30, right: 30, bottom: 50, left: 120 };
+const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
 function Axis({ width, height, xScale, yScale, labelX="", labelY="" }){
   // Layout. The div size is set by the given props.
@@ -31,7 +31,6 @@ function Axis({ width, height, xScale, yScale, labelX="", labelY="" }){
       .call(xAxisGenerator);
     svgElement
       .append("text")
-      .attr("font-size", 12)
       .attr("text-anchor", "middle")
       .attr("x", boundsWidth / 2)
       .attr("y", boundsHeight + 40)
@@ -42,7 +41,6 @@ function Axis({ width, height, xScale, yScale, labelX="", labelY="" }){
         .call(yAxisGenerator);
     svgElement
       .append("text")
-      .attr("font-size", 12)
       .attr("text-anchor", "middle")
       .attr("x", "-6em")
       .attr("y", boundsHeight / 2)

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import * as d3 from "d3";
 import Axis from "./Axis";
 
-const MARGIN = { top: 30, right: 30, bottom: 50, left: 120 };
+const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
 function EIAnalysis ({ width, height, data }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;

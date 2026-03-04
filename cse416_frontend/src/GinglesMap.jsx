@@ -26,7 +26,7 @@ function GinglesMap({activeState, activeRace, activeStateName}){
         }, [activeState]);
     
     const width = 730;
-    const height = 420;
+    const height = 580;
 
     return (
         // Load the GeoJSON for the districting map

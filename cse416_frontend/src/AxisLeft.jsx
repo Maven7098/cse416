@@ -31,7 +31,6 @@ function AxisLeft({ yScale, pixelsPerTick }){
           <text
             key={value}
             style={{
-              fontSize: "10px",
               textAnchor: "middle",
               transform: "translateX(-20px)",
             }}

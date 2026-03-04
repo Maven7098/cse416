@@ -12,7 +12,7 @@ function GinglesTable ({ data, race, activePrecinct }) {
 
     // TODO Today: Pagination
     // Divide the charts by 15
-    const linePerPage = 9;
+    const linePerPage = 14;
     const lineCount = data.length;
     const totalPages = Math.ceil(lineCount / linePerPage);
     const [paginatedData, setPaginatedData] = useState(
