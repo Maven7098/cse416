@@ -1,23 +1,74 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import MainNavbar from './Navbar.jsx'
 import Home from "./Home.jsx";
-import MapTab from "./MapTab.jsx";
-import ProposedMapTab from './ProposedMapTab.jsx'
+import MapNavbar from "./MabNavbar.jsx";
+import Map from "./Map.jsx";
+import GinglesTab from "./GinglesTab.jsx";
+import ProposedNavbar from './ProposedNavbar.jsx'
+import ProposedVRAMap from './ProposedVRAMap.jsx'
+import CompareMap from "./CompareMap.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // import NoPage from "./pages/NoPage";
 
 export default function App() {
+  const [activeRace, setActiveRace] = useState("BLACK")
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainNavbar />}>
           <Route index element={<Home />} />
-          <Route path="iowa" element={<MapTab activeState={"ia"} />} />
-          <Route path="georgia" element={<MapTab activeState={"ga"} />} />
-          <Route path="iowa-proposed" element={<ProposedMapTab activeState={"ia"} />} />
-          <Route path="georgia-proposed" element={<ProposedMapTab activeState={"ga"} />} />
+          <Route path="iowa" element={<>
+            <MapNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <Map activeState="ia" activeRace={activeRace} latitude={41.8780} longitude={-93.0977} />
+            </>} />
+          <Route path="georgia" element={<>
+            <MapNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <Map activeState="ga" activeRace={activeRace} latitude={33.2478} longitude={-83.4411} />
+            </>} />
+          <Route path="iowa/polarization" element={<>
+            <MapNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <GinglesTab activeState="ia" activeRace={activeRace} latitude={41.8780} longitude={-93.0977} />
+          </>} />
+          <Route path="georgia/polarization" element={<>
+            <MapNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <GinglesTab activeState="ga" activeRace={activeRace} latitude={33.2478} longitude={-83.4411} />
+          </>} />
+          <Route path="iowa/proposed" element={<>
+            <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <ProposedVRAMap activeState="ia" activeRace={activeRace} mode="vra" latitude={41.8780} longitude={-93.0977} />
+          </>} />
+          <Route path="georgia/proposed" element={<>
+            <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <ProposedVRAMap activeState="ga" activeRace={activeRace} mode="vra" latitude={33.2478} longitude={-83.4411} />
+          </>} />
+          <Route path="iowa/proposed/vra" element={<>
+            <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <ProposedVRAMap activeState="ia" activeRace={activeRace} mode="vra" latitude={41.8780} longitude={-93.0977} />
+          </>} />
+          <Route path="georgia/proposed/vra" element={<>
+            <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <ProposedVRAMap activeState="ga" activeRace={activeRace} mode="vra" latitude={33.2478} longitude={-83.4411} />
+          </>} />
+          <Route path="iowa/proposed/nonvra" element={<>
+            <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <ProposedVRAMap activeState="ia" activeRace={activeRace} mode="non-vra" latitude={41.8780} longitude={-93.0977} />
+          </>} />
+          <Route path="georgia/proposed/nonvra" element={<>
+            <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <ProposedVRAMap activeState="ga" activeRace={activeRace} mode="non-vra" latitude={33.2478} longitude={-83.4411} />
+          </>} />
+          <Route path="iowa/proposed/compare" element={<>
+            <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <CompareMap activeState="ia" activeRace={activeRace} activeStateName="Iowa" mode="nonvra" latitude={41.8780} longitude={-93.0977} />
+          </>} />
+          <Route path="georgia/proposed/compare" element={<>
+            <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
+            <CompareMap activeState="ga" activeRace={activeRace} activeStateName="Georgia" mode="nonvra" latitude={33.2478} longitude={-83.4411} />
+          </>} />
           {/* For any undefined pages, throw 404 error */}
           {/* <Route path="*" element={<NoPage />} /> */}
         </Route>

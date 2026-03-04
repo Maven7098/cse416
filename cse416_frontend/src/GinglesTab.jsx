@@ -7,18 +7,11 @@ import EIMap from './EIMap';
 import './CustomTab.css'
 
 
-function GinglesTab({activeState, activeRace}) {
-  let activeStateName = ""
-  let latitude=0;
-  let longitude=0;
-
+function GinglesTab({activeState, activeRace, latitude, longitude}) {
   // Set Current State - Name, Latitude, Longitude
   // I have initially thought of setting this on the server
   // But why do we need to do that? Is the latitude or longitude important?
-  switch (activeState) {
-      case 'ia': activeStateName="Iowa"; latitude=41.8780; longitude=-93.0977; break;
-      case 'ga': activeStateName="Georgia"; latitude=33.2478; longitude=-83.4411; break;
-    }
+  
   
     return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="first" fluid>
@@ -35,8 +28,8 @@ function GinglesTab({activeState, activeRace}) {
         </Col>
         <Col lg={true}>
           <Tab.Content>
-            <Tab.Pane eventKey="gingles"><GinglesMap activeState={activeState} activeRace={activeRace} activeStateName={activeStateName} /></Tab.Pane>
-            <Tab.Pane eventKey="ei"><EIMap activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} activeStateName={activeStateName} /></Tab.Pane>
+            <Tab.Pane eventKey="gingles"><GinglesMap activeState={activeState} activeRace={activeRace} activeStateName={activeState.NAME} /></Tab.Pane>
+            <Tab.Pane eventKey="ei"><EIMap activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} activeStateName={activeState.NAME} /></Tab.Pane>
           </Tab.Content>
         </Col>
       </Row>
