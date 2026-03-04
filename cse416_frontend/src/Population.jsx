@@ -63,7 +63,7 @@ function Population({ width, height, districtData }){
           height={yScale.bandwidth()}
           opacity={0.7}
           stroke="#9d174d"
-          fill="#9d174d"
+          fill="#f9efc4"
           fillOpacity={0.3}
           strokeWidth={1}
           rx={1}
@@ -73,7 +73,6 @@ function Population({ width, height, districtData }){
           y={y + yScale.bandwidth() / 2}
           textAnchor="end"
           alignmentBaseline="central"
-          fontSize={12}
           opacity={xScale(d.value) > 90 ? 1 : 0} // hide label if bar is not wide enough
         >
           {d.value}
@@ -83,7 +82,6 @@ function Population({ width, height, districtData }){
           y={y + yScale.bandwidth() / 2}
           textAnchor="start"
           alignmentBaseline="central"
-          fontSize={12}
         >
           {d.key}
         </text>

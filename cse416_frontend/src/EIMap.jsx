@@ -79,7 +79,7 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
     }
     */
     
-    const width = 900;
+    const width = 880;
     const eiHeight = 200;
 
     return (
@@ -89,7 +89,6 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
         // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
         // in accordance with the Navbar
     <div>
-        <h1>Racial Polarization status of {activeStateName}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
                 <h1>Select Precinct</h1>

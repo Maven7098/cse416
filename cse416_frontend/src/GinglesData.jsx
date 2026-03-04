@@ -52,7 +52,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
     return (
       <circle
         key={i}
-        r={8}
+        r={4}
         cx={xScale(100 * (activeRace / d.TOTAL))}
         cy={yScale(100 * (d.DEMOCRATIC / d.TOTAL))}
         stroke={(d.DEMOCRATIC > d.REPUBLICAN ? "#0000ff" : "#ff0000")}

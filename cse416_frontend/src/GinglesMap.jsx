@@ -36,7 +36,6 @@ function GinglesMap({activeState, activeRace, activeStateName}){
         // in accordance with the Navbar
     <div>
         {ginglesData ? <>
-        <h1>Racial Polarization status of {activeStateName}</h1>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>

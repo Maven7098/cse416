@@ -56,7 +56,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
     <>
-    <div className="leaflet-containerset-big">
+    <div className="leaflet-containerset">
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
         <h1>Select District</h1>
