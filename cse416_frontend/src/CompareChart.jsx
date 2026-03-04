@@ -19,8 +19,8 @@ function CompareChart({ activeState, activeRace, currentMode }){
   let districtOneName = "District 1"
   let districtTwoName = "District 2"
 
-  const width = 450;
-  const proposedHeight = 200;
+  const width = 560;
+  const proposedHeight = 240;
 
     // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {

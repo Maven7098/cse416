@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import MainNavbar from './Navbar.jsx'
 import Home from "./Home.jsx";
-import MapNavbar from "./MabNavbar.jsx";
+import MapNavbar from "./MapNavbar.jsx";
 import Map from "./Map.jsx";
 import GinglesTab from "./GinglesTab.jsx";
 import ProposedNavbar from './ProposedNavbar.jsx'

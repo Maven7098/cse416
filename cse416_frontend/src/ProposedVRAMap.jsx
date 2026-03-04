@@ -47,7 +47,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
     }
 
     const width = 900;
-    const proposedHeight = 200;
+    const proposedHeight = 255;
 
   return (
     // Load the GeoJSON for the districting map
@@ -59,7 +59,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
     <div className="leaflet-containerset">
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
-        <h1>Select District</h1>
+        <h3>Proposed District Map</h3>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
         zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${mode}`}
         whenReady={() => resizeMap(mapRef)}>
@@ -73,7 +73,6 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
       <div className='leaflet-container-big'>
         <div style={{display: 'flex', flexDirection: 'column'}}>
           {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-          <h3>Ensemble Splits</h3>
           <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>
           {/* GUI-17: Display Box & Whisker Data */}
           <h3>Box and Whisker Data</h3>

@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
 import titleCase from './TitleCase.js'
 
-const MARGIN = { top: 0, right: 30, bottom: 30, left: 30 };
+const MARGIN = { top: 0, right: 60, bottom: 30, left: 60 };
 const BAR_PADDING = 0.3;
 
 function State({ width, height, activeState }){
@@ -21,44 +21,40 @@ function State({ width, height, activeState }){
   const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, ...popData} = activeState;
   // popData should be converted to Key/Value pairs of arrays to work w/ D3 
   const data = Object.keys(popData).map(key => ({
-      key: titleCase(key),
+      name: titleCase(key),
       value: popData[key]
   }));
 
-  // Y axis is for groups since the barplot is horizontal
-  const groups = data.map((d) => d.key);
-  const yScale = useMemo(() => {
-    return d3
-      .scaleBand()
-      .domain(groups)
-      .range([0, boundsHeight])
-      .padding(BAR_PADDING);
-  }, [data, height]);
+  // X axis is for groups since the barplot is vertical
+  const groups = data.map((d) => d.name);
+  const xScale = d3
+    .scaleBand()
+    .domain(groups)
+    .range([0, boundsWidth])
+    .padding(BAR_PADDING);
 
-  // X axis
-  const xScale = useMemo(() => {
-    const [min, max] = d3.extent(data.map((d) => d.value));
-    return d3
-      .scaleLinear()
-      .domain([0, max || 10])
-      .range([0, boundsWidth]);
-  }, [data, width]);
+  // Y axis
+  const max = d3.max(data.map((d) => d.value)) ?? 10;
+  const yScale = d3
+    .scaleLinear()
+    .domain([max * 1.2, 0])
+    .range([0, boundsHeight]);
 
   // Build the shapes
   const allShapes = data.map((d, i) => {
-    const y = yScale(d.key);
-    if (y === undefined) {
+    const x = xScale(d.name);
+    if (x === undefined) {
       return null;
     }
 
     return (
       <g key={i}>
         <rect
-          x={xScale(0)}
-          y={yScale(d.key)}
-          width={xScale(d.value)}
-          height={yScale.bandwidth()}
-          opacity={0.7}
+          x={x}
+          y={yScale(d.value)}
+          width={xScale.bandwidth()}
+          height={boundsHeight - yScale(d.value)}
+          opacity={0.9}
           stroke="#9d174d"
           fill="#f9efc4"
           fillOpacity={0.3}
@@ -66,52 +62,50 @@ function State({ width, height, activeState }){
           rx={1}
         />
         <text
-          x={xScale(d.value) - 7}
-          y={y + yScale.bandwidth() / 2}
-          textAnchor="end"
+          x={x + xScale.bandwidth() / 2}
+          y={yScale(d.value) - 10}
+          textAnchor="middle"
           alignmentBaseline="central"
-          opacity={xScale(d.value) > 90 ? 1 : 0} // hide label if bar is not wide enough
+          fontSize={12}
         >
           {d.value}
         </text>
         <text
-          x={xScale(0) + 7}
-          y={y + yScale.bandwidth() / 2}
-          textAnchor="start"
+          x={x + xScale.bandwidth() / 2}
+          y={boundsHeight + 10}
+          textAnchor="middle"
           alignmentBaseline="central"
+          fontSize={12}
         >
-          {d.key}
+          {d.name}
         </text>
       </g>
     );
   });
 
-  const grid = xScale
-    .ticks(5)
-    .slice(1)
-    .map((value, i) => (
-      <g key={i}>
-        <line
-          x1={xScale(value)}
-          x2={xScale(value)}
-          y1={0}
-          y2={boundsHeight}
-          stroke="#808080"
-          opacity={0.2}
-        />
-        <text
-          x={xScale(value)}
-          y={boundsHeight + 10}
-          textAnchor="middle"
-          alignmentBaseline="central"
-          fontSize={9}
-          stroke="#808080"
-          opacity={0.8}
-        >
-          {value}
-        </text>
-      </g>
-    ));
+  const grid = yScale.ticks(5).map((value, i) => (
+    <g key={i}>
+      <line
+        x1={0}
+        x2={boundsWidth}
+        y1={yScale(value)}
+        y2={yScale(value)}
+        stroke="#808080"
+        opacity={0.2}
+      />
+      <text
+        x={-10}
+        y={yScale(value)}
+        textAnchor="middle"
+        alignmentBaseline="central"
+        fontSize={9}
+        stroke="#808080"
+        opacity={0.8}
+      >
+        {value}
+      </text>
+    </g>
+  ));
 
   return (
     <div>
