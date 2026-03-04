@@ -24,14 +24,14 @@ function Map({ activeState, activeRace, latitude, longitude }){
       setDistrictData("")
   }, [activeState]);
 
-    const resizeMap = (mapRef) => {
-      const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-      const container = document.getElementById('map-container-district')
-      if (container) {
-        resizeObserver.observe(container)
-      }
+  const resizeMap = (mapRef) => {
+    const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
+    const container = document.getElementById('map-container-district')
+    if (container) {
+      resizeObserver.observe(container)
     }
-    const mapRef = useRef(null)
+  }
+  const mapRef = useRef(null)
 
   function getColor(d) {
     return d > 1000 ? '#800026' :
@@ -47,11 +47,6 @@ function Map({ activeState, activeRace, latitude, longitude }){
             case 'D': return "#0000ff";
     }
   }
-
-  var highlightStyle = {
-    weight: 6
-  };
-
 
   // "Softening" the interface - No longer using all caps
   let currentRace = "Black / African American"
@@ -88,7 +83,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
         // property type should be chosen later on (after graph rendering is done)
         fillColor: getColor(mapRace),
         opacity: 0,
-        fillOpacity: 0.7
+        fillOpacity: 0.5
     };
   }
 
@@ -107,22 +102,16 @@ function Map({ activeState, activeRace, latitude, longitude }){
     }
     // Send properties of the feature to Population.jsx
     layer.on("click", (e) => {
-      handleClick(e, layer);
       setDistrictData(feature.properties);
     });
 
     layer.on("mouseover", (e) => {
-      layer.setStyle(highlightStyle);
+      layer.setStyle({weight: 6});
         layer.on("mouseout", (e) => {
         // Start by reverting the style back
         layer.setStyle({weight: 2});
       });
     })
-  }
-  function handleClick(event, layer) {
-    const bounds = layer.get
-    // Send properties of tBounds();
-    // console.log(bounds);
   }
 
   const grades = [0, 200, 400, 600, 800, 1000];
@@ -138,36 +127,35 @@ function Map({ activeState, activeRace, latitude, longitude }){
     // I will use GA for the prototype, although this may or may not be carried over to the final product
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
-    <div style={{paddingTop: "5.7vh"}}>
-      <h1>{currentState ? currentState.NAME : "State Loading"}</h1>
-    <div className="leaflet-containerset">
-      <div className='leaflet-container-big'>
-        <h1>Select District</h1>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
-        zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
-        whenReady={() => resizeMap(mapRef)}>
-          <Legend grades={grades} colors={colors} title={currentRace}/>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <GeoJSON data={precinctGeoJsonData} style={precinctHeatMap} key={JSON.stringify(precinctGeoJsonData)} />
-          <GeoJSON data={districtGeoJsonData} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
-        </MapContainer>
+    <div>
+      <div className="leaflet-containerset">
+        <div className='leaflet-container-big'>
+          <h1>Select District</h1>
+          <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
+          zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
+          whenReady={() => resizeMap(mapRef)}>
+            <Legend grades={grades} colors={colors} title={currentRace}/>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <GeoJSON data={precinctGeoJsonData} style={precinctHeatMap} key={JSON.stringify(precinctGeoJsonData)} />
+            <GeoJSON data={districtGeoJsonData} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
+          </MapContainer>
+        </div>
+        <div className='leaflet-container-big'>
+          {/* TODO Today: Use State Data if districtData is empty */}
+          {districtData ? (<>
+          <button onClick={() => setDistrictData("")}>Go Back to State Information</button>
+          <Population districtData={districtData} width={width} height={heightPop} />
+          </>)
+          : (<>
+            <State activeState={currentState} width={width} height={heightState} />
+          </>)
+          }
+          
+        </div>
       </div>
-      <div className='leaflet-container-big'>
-        {/* TODO Today: Use State Data if districtData is empty */}
-        {districtData ? (<>
-        <button onClick={() => setDistrictData("")}>Go Back to State Information</button>
-         <Population districtData={districtData} width={width} height={heightPop} />
-        </>)
-         : (<>
-          <State activeState={currentState} width={width} height={heightState} />
-        </>)
-        }
-        
-      </div>
-    </div>
     </div>
   );
 };

@@ -3,6 +3,10 @@
 import express from 'express';
 let router = express.Router();
 
+// Home Menu
+import ga from './assets/ga/georgia.json' with { type: 'json' };
+import ia from './assets/ia/iowa.json' with { type: 'json' };
+
 // Part 1: Current Districts
 import districtGa from './assets/ga/GA-Congress-District.json' with { type: 'json' };
 import districtIa from './assets/ia/IA-Congress-District.json' with { type: 'json' };
@@ -33,7 +37,7 @@ import districtIaNonVra from './assets/ia/IA-Congress-District-NonVRA.json' with
 // Get the image of the 2 states
 router.get('/', async (req,res)=>{
     try {
-        const result = ["http://localhost:3000/assets/ia/iowa.png","http://localhost:3000/assets/ga/georgia.png"]
+        const result = [ia,ga]
         res.send(result)
       } catch (err) {
         res.status(500).send({
