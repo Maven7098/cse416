@@ -47,8 +47,8 @@ function Home() {
     }
 
     layer.on('click', function (e) {
-      if(feature.properties.NAME === "Iowa"){ navigate('/iowa') }
-      if(feature.properties.NAME === "Georgia"){ navigate('/georgia') }
+      if(feature.properties.NAME === "Iowa - Non Pre-Clearance State"){ navigate('/iowa') }
+      if(feature.properties.NAME === "Georgia - Pre-Clearance State"){ navigate('/georgia') }
     });
 
     layer.on('mouseover', function (e) {

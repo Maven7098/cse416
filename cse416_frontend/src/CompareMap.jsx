@@ -1,19 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import { Tabs, Tab, Dropdown } from 'react-bootstrap';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import axios from 'axios';
 
-function CompareMap({ activeState, latitude, longitude }){
+function CompareMap({ activeState, currentMode, latitude, longitude }){
   const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
   const [proposedGeoJsonDataVra, setProposedGeoJsonDataVra] = useState("");
   const [proposedGeoJsonDataNonVra, setProposedGeoJsonDataNonVra] = useState("");
   const [districtOne, setDistrictOne] = useState("");
   const [districtTwo, setDistrictTwo] = useState("");
-  const [currentMode, setCurrentMode] = useState("Select a Comparison Option");
+  let districtOneName = "District 1"
+  let districtTwoName = "District 2"
 
-    // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
+  // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
       axios.get(`http://localhost:3000/api/${activeState}/district-compare`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
@@ -21,6 +21,35 @@ function CompareMap({ activeState, latitude, longitude }){
             setProposedGeoJsonDataNonVra(response.data[2])})
       .catch(error => console.log(error.response.data))
   }, [activeState]);
+
+  // Switch District #1 and #2 based on current Mode
+  useEffect(() => {
+    switch (currentMode) {
+    case "Current / Proposed-VRA-Compliant":
+      setDistrictOne(districtGeoJsonData);
+      districtOneName = "Current District"
+      setDistrictTwo(proposedGeoJsonDataVra);
+      districtTwoName = "Proposed District (VRA Compliant)"
+      break;
+    case "Current / Proposed-Race-Blind":
+      setDistrictOne(districtGeoJsonData);
+      districtOneName = "Current District"
+      setDistrictTwo(proposedGeoJsonDataNonVra);
+      districtTwoName = "Proposed District (Race Blind)"
+      break;
+    case "Proposed-VRA-Compliant / Proposed-Race-Blind":
+      setDistrictOne(proposedGeoJsonDataVra);
+      districtOneName = "Proposed District (VRA Compliant)"
+      setDistrictTwo(proposedGeoJsonDataNonVra);
+      districtTwoName = "Proposed District (Race Blind)"
+      break;
+    default:
+      setDistrictOne("");
+      districtOneName = "District 1"
+      setDistrictTwo("");
+      districtTwoName = "District 2"
+    }
+  }, [currentMode])
 
     const resizeMapOne = (mapRefOne) => {
       const resizeObserverOne = new ResizeObserver(() => mapRefOne.current?.invalidateSize())
@@ -45,29 +74,10 @@ function CompareMap({ activeState, latitude, longitude }){
     // I will use GA for the prototype, although this may or may not be carried over to the final product
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
-    <>
     <div className="leaflet-containerset">
-        <h3 style={{margin: "0 0.5em"}}> Compare Districts: </h3>
-        <Dropdown>
-            <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary'>
-            {currentMode}
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-            <Dropdown.Item onClick={() => {setDistrictOne(districtGeoJsonData); setDistrictTwo(proposedGeoJsonDataVra);
-              setCurrentMode("Current / Proposed-VRA-Compliant")
-            }}>Current / Proposed-VRA-Compliant</Dropdown.Item>
-            <Dropdown.Item onClick={() => {setDistrictOne(districtGeoJsonData); setDistrictTwo(proposedGeoJsonDataNonVra)
-              setCurrentMode("Current / Proposed-Race-Blind")
-            }}>Current / Proposed-Race-Blind</Dropdown.Item>
-            <Dropdown.Item onClick={() => {setDistrictOne(proposedGeoJsonDataVra); setDistrictTwo(proposedGeoJsonDataNonVra)
-              setCurrentMode("Proposed-VRA-Compliant / Proposed-Race-Blind")
-            }}>Proposed-VRA-Compliant / Proposed-Race-Blind</Dropdown.Item>
-            </Dropdown.Menu>
-        </Dropdown>
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
-        <h1>District One</h1>
+        <h3>{districtOneName}</h3>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtOne)}
         zoom={7} className="leaflet-container" ref={mapRefOne} id={'map-container-district-one'}
         whenReady={() => resizeMapOne(mapRefOne)}>
@@ -79,7 +89,7 @@ function CompareMap({ activeState, latitude, longitude }){
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
-        <h1>District Two</h1>
+        <h3>{districtTwoName}</h3>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtTwo)}
         zoom={7} className="leaflet-container" ref={mapRefTwo} id={'map-container-district-two'}
         whenReady={() => resizeMapTwo(mapRefTwo)}>
@@ -91,7 +101,6 @@ function CompareMap({ activeState, latitude, longitude }){
         </MapContainer>
       </div>
     </div>
-    </>
   );
 };
 

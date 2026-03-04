@@ -32,6 +32,10 @@ import ensembleIaNonVra from './assets/ia/IA-Ensemble-Data-NonVRA.json' with { t
 import districtGaNonVra from './assets/ga/GA-Congress-District-NonVRA.json' with { type: 'json' };
 // import districtIaVra from './assets/ia/IA-Congress-District-VRA.json' with { type: 'json' };
 import districtIaNonVra from './assets/ia/IA-Congress-District-NonVRA.json' with { type: 'json' };
+import boxGaCurrent from './assets/ga/GA-Box-Data-Current.json' with { type:'json' };
+import boxIaCurrent from './assets/ia/IA-Box-Data-Current.json' with { type:'json' };
+import ensembleGaCurrent from './assets/ga/GA-Ensemble-Data-Current.json' with { type: 'json' };
+import ensembleIaCurrent from './assets/ia/IA-Ensemble-Data-Current.json' with { type: 'json' };
 
 // GET - MainMenu
 // Get the image of the 2 states
@@ -215,5 +219,30 @@ router.get('/ga/district-compare', async (req,res)=>{
         })
       }
 });
+router.get('/ia/district-compare-chart', async (req,res)=>{
+    try {
+      // Send the GeoJSON file, latitude and longitude
+        const result = [ensembleIaCurrent, boxIaCurrent, ensembleIaVra, boxIaVra, ensembleIaNonVra, boxIaNonVra]
+        res.send(result)
+      } catch (err) {
+        res.status(500).send({
+          success: false,
+          error: err,
+        })
+      }
+});
+router.get('/ga/district-compare-chart', async (req,res)=>{
+    try {
+      // Send the GeoJSON file, latitude and longitude
+        const result = [ensembleGaCurrent, boxGaCurrent, ensembleGaVra, boxGaVra, ensembleGaNonVra, boxGaNonVra]
+        res.send(result)
+      } catch (err) {
+        res.status(500).send({
+          success: false,
+          error: err,
+        })
+      }
+});
+  
 
 export default router;

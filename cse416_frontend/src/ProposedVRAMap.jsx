@@ -20,7 +20,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
       .catch(error => console.log(error.response.data))
       // If Active State changes, then also reset districtData
       setDistrictGeoJsonData("")
-  }, [activeState]);
+  }, [activeState, mode]);
 
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
@@ -72,12 +72,12 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
       </div>
       <div className='leaflet-container-big'>
         <div style={{display: 'flex', flexDirection: 'column'}}>
-            {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-            <h3>Ensemble Splits</h3>
-            <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>
-            {/* GUI-17: Display Box & Whisker Data */}
-            <h3>Box and Whisker Data</h3>
-            <BoxandWhiskerChart data={boxandWhiskerData} width={width} height={proposedHeight}/>
+          {/* GUI-16: Display Ensemble Splits in Bar Chart */}
+          <h3>Ensemble Splits</h3>
+          <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>
+          {/* GUI-17: Display Box & Whisker Data */}
+          <h3>Box and Whisker Data</h3>
+          <BoxandWhiskerChart data={boxandWhiskerData} width={width} height={proposedHeight}/>
         </div>
       </div>
     </div>

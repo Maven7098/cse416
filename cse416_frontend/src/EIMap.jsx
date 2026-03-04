@@ -91,7 +91,6 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
     <div>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
-                <h1>Select Precinct</h1>
                 <MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
                 zoom={7} className="leaflet-container" ref={mapRef} id="map-container-precinct"
                 whenReady={() => resizeMap(mapRef)}>
@@ -105,7 +104,8 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
             </div>
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
-                    <h3>EI Analysis</h3>
+                    <h3>Support for Candidate</h3>
+                    <h5>EI Analysis</h5>
                     {/* EI Analysis */}
                     <EIAnalysis data={data} width={width} height={eiHeight} />
                     <h3>EI KDE (Kernel Data) Results</h3>

@@ -132,7 +132,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
     <div>
       <div className="leaflet-containerset">
         <div className='leaflet-container-big'>
-          <h1>Select District</h1>
+          <h3>Select District</h3>
           <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
           zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
           whenReady={() => resizeMap(mapRef)}>

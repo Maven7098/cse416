@@ -118,8 +118,8 @@ function Population({ width, height, districtData }){
 
   return (
     <div>
-        <h1>District No.: {districtData.DISTRICT}</h1>
-        <h3>District GeoID: {districtData.GEOID}</h3>
+        <h3>District No.: {districtData.DISTRICT}</h3>
+        <h5>District GeoID: {districtData.GEOID}</h5>
       <div>
         <p style={{margin: "2px"}}>Current Representative: {districtData.REPRESENT}</p>
         <p style={{margin: "2px"}}>Race of Current Representative: {districtData.RRACE}</p>

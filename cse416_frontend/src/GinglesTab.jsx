@@ -14,7 +14,7 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
   
   
     return (
-    <Tab.Container id="left-tabs-example" defaultActiveKey="first" fluid>
+    <Tab.Container id="left-tabs-example" defaultActiveKey="gingles" fluid>
       <Row>
         <Col lg={1}>
           <Nav variant="pills" className="flex-column">

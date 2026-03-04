@@ -115,7 +115,6 @@ function State({ width, height, activeState }){
 
   return (
     <div>
-        <h1>State Information</h1>
         <div style={{ display: "flex", alignItems: "center", justifyContent:"space-evenly", flexDirection: "row", textAlign: "center"}}>
             <div style={{flexDirection: "column"}}>
                 <h3>Democrats:</h3>
