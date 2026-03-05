@@ -68,7 +68,7 @@ function Home() {
       <h1>Select a State</h1>
         <div className="leaflet-containerset">
           <div className='leaflet-container-big'>
-            <MapContainer center={[39.8333,-98.5833]} key={JSON.stringify(places)}
+            <div className="map"><MapContainer center={[39.8333,-98.5833]} key={JSON.stringify(places)}
             zoom={4} className="leaflet-container" ref={mapRef} id="map-container-district"
             whenReady={() => resizeMap(mapRef)}>
               <TileLayer
@@ -79,7 +79,7 @@ function Home() {
                 </GeoJSON>
               <GeoJSON data={georgia} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(georgia)}>
                 </GeoJSON>
-            </MapContainer>
+            </MapContainer></div>
           </div>
         </div>
 

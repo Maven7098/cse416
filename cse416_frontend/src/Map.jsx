@@ -133,7 +133,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
       <div className="leaflet-containerset">
         <div className='leaflet-container-big'>
           <h3>Select District</h3>
-          <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
+          <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
           zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
           whenReady={() => resizeMap(mapRef)}>
             <Legend grades={grades} colors={colors} title={currentRace}/>
@@ -143,7 +143,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
             />
             <GeoJSON data={precinctGeoJsonData} style={precinctHeatMap} key={JSON.stringify(precinctGeoJsonData)} />
             <GeoJSON data={districtGeoJsonData} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
-          </MapContainer>
+          </MapContainer></div>
         </div>
         <div className='leaflet-container-big'>
           {/* TODO Today: Use State Data if districtData is empty */}
