@@ -37,14 +37,6 @@ export default function App() {
             <MapNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
             <GinglesTab activeState="ga" activeRace={activeRace} latitude={33.2478} longitude={-83.4411} />
           </>} />
-          <Route path="iowa/proposed" element={<>
-            <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <ProposedVRAMap activeState="ia" activeRace={activeRace} mode="vra" latitude={41.8780} longitude={-93.0977} />
-          </>} />
-          <Route path="georgia/proposed" element={<>
-            <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <ProposedVRAMap activeState="ga" activeRace={activeRace} mode="vra" latitude={33.2478} longitude={-83.4411} />
-          </>} />
           <Route path="iowa/proposed/vra" element={<>
             <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
             <ProposedVRAMap activeState="ia" activeRace={activeRace} mode="vra" latitude={41.8780} longitude={-93.0977} />

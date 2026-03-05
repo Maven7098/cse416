@@ -10,13 +10,22 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
   const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
   const [ensembleSplitData, setEnsembleSplitData] = useState([]);
   const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
+  const [circleData, setCircleData] = useState([]);
 
     // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
       axios.get(`http://localhost:3000/api/${activeState}/district-${mode}`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
-            setEnsembleSplitData(response.data[1]);
-            setBoxandWhiskerData(response.data[2])})
+            setEnsembleSplitData(response.data[1])})
+      .catch(error => console.log(error.response.data))
+      // If Active State changes, then also reset districtData
+      setDistrictGeoJsonData("")
+  }, [activeState, mode]);
+  useEffect(() => {
+      axios.get(`http://localhost:3000/api/${activeState}/district-${mode}/box/${activeRace.toLowerCase()}`)
+      .then(response => {setBoxandWhiskerData(response.data[0]);
+        setCircleData(response.data[1])
+      })
       .catch(error => console.log(error.response.data))
       // If Active State changes, then also reset districtData
       setDistrictGeoJsonData("")
@@ -24,7 +33,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
 
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-      const container = document.getElementById(`map-container-district-${mode}`)
+      const container = document.getElementById(`/map-container-district-${mode}`)
       if (container) {
         resizeObserver.observe(container)
       }
@@ -76,7 +85,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
           <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>
           {/* GUI-17: Display Box & Whisker Data */}
           <h3>Box and Whisker Data</h3>
-          <BoxandWhiskerChart data={boxandWhiskerData} width={width} height={proposedHeight}/>
+          <BoxandWhiskerChart data={boxandWhiskerData} circleData={circleData} width={width} height={proposedHeight}/>
           {/* <BoxandWhiskerExtra /> */}
         </div>
       </div>

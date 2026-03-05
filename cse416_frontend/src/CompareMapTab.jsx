@@ -53,7 +53,7 @@ function CompareMapTab({activeState, activeRace, latitude, longitude}) {
               <Nav.Link eventKey="map">Compare Maps</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="chart">Compare Charts</Nav.Link>
+              <Nav.Link eventKey="chart">Compare Charts (Proposed Districts only)</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>

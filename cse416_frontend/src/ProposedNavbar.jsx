@@ -1,6 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import {Link, Outlet} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -33,19 +34,22 @@ function MapNavbar({activeState, activeRace, setActiveRace}) {
     <>
     <Navbar expand="lg" className="data-bs-theme-dark">
       <Container>
-        <Navbar.Brand>{activeStateName}</Navbar.Brand>
+        <Navbar.Brand>{activeStateName} - Proposed Districts</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to={`/${destination}/proposed`}>
-              Summary of Ensembles</Nav.Link>
             <Nav.Link as={Link} to={`/${destination}/proposed/vra`}>
               Proposed Districts with Voting Rights Act</Nav.Link>
-              <Nav.Link as={Link} to={`/${destination}/proposed/nonvra`}>
+            <Nav.Link as={Link} to={`/${destination}/proposed/nonvra`}>
               Proposed Districts with Race Blind Redistricting</Nav.Link>
             <Nav.Link as={Link} to={`/${destination}/proposed/compare`}>
               Compare Districts</Nav.Link>
           </Nav>
+          <NavDropdown title={`Select Race: ${currentRace}`}>
+            <NavDropdown.Item onClick={() => setActiveRace("BLACK")}>Black / African American</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setActiveRace("HISPANIC")}>Hispanic / Latino</NavDropdown.Item>
+            <NavDropdown.Item onClick={() => setActiveRace("ASIAN")}>Asian / Asian American</NavDropdown.Item>
+          </NavDropdown>
         </Navbar.Collapse>
       </Container>
     </Navbar>

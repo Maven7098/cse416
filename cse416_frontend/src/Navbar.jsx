@@ -18,9 +18,9 @@ function MainNavbar() {
               NonPreclearanceState (Iowa - IA)</Nav.Link>
             <Nav.Link as={Link} to="/georgia">
               PreclearanceState (Georgia - GA)</Nav.Link>
-              <Nav.Link as={Link} to="/iowa/proposed">
+              <Nav.Link as={Link} to="/iowa/proposed/vra">
               NonPreclearanceState (Iowa - IA) - District Ensembles</Nav.Link>
-            <Nav.Link as={Link} to="/georgia/proposed">
+            <Nav.Link as={Link} to="/georgia/proposed/vra">
               PreclearanceState (Georgia - GA) - District Ensembles</Nav.Link>
           </Nav>
         </Navbar.Collapse>

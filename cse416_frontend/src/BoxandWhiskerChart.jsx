@@ -7,14 +7,12 @@ import VerticalBox from "./VerticalBox";
 
 const MARGIN = { top: 30, right: 30, bottom: 30, left: 50 };
 
-function BoxandWhiskerChart({ width, height, data }){
+function BoxandWhiskerChart({ width, height, data, circleData }){
   // The bounds (= area inside the axis) is calculated by substracting the margins from total width / height
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
-  const numberData = data.filter((d) => d.name !== "Enacted" && d.name !== "Proposed").sort( function (a, b){ return a.value - b.value });
-  const circleDataEnacted = data.filter((d) => d.name === "Enacted").map((d) => d.value);
-  const circleDataProposed = data.filter((d) => d.name === "Proposed").map((d) => d.value);
-  console.log(circleDataProposed)
+  const numberData = data.sort( function (a, b){ return a.value - b.value });
+  const circleDataEnacted = circleData.filter((d) => d.name === "Enacted").map((d) => d.value);
 
   // Compute everything derived from the dataset:
   const { chartMin, chartMax, groups } = useMemo(() => {
@@ -49,20 +47,6 @@ function BoxandWhiskerChart({ width, height, data }){
     />
     )
 });
-  let countProposed = 0;
-  const allProposedCircles = circleDataProposed.map((value, i) => {
-    countProposed++;
-    return (
-    <circle
-      key={i}
-      cx={xScale(countProposed.toString()) + xScale.bandwidth() / 2}
-      cy={yScale(value)}
-      r={6}
-      fill="#800026"
-      fillOpacity={0.8}
-    />
-    )
-  });
   // Build the box shapes
   const allShapes = groups.map((group, i) => {
     // Do not put "Enacted" and "Proposed" into box charts
@@ -104,12 +88,11 @@ function BoxandWhiskerChart({ width, height, data }){
         >
           {allShapes}
           {allEnactedCircles}
-          {allProposedCircles}
         {/* Build a Legend */}
         <rect
           key="BOX"
           width={220}
-          height={50}
+          height={30}
           fill="#ffffff"
           stroke="#000000"
           fillOpacity={0.6}
@@ -123,18 +106,8 @@ function BoxandWhiskerChart({ width, height, data }){
           cy={-5}
           fill="#E31A1C"
         />
-        <circle
-          key="PROPOSED"
-          r={6}
-          cx={boundsWidth - 195}
-          cy={15}
-          fill="#800026"
-        />
         <text x={boundsWidth - 180} y={0} alignmentBaseline="central">
           Enacted Plan
-        </text>
-        <text x={boundsWidth - 180} y={20} alignmentBaseline="central">
-          Proposed Plan
         </text>
           <AxisLeft yScale={yScale} pixelsPerTick={30} />
           {/* X axis uses an additional translation to appear at the bottom */}
