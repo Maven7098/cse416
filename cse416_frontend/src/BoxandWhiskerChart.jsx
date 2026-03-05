@@ -24,7 +24,7 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
   // Compute scales
   const yScale = d3
     .scaleLinear()
-    .domain([chartMin, chartMax])
+    .domain([0, chartMax])
     .range([boundsHeight, 0]);
   const xScale = d3
     .scaleBand()
@@ -64,6 +64,11 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
 
     return (
       <g key={i} transform={`translate(${xScale(group)},0)`}>
+        <defs>
+            <clipPath id="gridClip">
+            <rect x={0} y={0} width={boundsWidth} height={boundsHeight} />
+            </clipPath>
+          </defs>
         <VerticalBox
           width={xScale.bandwidth()}
           q1={yScale(q1)}
@@ -73,6 +78,7 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
           max={yScale(max)}
           stroke="black"
           fill={"#FFEDA0"}
+          clipPath="url(#gridClip)"
         />
       </g>
     );
@@ -86,6 +92,11 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
           height={boundsHeight}
           transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
         >
+          <defs>
+            <clipPath id="gridClip">
+            <rect x={0} y={0} width={boundsWidth} height={boundsHeight} />
+            </clipPath>
+          </defs>
           {allShapes}
           {allEnactedCircles}
         {/* Build a Legend */}

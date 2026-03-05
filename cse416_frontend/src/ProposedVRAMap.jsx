@@ -29,7 +29,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
       .catch(error => console.log(error.response.data))
       // If Active State changes, then also reset districtData
       setDistrictGeoJsonData("")
-  }, [activeState, mode]);
+  }, [activeState, mode, activeRace]);
 
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())

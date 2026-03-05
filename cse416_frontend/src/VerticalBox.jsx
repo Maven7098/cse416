@@ -14,16 +14,18 @@ function VerticalBox({
   width,
   stroke,
   fill,
+  clipPath
 }){
   return (
     <>
       <line
         x1={width / 2}
         x2={width / 2}
-        y1={min}
+        y1={min > 0 ? min : 0}
         y2={max}
         stroke={stroke}
         width={STROKE_WIDTH}
+        clipPath={clipPath}
       />
       <rect
         x={0}
@@ -32,6 +34,7 @@ function VerticalBox({
         height={q1 - q3}
         stroke={stroke}
         fill={fill}
+        clipPath={clipPath}
       />
       <line
         x1={0}
@@ -40,6 +43,7 @@ function VerticalBox({
         y2={median}
         stroke={stroke}
         width={STROKE_WIDTH}
+        clipPath={clipPath}
       />
     </>
   );
