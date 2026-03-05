@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
 
-const MARGIN = { top: 0, right: 60, bottom: 30, left: 60 };
+const MARGIN = { top: 0, right: 60, bottom: 50, left: 60 };
 const BAR_PADDING = 0.3;
 
 function EnsembleSplits({ width, height, data }){
@@ -101,8 +101,8 @@ function EnsembleSplits({ width, height, data }){
 
   return (
     <div>
-        <h3>Simulated Election: Splits for {data.NAME}</h3>
-        <p>D/R: Democratic Victory/Republican Victory</p>
+        <h3 style={{marginBottom: "0.25rem"}}>Simulated Election: Splits for {data.NAME}</h3>
+        <p style={{marginBottom: "0.5rem"}}>D/R: Democratic Victory/Republican Victory</p>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}

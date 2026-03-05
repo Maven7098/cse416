@@ -94,6 +94,7 @@
 
 .polarization-main-content > .row {
     height: 100%;
+    gap: 15px;
 }
 
 .polarization-main-content .tab-content,

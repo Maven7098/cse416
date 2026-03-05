@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
 import titleCase from './TitleCase.js'
 
-const MARGIN = { top: 0, right: 60, bottom: 30, left: 60 };
+const MARGIN = { top: 0, right: 60, bottom: 50, left: 60 };
 const BAR_PADDING = 0.3;
 
 function State({ width, height, activeState }){

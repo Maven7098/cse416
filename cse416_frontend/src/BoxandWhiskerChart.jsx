@@ -5,7 +5,7 @@ import AxisLeft from "./AxisLeft";
 import AxisBottom from "./AxisBottomCategoric";
 import VerticalBox from "./VerticalBox";
 
-const MARGIN = { top: 30, right: 30, bottom: 30, left: 50 };
+const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
 
 function BoxandWhiskerChart({ width, height, data, circleData }){
   // The bounds (= area inside the axis) is calculated by substracting the margins from total width / height

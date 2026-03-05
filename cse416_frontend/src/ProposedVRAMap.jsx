@@ -84,7 +84,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
           {/* GUI-16: Display Ensemble Splits in Bar Chart */}
           <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>
           {/* GUI-17: Display Box & Whisker Data */}
-          <h3>Box and Whisker Data</h3>
+          <h3 style={{marginBottom: "0.5rem"}}>Box and Whisker Data</h3>
           <BoxandWhiskerChart data={boxandWhiskerData} circleData={circleData} width={width} height={proposedHeight}/>
           {/* <BoxandWhiskerExtra /> */}
         </div>

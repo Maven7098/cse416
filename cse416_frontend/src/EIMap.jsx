@@ -80,7 +80,7 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
     }
     */
     
-    const width = 900;
+    const width = 680;
     const eiHeight = 330;
 
     return (

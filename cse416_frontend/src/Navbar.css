@@ -13,8 +13,19 @@
   letter-spacing: 0.5px;
 }
 
-.navbar-brand:hover {
-  color: #52000d !important;
+/* Home button styling - only for main navbar */
+.navbar.bg-body-tertiary .navbar-brand {
+  color: #2c2c2c !important;
+  background-color: #e8d4c8 !important;
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.navbar.bg-body-tertiary .navbar-brand:hover {
+  color: #ffffff !important;
+  background-color: #3a3a3a !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Main Navigation Links */
@@ -139,6 +150,13 @@
   color: #e8d4c8 !important;
   font-size: 1.2rem !important;
   font-weight: 700 !important;
+}
+
+.navbar[class*="data-bs-theme-dark"] .navbar-brand:hover {
+  color: #e8d4c8 !important;
+  background-color: transparent !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .navbar[class*="data-bs-theme-dark"] .subnav-brand-fixed {

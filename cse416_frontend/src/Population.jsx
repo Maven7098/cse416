@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-const MARGIN = { top: 30, right: 60, bottom: 30, left: 60 };
+const MARGIN = { top: 30, right: 60, bottom: 50, left: 60 };
 const BAR_PADDING = 0.3;
 import titleCase from './TitleCase';
 

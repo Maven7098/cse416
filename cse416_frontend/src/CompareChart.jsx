@@ -57,7 +57,7 @@ function CompareChart({ activeState, activeRace }){
             {/* GUI-16: Display Ensemble Splits in Bar Chart */}
             <EnsembleSplits data={districtOne[0]} width={width} height={proposedHeight}/>
             {/* GUI-17: Display Box & Whisker Data */}
-            <h3>Box and Whisker Data</h3>
+            <h3 style={{marginBottom: "0.5rem"}}>Box and Whisker Data</h3>
             <BoxandWhiskerChart data={districtOne[1]} circleData={currentBoxandWhiskerData} width={width} height={proposedHeight}/>
             {/* <BoxandWhiskerExtra /> */}
           </div>
@@ -68,7 +68,7 @@ function CompareChart({ activeState, activeRace }){
             {/* GUI-16: Display Ensemble Splits in Bar Chart */}
             <EnsembleSplits data={districtTwo[0]} width={width} height={proposedHeight}/>
             {/* GUI-17: Display Box & Whisker Data */}
-            <h3>Box and Whisker Data</h3>
+            <h3 style={{marginBottom: "0.5rem"}}>Box and Whisker Data</h3>
             <BoxandWhiskerChart data={districtTwo[1]} circleData={currentBoxandWhiskerData} width={width} height={proposedHeight}/>
             {/* <BoxandWhiskerExtra /> */}
           </div>
