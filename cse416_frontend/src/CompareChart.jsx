@@ -18,8 +18,8 @@ function CompareChart({ activeState, activeRace }){
   let districtOneName = "Proposed District (VRA Compliant)"
   let districtTwoName = "Proposed District (Race Blind)"
 
-  const width = 560;
-  const proposedHeight = 240;
+  const width = 700;
+  const proposedHeight = 320;
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   // Universally available data: Does not depend on activeRace

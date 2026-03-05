@@ -120,8 +120,8 @@ function Map({ activeState, activeRace, latitude, longitude }){
   const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
 
   const width = 960;
-  const heightPop = 450;
-  const heightState = 440;
+  const heightPop = 610;
+  const heightState = 600;
 
   return (
     // Load the GeoJSON for the districting map
