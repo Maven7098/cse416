@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import { useState } from "react";
 import Tooltip from "./Tooltip";
 import Axis from "./Axis";
+import { regressionLinear } from "d3-regression";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
@@ -73,6 +74,56 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
     );
   });
 
+  const linearRegression = regressionLinear()
+    .x(d => d.x) // x-accessor
+    .y(d => d.y) // y-accessor
+  
+  const dataDem = data.filter((precinct) => precinct.DEMOCRATIC > precinct.REPUBLICAN)
+  .map((precinct) => {
+    let activeRace = "BLACK"
+    switch (race) {
+      case "HISPANIC":
+        activeRace = precinct.HISPANIC;
+        break;
+      case "BLACK":
+        activeRace = precinct.BLACK;
+        break;
+      case "ASIAN":
+        activeRace = precinct.ASIAN;
+        break;
+    }
+    return{
+      x: 100*activeRace/precinct.TOTAL,
+      y: 100*precinct.DEMOCRATIC/precinct.TOTAL}
+  })
+  const resultDem = linearRegression(dataDem);
+  const dataRep = data.filter((precinct) => precinct.REPUBLICAN >= precinct.DEMOCRATIC)
+  .map((precinct) => {
+    let activeRace = "BLACK"
+    switch (race) {
+      case "HISPANIC":
+        activeRace = precinct.HISPANIC;
+        break;
+      case "BLACK":
+        activeRace = precinct.BLACK;
+        break;
+      case "ASIAN":
+        activeRace = precinct.ASIAN;
+        break;
+    }
+    return{
+      x: 100*activeRace/precinct.TOTAL,
+      y: 100*precinct.REPUBLICAN/precinct.TOTAL}
+  })
+  const resultRep = linearRegression(dataRep);
+
+  // 4. Use result to draw line (result.a is slope, result.b is intercept)
+  const lineBuilder = d3.line()
+  .x(d => xScale(d[0])) // Use the first value in the point array (x-coord)
+  .y(d => yScale(d[1])); // Use the second value in the point array (y-coord)
+  const demPath = lineBuilder(resultDem);
+  const repPath = lineBuilder(resultRep);
+
   return (
     <div style={{ position: "relative" }}>
       <svg width={width} height={height}>
@@ -83,6 +134,22 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
         >
           {/* Circles */}
           {allShapes}
+          {/* Lines - Democratic */}
+          <path
+            d={demPath}
+            opacity={1}
+            stroke="#000088"
+            fill="none"
+            strokeWidth={4}
+          />
+          {/* Lines - Republican */}
+          <path
+            d={repPath}
+            opacity={1}
+            stroke="#880000"
+            fill="none"
+            strokeWidth={4}
+          />
         </g>
         <Axis width={width} height={height}
         xScale={xScale} yScale={yScale}
