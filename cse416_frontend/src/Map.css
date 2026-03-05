@@ -4,8 +4,9 @@
 .map{
     width: 100%;
     height: 100%; /* Example height, can be anything */
-    border: 4px solid #000000; /* Red border with 4px thickness */
-    padding: 4px;
+    border: 8px solid #34000f;
+    border-radius: 8px;
+    padding: 0;
 }
 .leaflet-containerset {
   width: 100%;
@@ -14,6 +15,7 @@
   flex-direction: row;
   overflow: hidden;
   padding: 20px 10px 5px 10px;
+  gap: 15px;
 }
 .leaflet-container-big{
   width: 100%;

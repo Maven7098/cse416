@@ -66,6 +66,7 @@
 
 .compare-main-content > .row {
     height: 100%;
+    gap: 15px;
 }
 
 .compare-main-content .tab-content,
@@ -118,7 +119,7 @@
 .compare-mode-dropdown .compare-mode-toggle,
 .compare-mode-dropdown .compare-mode-toggle.btn,
 .compare-mode-dropdown .compare-mode-toggle.btn-secondary {
-    background-color: #1f1f1f !important;
+    background-color: var(--compare-mode-bg-color, #1f1f1f) !important;
     border: none !important;
     border-radius: 999px !important;
     color: #e8d4c8 !important;
@@ -128,6 +129,28 @@
     justify-content: center !important;
     box-shadow: none !important;
     min-width: 330px !important;
+}
+
+.compare-mode-dropdown .compare-mode-toggle.compare-mode-toggle-attention,
+.compare-mode-dropdown .compare-mode-toggle.compare-mode-toggle-attention.btn,
+.compare-mode-dropdown .compare-mode-toggle.compare-mode-toggle-attention.btn-secondary {
+    animation: compare-mode-bg-breathe 2s ease-in-out infinite;
+}
+
+@property --compare-mode-bg-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: #1f1f1f;
+}
+
+@keyframes compare-mode-bg-breathe {
+    0%,
+    100% {
+        --compare-mode-bg-color: #1f1f1f;
+    }
+    50% {
+        --compare-mode-bg-color: #8f3a4a;
+    }
 }
 
 .compare-mode-dropdown .compare-mode-toggle:hover,
@@ -144,7 +167,7 @@
 .compare-mode-dropdown .compare-mode-toggle.btn-secondary:active,
 .compare-mode-dropdown .compare-mode-toggle.btn-secondary:focus,
 .compare-mode-dropdown .compare-mode-toggle.btn-secondary:focus-visible {
-    background-color: #1f1f1f !important;
+    background-color: var(--compare-mode-bg-color, #1f1f1f) !important;
     border: none !important;
     color: #e8d4c8 !important;
     box-shadow: none !important;
