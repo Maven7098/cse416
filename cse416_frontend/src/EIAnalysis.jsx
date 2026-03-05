@@ -3,38 +3,91 @@ import * as d3 from "d3";
 import Axis from "./Axis";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
+const COLORS = ["#e0ac2b", "#e85252", "#6689c6", "#9a6fb0", "#a53253"];
 
-function EIAnalysis ({ width, height, data }) {
+function EIAnalysis ({ width, height, data, race }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+  // Only return WHITE and the matching Minority Group
+  data = data.filter((group) => group.name === "WHITE" || group.name === race)
+  console.log(race)
+
+  const allGroupNames = data.map((group) => group.name);
+
+  let currentRace = "Black / African American"
+  switch (race) {
+      case "HISPANIC":
+        currentRace = "Hispanic / Latino";
+        break;
+      case "BLACK":
+        currentRace = "Black / African American";
+        break;
+      case "ASIAN":
+        currentRace = "Asian / Asian American";
+        break;
+  }
+
+  const colorScale = d3
+    .scaleOrdinal()
+    .domain(allGroupNames)
+    .range(COLORS);
 
   const xScale = useMemo(() => {
-    // const max = Math.max(...data);
+    const max = Math.max(...data.map((group) => Math.max(...group.values)));
+    const min = Math.min(...data.map((group) => Math.min(...group.values)));
+    const range = max - min;
     return d3
       .scaleLinear()
-      .domain([0, 1000]) // note: limiting to 1000 instead of max here because of extreme values in the dataset
-      .range([10, boundsWidth - 10]);
+      .domain([min - range * 0.2, max + range * 0.2]) // Add 20%: smoothing ends up out of the data bounds when drawing
+      .range([10, boundsWidth])
+      .nice();
   }, [data, width]);
 
-  // Compute kernel density estimation
-  const density = useMemo(() => {
-    const kde = kernelDensityEstimator(kernelEpanechnikov(7), xScale.ticks(40));
-    return kde(data);
-  }, [xScale]);
+  // Function that computes a kernel density based on an array of number
+  const densityGenerator = kernelDensityEstimator(
+    kernelEpanechnikov(2),
+    xScale.ticks(40)
+  );
+
+  // Compute densities for all groups before drawing.
+  // We need all densities to be able to know the max of the Y axis
+  const densityData = data.map((group, i) => {
+    const density = densityGenerator(group.values);
+    return {
+      name: group.name,
+      density,
+    };
+  });
+
+  const allYMax = densityData.map((group) =>
+    Math.max(...group.density.map((d) => d[1]))
+  );
+  const yMax = Math.max(...allYMax);
 
   const yScale = useMemo(() => {
-    const max = Math.max(...density.map((d) => d[1]));
-    return d3.scaleLinear().range([boundsHeight, 0]).domain([0, max]);
+    return d3.scaleLinear().range([boundsHeight, 0]).domain([0, yMax]);
   }, [data, height]);
 
-  const path = useMemo(() => {
-    const lineGenerator = d3
-      .line()
-      .x((d) => xScale(d[0]))
-      .y((d) => yScale(d[1]))
-      .curve(d3.curveBasis);
-    return lineGenerator(density);
-  }, [density]);
+  const pathGenerator = d3
+    .line()
+    .x((d) => xScale(d[0]))
+    .y((d) => yScale(d[1]))
+    .curve(d3.curveBasis);
+
+  const allShapes = densityData.map((group, i) => {
+    const path = pathGenerator(group.density);
+    return (
+      <path
+        key={i}
+        d={path}
+        fill={colorScale(group.name)}
+        opacity={0.4}
+        stroke="black"
+        strokeWidth={1}
+        strokeLinejoin="round"
+      />
+    );
+  });
 
   return (
     <svg width={width} height={height}>
@@ -43,18 +96,12 @@ function EIAnalysis ({ width, height, data }) {
         height={boundsHeight}
         transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
       >
-        <path
-          d={path}
-          fill="#9a6fb0"
-          opacity={0.4}
-          stroke="black"
-          strokeWidth={1}
-          strokeLinejoin="round"
-        />
+        {allShapes}
       </g>
       {/* Generate X and Y Axis */}
-      <Axis width={width} height={height}
-      xScale={xScale} yScale={yScale}/>
+        <Axis width={width} height={height}
+        xScale={xScale} yScale={yScale}
+        labelX={`${currentRace} - Non ${currentRace} Vote for Democrat`} labelY="Density" />
     </svg>
   );
 };

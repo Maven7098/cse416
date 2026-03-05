@@ -5,10 +5,11 @@ import './Map.css';
 import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
 import { data } from './Data.js'
+import { dataEi } from './DataEi.js';
 
 import axios from 'axios';
 
-function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }){
+function EIMap({ activeState, activeRace, latitude, longitude }){
     const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
 
   useEffect(() => {
@@ -107,7 +108,7 @@ function EIMap({ activeState, activeRace, latitude, longitude, activeStateName }
                     <h3>Support for Candidate</h3>
                     <h5>EI Analysis</h5>
                     {/* EI Analysis */}
-                    <EIAnalysis data={data} width={width} height={eiHeight} />
+                    <EIAnalysis data={dataEi} width={width} height={eiHeight} race={activeRace} />
                     <h3>EI KDE (Kernel Data) Results</h3>
                     {/* EI KDE Results */}
                     <EIKDE data={data} width={width} height={eiHeight} race={activeRace}/>
