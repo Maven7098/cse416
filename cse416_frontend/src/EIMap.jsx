@@ -48,7 +48,17 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
     
     // GUI-14 (TODO Next)
     const grades = [0, 20, 40, 60, 80, 100];
-    const colors = ['#00ffff', '#00aaaa', '#008888', '#0000ff', '#000066', '#000044'];
+    const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+
+    function style(){
+    return {
+        fillColor: '#FFEDA0',
+        color: '#800026',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.5
+    };
+  }
     /*
     function getColor(d) {
     return d > 1000000 ? '#800026' :
@@ -118,7 +128,7 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
                     {/* Afraid of rendering a precinct file too large (I ran out of memory) */}
-                    <GeoJSON data={precinctGeoJsonData} key={JSON.stringify(precinctGeoJsonData)}/>
+                    <GeoJSON data={precinctGeoJsonData} style={style} key={JSON.stringify(precinctGeoJsonData)}/>
                 </MapContainer></div>
             </div>
             <div className='leaflet-container-big'>

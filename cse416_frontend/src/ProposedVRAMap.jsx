@@ -55,6 +55,16 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
         break;
     }
 
+    function districtWindow(){
+    return {
+        fillColor: '#FFEDA0',
+        color: '#800026',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.5
+    };
+  }
+
     const width = 900;
     const proposedHeight = 320;
 
@@ -76,7 +86,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={districtGeoJsonData} key={JSON.stringify(districtGeoJsonData)}/>
+          <GeoJSON data={districtGeoJsonData} style={districtWindow} key={JSON.stringify(districtGeoJsonData)}/>
         </MapContainer></div>
       </div>
       <div className='leaflet-container-big'>
