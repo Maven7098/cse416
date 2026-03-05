@@ -3,14 +3,13 @@ import * as d3 from "d3";
 import Axis from "./Axis";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
-const COLORS = ["#e0ac2b", "#e85252", "#6689c6", "#9a6fb0", "#a53253"];
+const COLORS = ["#e0ac2b", "#e85252"];
 
 function EIAnalysis ({ width, height, data, race }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
   // Only return WHITE and the matching Minority Group
   data = data.filter((group) => group.name === "WHITE" || group.name === race)
-  console.log(race)
 
   const allGroupNames = data.map((group) => group.name);
 
@@ -97,6 +96,38 @@ function EIAnalysis ({ width, height, data, race }) {
         transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
       >
         {allShapes}
+
+        {/* Build a Legend */}
+        <rect
+          key="BOX"
+          width={220}
+          height={50}
+          fill="#ffffff"
+          stroke="#000000"
+          fillOpacity={0.3}
+          x={boundsWidth - 210}
+          y={-20}
+        />
+        <circle
+          key="WHITE"
+          r={6}
+          cx={boundsWidth - 195}
+          cy={-5}
+          fill="#e0ac2b"
+        />
+        <circle
+          key={race}
+          r={6}
+          cx={boundsWidth - 195}
+          cy={15}
+          fill="#e0ac2b"
+        />
+        <text x={boundsWidth - 180} y={0} alignmentBaseline="central">
+          White / European American
+        </text>
+        <text x={boundsWidth - 180} y={20} alignmentBaseline="central">
+          {currentRace}
+        </text>
       </g>
       {/* Generate X and Y Axis */}
         <Axis width={width} height={height}
