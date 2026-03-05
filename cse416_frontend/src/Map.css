@@ -1,6 +1,12 @@
 root {
     width: 100%;
 }
+.map{
+    width: 100%;
+    height: 100%; /* Example height, can be anything */
+    border: 4px solid #000000; /* Red border with 4px thickness */
+    padding: 4px;
+}
 .leaflet-containerset {
   width: 100%;
   height: 100%;

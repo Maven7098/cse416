@@ -47,6 +47,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
       setDistrictOne("");
       setDistrictOneName("District 1")
       setDistrictTwo("");
+      setDistrictOne("");
       setDistrictTwoName("District 2")
     }
   }, [currentMode])
@@ -78,7 +79,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
         <h3>{districtOneName}</h3>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtOne)}
+        <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(districtOne)}
         zoom={7} className="leaflet-container" ref={mapRefOne} id={'map-container-district-one'}
         whenReady={() => resizeMapOne(mapRefOne)}>
           <TileLayer
@@ -86,11 +87,11 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GeoJSON data={districtOne} key={JSON.stringify(districtOne)}/>
-        </MapContainer>
+        </MapContainer></div>
       </div>
       <div className='leaflet-container-big'>
         <h3>{districtTwoName}</h3>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtTwo)}
+        <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(districtTwo)}
         zoom={7} className="leaflet-container" ref={mapRefTwo} id={'map-container-district-two'}
         whenReady={() => resizeMapTwo(mapRefTwo)}>
           <TileLayer
@@ -98,7 +99,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GeoJSON data={districtTwo} key={JSON.stringify(districtTwo)}/>
-        </MapContainer>
+        </MapContainer></div>
       </div>
     </div>
   );
