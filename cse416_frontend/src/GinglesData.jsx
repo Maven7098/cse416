@@ -80,7 +80,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   
   const dataDem = data.filter((precinct) => precinct.DEMOCRATIC > precinct.REPUBLICAN)
   .map((precinct) => {
-    let activeRace = "BLACK"
+    let activeRace = precinct.BLACK
     switch (race) {
       case "HISPANIC":
         activeRace = precinct.HISPANIC;
@@ -99,7 +99,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   const resultDem = linearRegression(dataDem);
   const dataRep = data.filter((precinct) => precinct.REPUBLICAN >= precinct.DEMOCRATIC)
   .map((precinct) => {
-    let activeRace = "BLACK"
+    let activeRace = precinct.BLACK
     switch (race) {
       case "HISPANIC":
         activeRace = precinct.HISPANIC;
@@ -127,6 +127,11 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   return (
     <div style={{ position: "relative" }}>
       <svg width={width} height={height}>
+        <defs>
+          <clipPath id="gridClip">
+           <rect x={0} y={0} width={boundsWidth} height={boundsHeight} />
+          </clipPath>
+        </defs>
         <g
           width={boundsWidth}
           height={boundsHeight}
@@ -141,6 +146,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
             stroke="#000088"
             fill="none"
             strokeWidth={4}
+            clipPath="url(#gridClip)"
           />
           {/* Lines - Republican */}
           <path
@@ -149,6 +155,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
             stroke="#880000"
             fill="none"
             strokeWidth={4}
+            clipPath="url(#gridClip)"
           />
         </g>
         <Axis width={width} height={height}
