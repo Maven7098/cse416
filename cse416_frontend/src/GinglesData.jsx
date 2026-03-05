@@ -9,6 +9,8 @@ import { regressionLinear } from "d3-regression";
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
 function GinglesData ({ width, height, data, race, setActivePrecinct }) {
+  // Force re-render and animation trigger when race changes
+  const key = `${race}-${data.length}`;
 
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -30,12 +32,65 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
         break;
     }
 
-  // Scales
-  const yScale = d3.scaleLinear().domain([0, 100]).range([boundsHeight, 0]);
-  const xScale = d3.scaleLinear().domain([0, 100]).range([0, boundsWidth]);
+  // Calculate data extents for dynamic scaling
+  const xValues = data.map((d) => {
+    let activeRace = d.BLACK;
+    switch (race) {
+      case "HISPANIC":
+        activeRace = d.HISPANIC;
+        break;
+      case "BLACK":
+        activeRace = d.BLACK;
+        break;
+      case "ASIAN":
+        activeRace = d.ASIAN;
+        break;
+    }
+    return 100 * (activeRace / d.TOTAL);
+  });
+  
+  const yValues = data.map((d) => 100 * (d.DEMOCRATIC / d.TOTAL));
+  
+  const xMin = Math.max(0, d3.min(xValues) - 5);
+  const xMax = Math.min(100, d3.max(xValues) + 5);
+  const yMin = Math.max(0, d3.min(yValues) - 5);
+  const yMax = Math.min(100, d3.max(yValues) + 5);
+
+  // Scales with dynamic domains based on actual data
+  const yScale = d3.scaleLinear().domain([yMin, yMax]).range([boundsHeight, 0]);
+  const xScale = d3.scaleLinear().domain([xMin, xMax]).range([0, boundsWidth]);
+
+  // Sort data by x-value (minority percentage) for left-to-right loading
+  const sortedData = [...data].sort((a, b) => {
+    let activeRaceA = a.BLACK;
+    let activeRaceB = b.BLACK;
+    switch (race) {
+      case "HISPANIC":
+        activeRaceA = a.HISPANIC;
+        activeRaceB = b.HISPANIC;
+        break;
+      case "BLACK":
+        activeRaceA = a.BLACK;
+        activeRaceB = b.BLACK;
+        break;
+      case "ASIAN":
+        activeRaceA = a.ASIAN;
+        activeRaceB = b.ASIAN;
+        break;
+    }
+    return (100 * (activeRaceA / a.TOTAL)) - (100 * (activeRaceB / b.TOTAL));
+  });
+
+  // Calculate animation timing: axes first, then points, then lines
+  const axisStartDelay = 0;
+  const axisDuration = 0.1;
+  const pointsStartDelay = axisStartDelay + axisDuration; // 0.1s
+  const lastPointDelay = (data.length - 1) * 0.0007;
+  const pointAnimDuration = 0.1;
+  const lineStartDelay = pointsStartDelay + pointAnimDuration + lastPointDelay + 0.01; // small buffer
 
   // Build the shapes
-  const allShapes = data.map((d, i) => {
+  const allShapes = sortedData.map((d, i) => {
     let activeRace = d.BLACK;
 
     switch (race) {
@@ -70,6 +125,10 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
           setActivePrecinct(d.COUNT)
         }}
         onMouseLeave={() => setHovered(null)}
+        style={{
+          animation: `circlesFadeIn 0.1s ease-out forwards ${pointsStartDelay + i * 0.0007}s`,
+          opacity: 0
+        }}
       />
     );
   });
@@ -125,7 +184,25 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   const repPath = lineBuilder(resultRep);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative" }} key={key}>
+      <style>{`
+        @keyframes circlesFadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 0.7;
+          }
+        }
+        @keyframes pathsFadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
       <svg width={width} height={height}>
         <defs>
           <clipPath id="gridClip">
@@ -147,6 +224,10 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
             fill="none"
             strokeWidth={4}
             clipPath="url(#gridClip)"
+            style={{
+              animation: `pathsFadeIn 0.1s ease-out forwards ${lineStartDelay}s`,
+              opacity: 0
+            }}
           />
           {/* Lines - Republican */}
           <path
@@ -156,6 +237,10 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
             fill="none"
             strokeWidth={4}
             clipPath="url(#gridClip)"
+            style={{
+              animation: `pathsFadeIn 0.1s ease-out forwards ${lineStartDelay + 0.01}s`,
+              opacity: 0
+            }}
           />
         {/* Build a Legend */}
         <rect
@@ -189,9 +274,14 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
           Republican Precincts
         </text>
         </g>
-        <Axis width={width} height={height}
-        xScale={xScale} yScale={yScale}
-        labelX={`${currentRace} Vote %`} labelY="Democratic Vote %" />
+        <g style={{
+          animation: `pathsFadeIn ${axisDuration}s ease-out forwards ${axisStartDelay}s`,
+          opacity: 0
+        }}>
+          <Axis width={width} height={height}
+          xScale={xScale} yScale={yScale}
+          labelX={`${currentRace} Vote %`} labelY="Democratic Vote %" />
+        </g>
       </svg>
 
       {/* Tooltip */}
