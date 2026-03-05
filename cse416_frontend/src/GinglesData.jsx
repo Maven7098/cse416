@@ -157,6 +157,37 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
             strokeWidth={4}
             clipPath="url(#gridClip)"
           />
+        {/* Build a Legend */}
+        <rect
+          key="BOX"
+          width={220}
+          height={50}
+          fill="#ffffff"
+          stroke="#000000"
+          fillOpacity={0.6}
+          x={boundsWidth - 210}
+          y={-20}
+        />
+        <circle
+          key="DEMOCRATIC"
+          r={6}
+          cx={boundsWidth - 195}
+          cy={-5}
+          fill="#0000ff"
+        />
+        <circle
+          key="REPUBLICAN"
+          r={6}
+          cx={boundsWidth - 195}
+          cy={15}
+          fill="#ff0000"
+        />
+        <text x={boundsWidth - 180} y={0} alignmentBaseline="central">
+          Democratic Precincts
+        </text>
+        <text x={boundsWidth - 180} y={20} alignmentBaseline="central">
+          Republican Precincts
+        </text>
         </g>
         <Axis width={width} height={height}
         xScale={xScale} yScale={yScale}

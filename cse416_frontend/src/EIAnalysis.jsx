@@ -104,7 +104,7 @@ function EIAnalysis ({ width, height, data, race }) {
           height={50}
           fill="#ffffff"
           stroke="#000000"
-          fillOpacity={0.3}
+          fillOpacity={0.6}
           x={boundsWidth - 210}
           y={-20}
         />
