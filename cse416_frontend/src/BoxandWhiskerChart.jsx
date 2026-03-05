@@ -102,18 +102,18 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
         {/* Build a Legend */}
         <rect
           key="BOX"
-          width={240}
+          width={270}
           height={50}
           fill="#ffffff"
           stroke="#000000"
           fillOpacity={0.6}
-          x={boundsWidth - 230}
+          x={boundsWidth - 260}
           y={-20}
         />
         <circle
           key="ENACTED"
           r={6}
-          cx={boundsWidth - 215}
+          cx={boundsWidth - 245}
           cy={-5}
           fill="#E31A1C"
         />
@@ -121,15 +121,15 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
           key="MINORITY"
           width={12}
           height={12}
-          x={boundsWidth - 221}
+          x={boundsWidth - 251}
           y={9}
           fill="#ffeda0"
         />
-        <text x={boundsWidth - 200} y={0} alignmentBaseline="central">
-          Enacted Plan
+        <text x={boundsWidth - 230} y={0} alignmentBaseline="central">
+          Enacted Plan Minority Percentage
         </text>
-        <text x={boundsWidth - 200} y={20} alignmentBaseline="central">
-          Selected Minority Population
+        <text x={boundsWidth - 230} y={20} alignmentBaseline="central">
+          Selected Minority Percentage
         </text>
           <AxisLeft yScale={yScale} pixelsPerTick={30} />
           {/* X axis uses an additional translation to appear at the bottom */}
