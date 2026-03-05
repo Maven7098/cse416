@@ -88,7 +88,7 @@ function GinglesTable ({ data, race, activePrecinct }) {
             }
         </table>
         <p></p>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className="gingles-pagination" style={{ display: 'flex', justifyContent: 'center' }}>
             <PaginationHelper
                 paginate={paginate}
                 active={activePage}

@@ -30,11 +30,12 @@ function CompareMapTab({activeState, activeRace, latitude, longitude}) {
   
     return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="map" fluid>
+      <div className="compare-main-content">
       <Row>
         <Col lg={3}>
-        <div style={{display: 'flex', justifyContent: 'center'}}>
-            <Dropdown show={showDropdown} onToggle={toggleDropdown}>
-              <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary'>
+        <div className="compare-mode-dropdown-wrap" style={{display: 'flex', justifyContent: 'center'}}>
+            <Dropdown className="compare-mode-dropdown" show={showDropdown} onToggle={toggleDropdown}>
+              <Dropdown.Toggle id="dropdown-basic" className="compare-mode-toggle" variant='outline-secondary'>
               {currentMode}
               </Dropdown.Toggle>
 
@@ -64,6 +65,7 @@ function CompareMapTab({activeState, activeRace, latitude, longitude}) {
           </Tab.Content>
         </Col>
       </Row>
+      </div>
     </Tab.Container>
   );
 }

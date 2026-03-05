@@ -15,9 +15,10 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
   
     return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="gingles" fluid>
+      <div className="polarization-main-content">
       <Row>
         <Col lg={1}>
-          <Nav variant="pills" className="flex-column">
+          <Nav variant="pills" className="flex-column polarization-tabs">
             <Nav.Item>
               <Nav.Link eventKey="gingles">Gingles</Nav.Link>
             </Nav.Item>
@@ -33,6 +34,7 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
           </Tab.Content>
         </Col>
       </Row>
+      </div>
     </Tab.Container>
   );
 }

@@ -16,3 +16,46 @@ text-overflow: ellipsis; /* Add ellipsis for truncated text */
     table-layout: fixed;
     overflow: hidden;
 }
+
+.gingles-pagination {
+    margin-top: 0.5rem;
+}
+
+.gingles-pagination .pagination {
+    width: 30rem;
+    justify-content: center;
+    margin-bottom: 0;
+}
+
+.gingles-pagination .page-link {
+    color: #6a1b2a !important;
+    background-color: #f7ece6 !important;
+    border-color: #e3cfc3 !important;
+    font-weight: 600;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.gingles-pagination .page-link:hover,
+.gingles-pagination .page-link:focus {
+    color: #34000f !important;
+    background-color: #e9d6cb !important;
+    border-color: #d8bfb2 !important;
+    box-shadow: none !important;
+}
+
+.gingles-pagination .page-item.active .page-link {
+    color: #e8d4c8 !important;
+    background-color: #34000f !important;
+    border-color: #34000f !important;
+}
+
+.gingles-pagination .page-item.disabled .page-link {
+    color: #b39a8f !important;
+    background-color: #f3e5de !important;
+    border-color: #e4d3ca !important;
+}
