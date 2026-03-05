@@ -56,7 +56,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
     }
 
     const width = 900;
-    const proposedHeight = 255;
+    const proposedHeight = 320;
 
   return (
     // Load the GeoJSON for the districting map

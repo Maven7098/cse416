@@ -64,8 +64,9 @@ function Home() {
   let navigate = useNavigate();
 
   return (
-    <>
+    <div className="home-page-wrapper">
       <h1>Select a State</h1>
+      <div className="home-map-container">
         <div className="leaflet-containerset">
           <div className='leaflet-container-big'>
             <MapContainer center={[39.8333,-98.5833]} key={JSON.stringify(places)}
@@ -82,9 +83,10 @@ function Home() {
             </MapContainer>
           </div>
         </div>
+      </div>
 
         <Outlet />
-    </>
+    </div>
   )
 }
 

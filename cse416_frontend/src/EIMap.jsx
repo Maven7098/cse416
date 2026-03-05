@@ -81,7 +81,7 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
     */
     
     const width = 900;
-    const eiHeight = 250;
+    const eiHeight = 320;
 
     return (
         // Load the GeoJSON for the districting map

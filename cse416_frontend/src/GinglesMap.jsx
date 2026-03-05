@@ -26,7 +26,7 @@ function GinglesMap({activeState, activeRace, activeStateName}){
         }, [activeState]);
     
     const width = 730;
-    const height = 580;
+    const height = 680;
 
     return (
         // Load the GeoJSON for the districting map
@@ -40,14 +40,14 @@ function GinglesMap({activeState, activeRace, activeStateName}){
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     {/* Gingles Data */}
-                    <h3>Gingles 2/3 Data</h3>
+                    <h3>Racial Polarization Data</h3>
                     <GinglesData data={ginglesData} race={activeRace} width={width} height={height} setActivePrecinct={setActivePrecinct} />
                     {/* Gingles Chart */}
                 </div>
             </div>
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
-                    <h3>Gingles 2/3 Table</h3>
+                    <h3>Precincts</h3>
                     <GinglesTable data={ginglesData} race={activeRace} activePrecinct={activePrecinct} setActivePrecinct={setActivePrecinct}/>
                 </div>
             </div>
