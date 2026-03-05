@@ -11,6 +11,7 @@ function BoxandWhiskerChart({ width, height, data }){
   // The bounds (= area inside the axis) is calculated by substracting the margins from total width / height
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+  data = data.sort( function (a, b){ return a.value - b.value });
 
   // Compute everything derived from the dataset:
   const { chartMin, chartMax, groups } = useMemo(() => {
