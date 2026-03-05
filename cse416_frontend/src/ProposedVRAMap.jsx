@@ -60,7 +60,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
         fillColor: '#FFEDA0',
         color: '#800026',
         weight: 2,
-        opacity: 1,
+        opacity: 0.5,
         fillOpacity: 0.5
     };
   }
