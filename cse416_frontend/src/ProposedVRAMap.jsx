@@ -20,7 +20,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
       .catch(error => console.log(error.response.data))
       // If Active State changes, then also reset districtData
       setDistrictGeoJsonData("")
-  }, [activeState, mode]);
+  }, [activeState, mode, activeRace]);
   useEffect(() => {
       axios.get(`http://localhost:3000/api/${activeState}/district-${mode}/box/${activeRace.toLowerCase()}`)
       .then(response => {setBoxandWhiskerData(response.data[0]);
