@@ -31,6 +31,19 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
         }
     }
     const mapRef = useRef(null)
+
+    let currentRace = "Black / African American"
+    switch (activeRace) {
+        case "HISPANIC":
+            currentRace = "Hispanic / Latino";
+            break;
+        case "BLACK":
+            currentRace = "Black / African American";
+            break;
+        case "ASIAN":
+            currentRace = "Asian / Asian American";
+            break;
+    }
     
     // GUI-14 (TODO Next)
     /*
@@ -92,6 +105,7 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
     <div>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
+                <h3>Voting Preference for {currentRace}</h3>
                 <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
                 zoom={7} className="leaflet-container" ref={mapRef} id="map-container-precinct"
                 whenReady={() => resizeMap(mapRef)}>
