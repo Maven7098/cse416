@@ -32,20 +32,22 @@ function CompareMapTab({activeState, activeRace, latitude, longitude}) {
     <Tab.Container id="left-tabs-example" defaultActiveKey="map" fluid>
       <Row>
         <Col lg={3}>
-          <Dropdown show={showDropdown} onToggle={toggleDropdown}>
-            <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary'>
-            {currentMode}
-            </Dropdown.Toggle>
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+            <Dropdown show={showDropdown} onToggle={toggleDropdown}>
+              <Dropdown.Toggle id="dropdown-basic" variant='outline-secondary'>
+              {currentMode}
+              </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-            <Dropdown.Item onClick={(e) => {setCurrentMode("Current / Proposed-VRA-Compliant"); e.stopPropagation(); handleItemClick()}}>
-              Current / Proposed-VRA-Compliant</Dropdown.Item>
-            <Dropdown.Item onClick={(e) => {setCurrentMode("Current / Proposed-Race-Blind"); e.stopPropagation(); handleItemClick()}
-            }>Current / Proposed-Race-Blind</Dropdown.Item>
-            <Dropdown.Item onClick={(e) => {setCurrentMode("Proposed-VRA-Compliant / Proposed-Race-Blind"); e.stopPropagation(); handleItemClick()}
-            }>Proposed-VRA-Compliant / Proposed-Race-Blind</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+              <Dropdown.Menu>
+              <Dropdown.Item onClick={(e) => {setCurrentMode("Current / Proposed-VRA-Compliant"); e.stopPropagation(); handleItemClick()}}>
+                Current / Proposed-VRA-Compliant</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => {setCurrentMode("Current / Proposed-Race-Blind"); e.stopPropagation(); handleItemClick()}
+              }>Current / Proposed-Race-Blind</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => {setCurrentMode("Proposed-VRA-Compliant / Proposed-Race-Blind"); e.stopPropagation(); handleItemClick()}
+              }>Proposed-VRA-Compliant / Proposed-Race-Blind</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
           <Nav variant="pills" className="flex-column">
             <Nav.Item>
               <Nav.Link eventKey="map">Compare Maps</Nav.Link>

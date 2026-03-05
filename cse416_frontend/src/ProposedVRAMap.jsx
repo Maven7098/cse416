@@ -77,6 +77,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
           {/* GUI-17: Display Box & Whisker Data */}
           <h3>Box and Whisker Data</h3>
           <BoxandWhiskerChart data={boxandWhiskerData} width={width} height={proposedHeight}/>
+          {/* <BoxandWhiskerExtra /> */}
         </div>
       </div>
     </div>

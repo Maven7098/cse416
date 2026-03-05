@@ -77,6 +77,7 @@ function CompareChart({ activeState, activeRace, currentMode }){
             {/* GUI-17: Display Box & Whisker Data */}
             <h3>Box and Whisker Data</h3>
             <BoxandWhiskerChart data={districtOne[1]} width={width} height={proposedHeight}/>
+            {/* <BoxandWhiskerExtra /> */}
           </div>
         </div>
         <div className='leaflet-container-big'>
@@ -87,6 +88,7 @@ function CompareChart({ activeState, activeRace, currentMode }){
             {/* GUI-17: Display Box & Whisker Data */}
             <h3>Box and Whisker Data</h3>
             <BoxandWhiskerChart data={districtTwo[1]} width={width} height={proposedHeight}/>
+            {/* <BoxandWhiskerExtra /> */}
           </div>
         </div>
         </>
