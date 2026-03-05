@@ -69,7 +69,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
         <h3>Proposed District Map</h3>
-        <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
         zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${mode}`}
         whenReady={() => resizeMap(mapRef)}>
           <TileLayer
@@ -77,7 +77,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GeoJSON data={districtGeoJsonData} key={JSON.stringify(districtGeoJsonData)}/>
-        </MapContainer></div>
+        </MapContainer>
       </div>
       <div className='leaflet-container-big'>
         <div style={{display: 'flex', flexDirection: 'column'}}>

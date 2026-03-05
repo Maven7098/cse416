@@ -92,7 +92,7 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
     <div>
         <div className="leaflet-containerset">
             <div className='leaflet-container-big'>
-                <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
+                <MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
                 zoom={7} className="leaflet-container" ref={mapRef} id="map-container-precinct"
                 whenReady={() => resizeMap(mapRef)}>
                     <TileLayer
@@ -101,7 +101,7 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
                     />
                     {/* Afraid of rendering a precinct file too large (I ran out of memory) */}
                     <GeoJSON data={precinctGeoJsonData} key={JSON.stringify(precinctGeoJsonData)}/>
-                </MapContainer></div>
+                </MapContainer>
             </div>
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
