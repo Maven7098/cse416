@@ -68,6 +68,16 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
     const mapRefOne = useRef(null)
     const mapRefTwo = useRef(null)
 
+  function districtWindow(){
+    return {
+        fillColor: '#FFEDA0',
+        color: '#800026',
+        weight: 2,
+        opacity: 0.5,
+        fillOpacity: 0.5
+    };
+  }
+
   return (
     // Load the GeoJSON for the districting map
     // For Map 1 only: Map 2 does not have districting map
@@ -85,7 +95,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={districtOne} key={JSON.stringify(districtOne)}/>
+          <GeoJSON data={districtOne} style={districtWindow} key={JSON.stringify(districtOne)}/>
         </MapContainer></div>
       </div>
       <div className='leaflet-container-big'>
@@ -97,7 +107,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={districtTwo} key={JSON.stringify(districtTwo)}/>
+          <GeoJSON data={districtTwo} style={districtWindow} key={JSON.stringify(districtTwo)}/>
         </MapContainer></div>
       </div>
     </div>
