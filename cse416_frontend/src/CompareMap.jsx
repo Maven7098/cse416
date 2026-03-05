@@ -10,8 +10,8 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
   const [proposedGeoJsonDataNonVra, setProposedGeoJsonDataNonVra] = useState("");
   const [districtOne, setDistrictOne] = useState("");
   const [districtTwo, setDistrictTwo] = useState("");
-  let districtOneName = "District 1"
-  let districtTwoName = "District 2"
+  const [districtOneName, setDistrictOneName] = useState("District 1")
+  const [districtTwoName, setDistrictTwoName] = useState("District 2")
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
@@ -27,27 +27,27 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
     switch (currentMode) {
     case "Current / Proposed-VRA-Compliant":
       setDistrictOne(districtGeoJsonData);
-      districtOneName = "Current District"
+      setDistrictOneName("Current District")
       setDistrictTwo(proposedGeoJsonDataVra);
-      districtTwoName = "Proposed District (VRA Compliant)"
+      setDistrictTwoName("Proposed District (VRA Compliant)")
       break;
     case "Current / Proposed-Race-Blind":
       setDistrictOne(districtGeoJsonData);
-      districtOneName = "Current District"
+      setDistrictOneName("Current District")
       setDistrictTwo(proposedGeoJsonDataNonVra);
-      districtTwoName = "Proposed District (Race Blind)"
+      setDistrictTwoName("Proposed District (Race Blind)")
       break;
     case "Proposed-VRA-Compliant / Proposed-Race-Blind":
       setDistrictOne(proposedGeoJsonDataVra);
-      districtOneName = "Proposed District (VRA Compliant)"
+      setDistrictOneName("Proposed District (VRA Compliant)")
       setDistrictTwo(proposedGeoJsonDataNonVra);
-      districtTwoName = "Proposed District (Race Blind)"
+      setDistrictTwoName("Proposed District (Race Blind)")
       break;
     default:
       setDistrictOne("");
-      districtOneName = "District 1"
+      setDistrictOneName("District 1")
       setDistrictTwo("");
-      districtTwoName = "District 2"
+      setDistrictTwoName("District 3")
     }
   }, [currentMode])
 
