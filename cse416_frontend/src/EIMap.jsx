@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
+import Legend from './MapLegend.jsx';
 import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
 import { data } from './Data.js'
@@ -46,6 +47,8 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
     }
     
     // GUI-14 (TODO Next)
+    const grades = [0, 20, 40, 60, 80, 100];
+    const colors = ['#00ffff', '#00aaaa', '#008888', '#0000ff', '#000066', '#000044'];
     /*
     function getColor(d) {
     return d > 1000000 ? '#800026' :
@@ -109,6 +112,7 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
                 <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
                 zoom={7} className="leaflet-container" ref={mapRef} id="map-container-precinct"
                 whenReady={() => resizeMap(mapRef)}>
+                    <Legend grades={grades} colors={colors} title={`${currentRace} Voting %`}/>
                     <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
