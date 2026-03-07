@@ -191,11 +191,14 @@ public class Cse416Controller {
             // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Ensemble-Data-VRA.json").getInputStream()
+                new ClassPathResource("assets/ia/IA-Ensemble-VRA.json").getInputStream()
             );
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode boxChart = objectMapper.readTree(
                 new ClassPathResource("assets/ia/IA-Box-VRA.json").getInputStream()
+            );
+            JsonNode circleChart = objectMapper.readTree(
+                new ClassPathResource("assets/ia/IA-Box-Current.json").getInputStream()
             );
 
             // Combine them into a Map
@@ -203,6 +206,7 @@ public class Cse416Controller {
             response.add(proposedDistrict);
             response.add(ensemble);
             response.add(boxChart);
+            response.add(circleChart);
                 
             // Return as JSON
             return ResponseEntity.ok(response);
@@ -215,11 +219,14 @@ public class Cse416Controller {
             // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Ensemble-Data-NonVRA.json").getInputStream()
+                new ClassPathResource("assets/ia/IA-Ensemble-NonVRA.json").getInputStream()
             );
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode boxChart = objectMapper.readTree(
                 new ClassPathResource("assets/ia/IA-Box-NonVRA.json").getInputStream()
+            );
+            JsonNode circleChart = objectMapper.readTree(
+                new ClassPathResource("assets/ia/IA-Box-Current.json").getInputStream()
             );
 
             // Combine them into a Map
@@ -227,6 +234,7 @@ public class Cse416Controller {
             response.add(proposedDistrict);
             response.add(ensemble);
             response.add(boxChart);
+            response.add(circleChart);
                 
             // Return as JSON
             return ResponseEntity.ok(response);
@@ -239,11 +247,14 @@ public class Cse416Controller {
             // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Ensemble-Data-VRA.json").getInputStream()
+                new ClassPathResource("assets/ga/GA-Ensemble-VRA.json").getInputStream()
             );
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode boxChart = objectMapper.readTree(
                 new ClassPathResource("assets/ga/GA-Box-VRA.json").getInputStream()
+            );
+            JsonNode circleChart = objectMapper.readTree(
+                new ClassPathResource("assets/ga/GA-Box-Current.json").getInputStream()
             );
 
             // Combine them into a Map
@@ -251,6 +262,7 @@ public class Cse416Controller {
             response.add(proposedDistrict);
             response.add(ensemble);
             response.add(boxChart);
+            response.add(circleChart);
                 
             // Return as JSON
             return ResponseEntity.ok(response);
@@ -263,11 +275,14 @@ public class Cse416Controller {
             // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Ensemble-Data-NonVRA.json").getInputStream()
+                new ClassPathResource("assets/ga/GA-Ensemble-NonVRA.json").getInputStream()
             );
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode boxChart = objectMapper.readTree(
                 new ClassPathResource("assets/ga/GA-Box-NonVRA.json").getInputStream()
+            );
+            JsonNode circleChart = objectMapper.readTree(
+                new ClassPathResource("assets/ga/GA-Box-Current.json").getInputStream()
             );
 
             // Combine them into a Map
@@ -275,6 +290,7 @@ public class Cse416Controller {
             response.add(proposedDistrict);
             response.add(ensemble);
             response.add(boxChart);
+            response.add(circleChart);
                 
             // Return as JSON
             return ResponseEntity.ok(response);
@@ -314,15 +330,15 @@ public class Cse416Controller {
             // Return as JSON
             return ResponseEntity.ok(response);
         }
-        if (currentState.equals("ia") && currentMode.equals("non-vra")){
+        if (currentState.equals("ia") && currentMode.equals("chart")){
             // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
             JsonNode ensembleVra = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Ensemble-Data-VRA.json").getInputStream()
+                new ClassPathResource("assets/ia/IA-Ensemble-VRA.json").getInputStream()
             );
             // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode ensembleNonVra = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Ensemble-Data-NonVRA.json").getInputStream()
+                new ClassPathResource("assets/ia/IA-Ensemble-NonVRA.json").getInputStream()
             );
             // Current Racial Distribution used for dots
             JsonNode boxCurrent = objectMapper.readTree(
@@ -370,12 +386,12 @@ public class Cse416Controller {
         if (currentState.equals("ga") && currentMode.equals("chart")){
             // Read file 1 from src/main/resources/assets/ga/GA-Congress-District.json
             JsonNode ensembleVra = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Ensemble-Data-VRA.json").getInputStream()
+                new ClassPathResource("assets/ga/GA-Ensemble-VRA.json").getInputStream()
             );
             // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode ensembleNonVra = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Ensemble-Data-NonVRA.json").getInputStream()
+                new ClassPathResource("assets/ga/GA-Ensemble-NonVRA.json").getInputStream()
             );
             // Current Racial Distribution used for dots
             JsonNode boxCurrent = objectMapper.readTree(

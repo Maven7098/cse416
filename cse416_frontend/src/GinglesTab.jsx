@@ -5,7 +5,8 @@ import Tab from 'react-bootstrap/Tab';
 import GinglesMap from './GinglesMap';
 import EIMap from './EIMap';
 import './CustomTab.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 
 function GinglesTab({activeState, activeRace, latitude, longitude}) {

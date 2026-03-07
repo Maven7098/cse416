@@ -14,22 +14,17 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
 
     // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
-      axios.get(`http://localhost:8080/${activeState}/district-${mode}`)
-      .then(response => {setDistrictGeoJsonData(response.data[0]);
-            setEnsembleSplitData(response.data[1])})
-      .catch(error => console.log(error.response.data))
-      // If Active State changes, then also reset districtData
-      setDistrictGeoJsonData("")
-  }, [activeState, mode, activeRace]);
-  useEffect(() => {
-      axios.get(`http://localhost:8080/${activeState}/district-${mode}/box/${activeRace.toLowerCase()}`)
-      .then(response => {setBoxandWhiskerData(response.data[0]);
-        setCircleData(response.data[1])
+      axios.get(`http://localhost:8080/proposed?currentState=${activeState}&currentMode=${mode}`)
+      .then(response => {
+        setDistrictGeoJsonData(response.data[0]);
+        setEnsembleSplitData(response.data[1]);
+        setBoxandWhiskerData(response.data[2]);
+        setCircleData(response.data[3]);
       })
       .catch(error => console.log(error.response.data))
       // If Active State changes, then also reset districtData
       setDistrictGeoJsonData("")
-  }, [activeState, mode, activeRace]);
+  }, [activeState, mode]);
 
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
@@ -87,15 +82,17 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GeoJSON data={districtGeoJsonData} style={districtWindow} key={JSON.stringify(districtGeoJsonData)}/>
-        </MapContainer></div>
+        </MapContainer>
       </div>
       <div className='leaflet-container-big'>
         <div style={{display: 'flex', flexDirection: 'column'}}>
           {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-          <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>
+          {ensembleSplitData && 
+          <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>}
           {/* GUI-17: Display Box & Whisker Data */}
           <h3 style={{marginBottom: "0.5rem"}}>Box and Whisker Data</h3>
-          <BoxandWhiskerChart data={boxandWhiskerData} circleData={circleData} width={width} height={proposedHeight}/>
+          {(boxandWhiskerData && circleData) && 
+          <BoxandWhiskerChart data={boxandWhiskerData.filter((data) => data.race == activeRace)} circleData={circleData.filter((data) => data.race == activeRace)} width={width} height={proposedHeight}/>}
           {/* <BoxandWhiskerExtra /> */}
         </div>
       </div>

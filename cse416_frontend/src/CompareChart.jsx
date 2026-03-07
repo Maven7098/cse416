@@ -28,9 +28,9 @@ function CompareChart({ activeState, activeRace }){
       .then(response => {
             setVraEnsembleSplitData(response.data[0]);
             setNonVraEnsembleSplitData(response.data[1])
-            setCurrentBoxandWhiskerData(response.data[0]);
-            setVraBoxandWhiskerData(response.data[1]);
-            setNonVraBoxandWhiskerData(response.data[2]);})
+            setCurrentBoxandWhiskerData(response.data[2]);
+            setVraBoxandWhiskerData(response.data[3]);
+            setNonVraBoxandWhiskerData(response.data[4]);})
       .catch(error => console.log(error.response.data))
   }, [activeState]);
 
@@ -48,10 +48,10 @@ function CompareChart({ activeState, activeRace }){
           <h3>{districtOneName}</h3>
           <div style={{display: 'flex', flexDirection: 'column'}}>
             {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-            <EnsembleSplits data={districtOne[0].filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>
+            <EnsembleSplits data={districtOne[0]} width={width} height={proposedHeight}/>
             {/* GUI-17: Display Box & Whisker Data */}
             <h3>Box and Whisker Data</h3>
-            {districtOne[1] &&
+            {(districtOne[1] && currentBoxandWhiskerData) &&
             <BoxandWhiskerChart data={districtOne[1].filter((data) => data.RACE === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>}
             {/* <BoxandWhiskerExtra /> */}
           </div>
@@ -60,11 +60,11 @@ function CompareChart({ activeState, activeRace }){
           <h3>{districtTwoName}</h3>
           <div style={{display: 'flex', flexDirection: 'column'}}>
             {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-            <EnsembleSplits data={districtTwo[0].filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>
+            <EnsembleSplits data={districtTwo[0]} width={width} height={proposedHeight}/>
             {/* GUI-17: Display Box & Whisker Data */}
             <h3>Box and Whisker Data</h3>
-            {districtTwo[1] && 
-            <BoxandWhiskerChart data={districtTwo[1]} circleData={currentBoxandWhiskerData} width={width} height={proposedHeight}/>}
+            {(districtTwo[1] && currentBoxandWhiskerData) && 
+            <BoxandWhiskerChart data={districtTwo[1].filter((data) => data.race === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.race === activeRace)} width={width} height={proposedHeight}/>}
             {/* <BoxandWhiskerExtra /> */}
           </div>
         </div>

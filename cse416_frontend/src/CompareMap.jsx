@@ -109,7 +109,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GeoJSON data={districtTwo} style={districtWindow} key={JSON.stringify(districtTwo)}/>
-        </MapContainer></div>
+        </MapContainer>
       </div>
     </div>
   );
