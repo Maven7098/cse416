@@ -15,29 +15,28 @@ function MainNavbar() {
   const isGeorgiaEnsembleActive = location.pathname.startsWith('/georgia/proposed');
   
   return (
-    <>
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container fluid className="px-0">
-        <Navbar.Brand as={Link} to="/">Home</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
-          <Nav className="mx-auto">
-            {/* onClick, change the latitude, longitude, geojsonData values */}
-            <Nav.Link as={Link} className={isIowaActive ? 'active nav-link' : 'nav-link'} to="/iowa">
-              NonPreclearanceState (Iowa - IA)</Nav.Link>
-            <Nav.Link as={Link} className={isGeorgiaActive ? 'active nav-link' : 'nav-link'} to="/georgia">
-              PreclearanceState (Georgia - GA)</Nav.Link>
-              <Nav.Link as={Link} className={isIowaEnsembleActive ? 'active nav-link' : 'nav-link'} to="/iowa/proposed/vra">
-              NonPreclearanceState (Iowa - IA) - District Ensembles</Nav.Link>
-            <Nav.Link as={Link} className={isGeorgiaEnsembleActive ? 'active nav-link' : 'nav-link'} to="/georgia/proposed/vra">
-              PreclearanceState (Georgia - GA) - District Ensembles</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-
-    <Outlet />
-    </>
+    <div className="navbar-wrapper">
+      <Navbar expand="lg" className="bg-body-tertiary">
+        <Container fluid className="px-0">
+          <Navbar.Brand as={Link} to="/">Home</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
+            <Nav className="mx-auto">
+              {/* onClick, change the latitude, longitude, geojsonData values */}
+              <Nav.Link as={Link} className={isIowaActive ? 'active nav-link' : 'nav-link'} to="/iowa">
+                NonPreclearanceState (Iowa - IA)</Nav.Link>
+              <Nav.Link as={Link} className={isGeorgiaActive ? 'active nav-link' : 'nav-link'} to="/georgia">
+                PreclearanceState (Georgia - GA)</Nav.Link>
+                <Nav.Link as={Link} className={isIowaEnsembleActive ? 'active nav-link' : 'nav-link'} to="/iowa/proposed/vra">
+                NonPreclearanceState (Iowa - IA) - District Ensembles</Nav.Link>
+              <Nav.Link as={Link} className={isGeorgiaEnsembleActive ? 'active nav-link' : 'nav-link'} to="/georgia/proposed/vra">
+                PreclearanceState (Georgia - GA) - District Ensembles</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      <Outlet />
+    </div>
   );
 }
 

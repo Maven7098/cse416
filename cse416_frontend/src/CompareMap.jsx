@@ -10,12 +10,12 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
   const [proposedGeoJsonDataNonVra, setProposedGeoJsonDataNonVra] = useState("");
   const [districtOne, setDistrictOne] = useState("");
   const [districtTwo, setDistrictTwo] = useState("");
-  const [districtOneName, setDistrictOneName] = useState("District 1")
-  const [districtTwoName, setDistrictTwoName] = useState("District 2")
+  const [districtOneName, setDistrictOneName] = useState("District 1");
+  const [districtTwoName, setDistrictTwoName] = useState("District 2");
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/district-compare`)
+      axios.get(`http://localhost:8080/compare?currentState=${activeState}&currentMode=map`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
             setProposedGeoJsonDataVra(response.data[1]);
             setProposedGeoJsonDataNonVra(response.data[2])})
@@ -47,7 +47,8 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
       setDistrictOne("");
       setDistrictOneName("District 1")
       setDistrictTwo("");
-      setDistrictTwoName("District 3")
+      setDistrictOne("");
+      setDistrictTwoName("District 2")
     }
   }, [currentMode])
 
@@ -88,7 +89,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
         <h3>{districtOneName}</h3>
-        <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(districtOne)}
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtOne)}
         zoom={7} className="leaflet-container" ref={mapRefOne} id={'map-container-district-one'}
         whenReady={() => resizeMapOne(mapRefOne)}>
           <TileLayer
@@ -96,11 +97,11 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GeoJSON data={districtOne} style={districtWindow} key={JSON.stringify(districtOne)}/>
-        </MapContainer></div>
+        </MapContainer>
       </div>
       <div className='leaflet-container-big'>
         <h3>{districtTwoName}</h3>
-        <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(districtTwo)}
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtTwo)}
         zoom={7} className="leaflet-container" ref={mapRefTwo} id={'map-container-district-two'}
         whenReady={() => resizeMapTwo(mapRefTwo)}>
           <TileLayer

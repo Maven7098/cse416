@@ -1,4 +1,4 @@
-#root {
+root {
     width: 100%;
 }
 .map{
@@ -10,7 +10,7 @@
 }
 .leaflet-containerset {
   width: 100%;
-  height: 85.5vh;
+  height: 100%;
   display:flex;
   flex-direction: row;
   overflow: hidden;
@@ -39,4 +39,6 @@
 .leaflet-container{
   width: 100%;
   height: 100%;
+  border: 8px solid #34000f;
+  border-radius: 15px;
 }

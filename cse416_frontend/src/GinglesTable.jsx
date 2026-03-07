@@ -12,7 +12,7 @@ function GinglesTable ({ data, race, activePrecinct }) {
 
     // TODO Today: Pagination
     // Divide the charts by 15
-    const linePerPage = 17;
+    const linePerPage = 18;
     const lineCount = data.length;
     const totalPages = Math.ceil(lineCount / linePerPage);
     const [paginatedData, setPaginatedData] = useState(
@@ -56,31 +56,44 @@ function GinglesTable ({ data, race, activePrecinct }) {
                         <tbody key={precinct.COUNT}>
                         <tr>
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
                                 <div style={{height: "3em", alignContent:"center", overflow:"hidden", textOverflow: "ellipsis"}}>
                                 {precinct.UNIQUE_ID}</div></td> : 
                                 <td><div style={{height: "3em", alignContent:"center", overflow:"hidden", textOverflow: "ellipsis"}}>
                                 {precinct.UNIQUE_ID}</div></td>}
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>{precinct.TOTAL}</td> : <td>{precinct.TOTAL}</td>}
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.TOTAL}</td> : <td>{precinct.TOTAL}</td>}
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>{precinct.URBAN}</td> : <td>{precinct.URBAN}</td>}
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.URBAN}</td> : <td>{precinct.URBAN}</td>}
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>{precinct.SUBURBAN}</td> : <td>{precinct.SUBURBAN}</td>}
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.SUBURBAN}</td> : <td>{precinct.SUBURBAN}</td>}
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>{precinct.RURAL}</td> : <td>{precinct.RURAL}</td>}
-                            {(race == "HISPANIC" || activePrecinct === precinct.COUNT)
-                             ? <td style={{fontWeight: "bold"}}>{precinct.HISPANIC}</td> : <td>{precinct.HISPANIC}</td>}
-                            {(race == "BLACK" || activePrecinct === precinct.COUNT)
-                             ? <td style={{fontWeight: "bold"}}>{precinct.BLACK}</td> : <td>{precinct.BLACK}</td>}
-                            {(race == "ASIAN" || activePrecinct === precinct.COUNT)
-                             ? <td style={{fontWeight: "bold"}}>{precinct.ASIAN}</td> : <td>{precinct.ASIAN}</td>}
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.RURAL}</td> : <td>{precinct.RURAL}</td>}
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>{precinct.WHITE}</td> : <td>{precinct.WHITE}</td>}
+                             ? (<td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.HISPANIC}</td>) : ( race == "HISPANIC" ? (<td style={{fontWeight: "bold"}}>{precinct.HISPANIC}</td>)
+                                : (<td>{precinct.HISPANIC}</td>))}
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>{precinct.DEMOCRATIC}</td> : <td>{precinct.DEMOCRATIC}</td>}
+                             ? (<td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.BLACK}</td>) : ( race == "BLACK" ? (<td style={{fontWeight: "bold"}}>{precinct.BLACK}</td>)
+                                : (<td>{precinct.BLACK}</td>))}
                             {activePrecinct === precinct.COUNT
-                             ? <td style={{fontWeight: "bold"}}>{precinct.REPUBLICAN}</td> : <td>{precinct.REPUBLICAN}</td>}
+                             ? (<td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.ASIAN}</td>) : ( race == "ASIAN" ? (<td style={{fontWeight: "bold"}}>{precinct.ASIAN}</td>)
+                                : (<td>{precinct.ASIAN}</td>))}
+                            {activePrecinct === precinct.COUNT
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.WHITE}</td> : <td>{precinct.WHITE}</td>}
+                            {activePrecinct === precinct.COUNT
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.DEMOCRATIC}</td> : <td>{precinct.DEMOCRATIC}</td>}
+                            {activePrecinct === precinct.COUNT
+                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
+                                {precinct.REPUBLICAN}</td> : <td>{precinct.REPUBLICAN}</td>}
                         </tr>
                         </tbody>
                     )

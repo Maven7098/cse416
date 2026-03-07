@@ -13,7 +13,7 @@ function Home() {
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/`)
+    axios.get(`http://localhost:8080/`)
       .then(response => {
         setIowa(response.data[0]);
         setGeorgia(response.data[1]);
@@ -64,11 +64,12 @@ function Home() {
   let navigate = useNavigate();
 
   return (
-    <>
+    <div className="home-page-wrapper">
       <h1>Select a State</h1>
+      <div className="home-map-container">
         <div className="leaflet-containerset">
           <div className='leaflet-container-big'>
-            <div className="map"><MapContainer center={[39.8333,-98.5833]} key={JSON.stringify(places)}
+            <MapContainer center={[39.8333,-98.5833]} key={JSON.stringify(places)}
             zoom={4} className="leaflet-container" ref={mapRef} id="map-container-district"
             whenReady={() => resizeMap(mapRef)}>
               <TileLayer
@@ -79,12 +80,13 @@ function Home() {
                 </GeoJSON>
               <GeoJSON data={georgia} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(georgia)}>
                 </GeoJSON>
-            </MapContainer></div>
+            </MapContainer>
           </div>
         </div>
+      </div>
 
         <Outlet />
-    </>
+    </div>
   )
 }
 

@@ -14,7 +14,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
 
     // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/district-${mode}`)
+      axios.get(`http://localhost:8080/${activeState}/district-${mode}`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
             setEnsembleSplitData(response.data[1])})
       .catch(error => console.log(error.response.data))
@@ -22,7 +22,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
       setDistrictGeoJsonData("")
   }, [activeState, mode, activeRace]);
   useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/district-${mode}/box/${activeRace.toLowerCase()}`)
+      axios.get(`http://localhost:8080/${activeState}/district-${mode}/box/${activeRace.toLowerCase()}`)
       .then(response => {setBoxandWhiskerData(response.data[0]);
         setCircleData(response.data[1])
       })
@@ -79,7 +79,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
         <h3>Proposed District Map</h3>
-        <div className="map"><MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
         zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${mode}`}
         whenReady={() => resizeMap(mapRef)}>
           <TileLayer

@@ -105,27 +105,27 @@ function EIAnalysis ({ width, height, data, race }) {
           fill="#ffffff"
           stroke="#000000"
           fillOpacity={0.6}
-          x={boundsWidth - 210}
+          x={boundsWidth - 230}
           y={-20}
         />
         <circle
           key="WHITE"
           r={6}
-          cx={boundsWidth - 195}
+          cx={boundsWidth - 215}
           cy={-5}
           fill="#e0ac2b"
         />
         <circle
           key={race}
           r={6}
-          cx={boundsWidth - 195}
+          cx={boundsWidth - 215}
           cy={15}
           fill="#e0ac2b"
         />
-        <text x={boundsWidth - 180} y={0} alignmentBaseline="central">
+        <text x={boundsWidth - 200} y={0} alignmentBaseline="central">
           White / European American
         </text>
-        <text x={boundsWidth - 180} y={20} alignmentBaseline="central">
+        <text x={boundsWidth - 200} y={20} alignmentBaseline="central">
           {currentRace}
         </text>
       </g>
