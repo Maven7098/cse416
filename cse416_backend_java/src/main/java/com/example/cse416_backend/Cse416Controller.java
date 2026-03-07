@@ -1,7 +1,9 @@
 package com.example.cse416_backend;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 public class Cse416Controller {
@@ -19,8 +19,8 @@ public class Cse416Controller {
 
     // Get 2 GeoJSON for the Homepage
     // Maps to / => /
-    @GetMapping("/")
-    public ResponseEntity<Map<String, JsonNode>> getHomePage() throws IOException {
+    @GetMapping(value = "/", produces = "application/json")
+    public ResponseEntity<JsonNode> getHomePage() throws IOException {
         
         // Read file 1 from src/main/resources/assets/ia/IA-State.json
         JsonNode stateOne = objectMapper.readTree(
@@ -33,9 +33,9 @@ public class Cse416Controller {
         );
 
         // Combine them into a Map
-        Map<String, JsonNode> response = new HashMap<>();
-        response.put("dataset1", stateOne);
-        response.put("dataset2", stateTwo);
+        ArrayNode response = objectMapper.createArrayNode();
+        response.add(stateOne);
+        response.add(stateTwo);
 
         // Return as JSON
         return ResponseEntity.ok(response);
@@ -44,8 +44,8 @@ public class Cse416Controller {
     // Get a State Package
     // Consists of 2 GeoJSON (District for District Select, Precinct for Heatmap)
     // And a State Data (Right-hand side display)
-    @GetMapping("/district")
-    public ResponseEntity<Map<String, JsonNode>> getStatePack(@RequestParam String currentState) throws IOException {
+    @GetMapping(value = "/district", produces = "application/json")
+    public ResponseEntity<JsonNode> getStatePack(@RequestParam String currentState) throws IOException {
         if (currentState.equals("ia")){
             // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
             JsonNode currentDistrict = objectMapper.readTree(
@@ -61,10 +61,10 @@ public class Cse416Controller {
             );
 
             // Combine them into a Map
-            Map<String, JsonNode> response = new HashMap<>();
-                response.put("districtGeoJson", currentDistrict);
-                response.put("precinctGeoJson", currentPrecinct);
-                response.put("stateInfo", currentStateInfo);
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add(currentDistrict);
+            response.add(currentPrecinct);
+            response.add(currentStateInfo);
                 
             // Return as JSON
             return ResponseEntity.ok(response);
@@ -84,23 +84,22 @@ public class Cse416Controller {
             );
 
             // Combine them into a Map
-            Map<String, JsonNode> response = new HashMap<>();
-                response.put("districtGeoJson", currentDistrict);
-                response.put("precinctGeoJson", currentPrecinct);
-                response.put("stateInfo", currentStateInfo);
-            
-            System.out.println(response);
-                
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add(currentDistrict);
+            response.add(currentPrecinct);
+            response.add(currentStateInfo);
+
             // Return as JSON
             return ResponseEntity.ok(response);
         }
         // Should only accept "ia" and "ga", nothing else
         // (we are not doing other states)
         else{
-            Map<String, JsonNode> response = new HashMap<>();
-                response.put("districtGeoJson", null);
-                response.put("precinctGeoJson", null);
-                response.put("stateInfo", null);
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add((JsonNode) null);
+            response.add((JsonNode) null);
+            response.add((JsonNode) null);
+
             return ResponseEntity.ok(response);
         }
     }
@@ -109,13 +108,20 @@ public class Cse416Controller {
     // Get Package for EI
     // Consists of 1 GeoJSON object (District for Heatmap)
     // And 3 Chart JSON Data (Gingles, EI Distribution, EI KDE)
-    @GetMapping("/polarization")
-    public ResponseEntity<Map<String, JsonNode>> getStateEiPack(@RequestParam String currentState) throws IOException {
+    @GetMapping(value = "/polarization", produces = "application/json")
+    public ResponseEntity<JsonNode> getStateEiPack(@RequestParam String currentState, String currentRace) throws IOException {
         if (currentState.equals("ia")){
             // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
             JsonNode currentDistrict = objectMapper.readTree(
                 new ClassPathResource("assets/ia/IA-Congress-Precinct.json").getInputStream()
             );
+            if(currentRace.equals("BLACK")){
+
+            }
+            else if(currentRace.equals("HISPANIC")){
+
+            }
+            // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode gingles = objectMapper.readTree(
                 new ClassPathResource("assets/ia/IA-Precinct-Output.json").getInputStream()
@@ -130,11 +136,11 @@ public class Cse416Controller {
             );
 
             // Combine them into a Map
-            Map<String, JsonNode> response = new HashMap<>();
-                response.put("precinctGeoJson", currentDistrict);
-                response.put("Gingles", gingles);
-                response.put("StateEi", currentEi);
-                response.put("StateKde", currentKde);
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add(gingles);
+            response.add(currentDistrict);
+            response.add(currentEi);
+            response.add(currentKde);
                 
             // Return as JSON
             return ResponseEntity.ok(response);
@@ -158,22 +164,23 @@ public class Cse416Controller {
             );
 
             // Combine them into a Map
-            Map<String, JsonNode> response = new HashMap<>();
-                response.put("precinctGeoJson", currentDistrict);
-                response.put("Gingles", gingles);
-                response.put("StateEi", currentEi);
-                response.put("StateKde", currentKde);
-                
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add(gingles);
+            response.add(currentDistrict);
+            response.add(currentEi);
+            response.add(currentKde);
+
             // Return as JSON
             return ResponseEntity.ok(response);
         }
         // Should only accept "ia" and "ga", nothing else
         // (we are not doing other states)
         else{
-            Map<String, JsonNode> response = new HashMap<>();
-                response.put("precinctGeoJson", null);
-                response.put("StateEi", null);
-                response.put("StateKde", null);
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add((JsonNode) null);
+            response.add((JsonNode) null);
+            response.add((JsonNode) null);
+
             return ResponseEntity.ok(response);
         }
     }
