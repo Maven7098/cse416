@@ -15,7 +15,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/district-compare`)
+      axios.get(`http://localhost:8080/compare?currentState=${activeState}&currentMode=map`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
             setProposedGeoJsonDataVra(response.data[1]);
             setProposedGeoJsonDataNonVra(response.data[2])})

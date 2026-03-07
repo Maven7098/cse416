@@ -13,7 +13,7 @@ function Home() {
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/`)
+    axios.get(`http://localhost:8080/`)
       .then(response => {
         setIowa(response.data[0]);
         setGeorgia(response.data[1]);

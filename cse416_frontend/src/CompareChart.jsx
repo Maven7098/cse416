@@ -22,25 +22,18 @@ function CompareChart({ activeState, activeRace }){
   const proposedHeight = 320;
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
-  // Universally available data: Does not depend on activeRace
+  // There are racial versions of all of those data
   useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/district-compare-chart`)
+      axios.get(`http://localhost:8080/compare?currentState=${activeState}&currentMode=chart`)
       .then(response => {
             setVraEnsembleSplitData(response.data[0]);
-            setNonVraEnsembleSplitData(response.data[1]);})
-      .catch(error => console.log(error.response.data))
-  }, [activeState]);
-
-  // These data depend on activeRace
-  useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/district-compare-chart/box/${activeRace.toLowerCase()}`)
-      .then(response => {
+            setNonVraEnsembleSplitData(response.data[1])
             setCurrentBoxandWhiskerData(response.data[0]);
             setVraBoxandWhiskerData(response.data[1]);
             setNonVraBoxandWhiskerData(response.data[2]);})
       .catch(error => console.log(error.response.data))
-  }, [activeState, activeRace]);
-  
+  }, [activeState]);
+
   useEffect(() => {
     setDistrictOne([vraEnsembleSplitData, vraBoxandWhiskerData]);
     setDistrictTwo([nonVraEnsembleSplitData, nonVraBoxandWhiskerData]);
@@ -55,10 +48,10 @@ function CompareChart({ activeState, activeRace }){
           <h3>{districtOneName}</h3>
           <div style={{display: 'flex', flexDirection: 'column'}}>
             {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-            <EnsembleSplits data={districtOne[0]} width={width} height={proposedHeight}/>
+            <EnsembleSplits data={districtOne[0].filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>
             {/* GUI-17: Display Box & Whisker Data */}
             <h3>Box and Whisker Data</h3>
-            <BoxandWhiskerChart data={districtOne[1]} circleData={currentBoxandWhiskerData} width={width} height={proposedHeight}/>
+            <BoxandWhiskerChart data={districtOne[1].filter((data) => data.RACE === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>
             {/* <BoxandWhiskerExtra /> */}
           </div>
         </div>
@@ -66,10 +59,10 @@ function CompareChart({ activeState, activeRace }){
           <h3>{districtTwoName}</h3>
           <div style={{display: 'flex', flexDirection: 'column'}}>
             {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-            <EnsembleSplits data={districtTwo[0]} width={width} height={proposedHeight}/>
+            <EnsembleSplits data={districtTwo[0].filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>
             {/* GUI-17: Display Box & Whisker Data */}
             <h3>Box and Whisker Data</h3>
-            <BoxandWhiskerChart data={districtTwo[1]} circleData={currentBoxandWhiskerData} width={width} height={proposedHeight}/>
+            <BoxandWhiskerChart data={districtTwo[1].filter((data) => data.RACE === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>
             {/* <BoxandWhiskerExtra /> */}
           </div>
         </div>

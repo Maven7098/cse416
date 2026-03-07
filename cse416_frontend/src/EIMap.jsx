@@ -7,16 +7,7 @@ import EIKDE from './EIKDE.jsx'
 import { data } from './Data.js'
 import { dataEi } from './DataEi.js';
 
-import axios from 'axios';
-
-function EIMap({ activeState, activeRace, latitude, longitude }){
-    const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
-
-  useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/precinct`)
-      .then(response => {setPrecinctGeoJsonData(response.data)})
-      .catch(error => console.log(error.response.data))
-  }, [activeState]);
+function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, longitude }){
 
     // What type of data will we need for GinglesMap.jsx?
     // Left: Choropleth Map (GUI-14)
@@ -108,10 +99,10 @@ function EIMap({ activeState, activeRace, latitude, longitude }){
                     <h3>Support for Candidate</h3>
                     <h5>EI Analysis</h5>
                     {/* EI Analysis */}
-                    <EIAnalysis data={dataEi} width={width} height={eiHeight} race={activeRace} />
+                    <EIAnalysis data={eiData} width={width} height={eiHeight} race={activeRace} />
                     <h3>EI KDE (Kernel Data) Results</h3>
                     {/* EI KDE Results */}
-                    <EIKDE data={data} width={width} height={eiHeight} race={activeRace}/>
+                    <EIKDE data={eiKdeData} width={width} height={eiHeight} race={activeRace}/>
                 </div>
             </div>
         </div>

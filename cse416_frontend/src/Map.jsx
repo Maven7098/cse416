@@ -15,7 +15,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
   const [currentState, setCurrentState] = useState("");
 
   useEffect(() => {
-      axios.get(`http://localhost:3000/api/${activeState}/district`)
+      axios.get(`http://localhost:8080/district?currentState=${activeState}`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
             setPrecinctGeoJsonData(response.data[1])
             setCurrentState(response.data[2])})
