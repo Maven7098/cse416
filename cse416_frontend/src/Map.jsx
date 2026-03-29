@@ -97,8 +97,21 @@ function Map({ activeState, activeRace, latitude, longitude }){
   }
 
   function onEachFeature(feature, layer) {
+    let closePopupTimeout;
     if (feature.properties) {
-        layer.bindPopup(`District No.: ${feature.properties.DISTRICT}`);
+        const popup = layer.bindPopup(`District ${feature.properties.DISTRICT}`, { autoClose: false, closeButton: false });
+        // Handle popup interactions
+        popup.on('popupopen', function() {
+          const popupElement = document.querySelector('.leaflet-popup');
+          if (popupElement) {
+            popupElement.addEventListener('mouseenter', function() {
+              clearTimeout(closePopupTimeout); // Cancel close when entering popup
+            });
+            popupElement.addEventListener('mouseleave', function() {
+              layer.closePopup();
+            });
+          }
+        });
     }
     // Send properties of the feature to Population.jsx
     layer.on("click", function (e) {
@@ -108,11 +121,15 @@ function Map({ activeState, activeRace, latitude, longitude }){
 
     layer.on('mouseover', function (e) {
         layer.setStyle({weight:6})
+        clearTimeout(closePopupTimeout); // Cancel any pending close
         this.openPopup();
     });
     layer.on('mouseout', function (e) {
         layer.setStyle({weight:2})
-        this.closePopup();
+        // Delay close to allow transition to popup without it closing
+        closePopupTimeout = setTimeout(() => {
+            layer.closePopup();
+        }, 150);
     });
   }
 
@@ -148,7 +165,7 @@ function Map({ activeState, activeRace, latitude, longitude }){
         <div className='leaflet-container-big'>
           {/* TODO Today: Use State Data if districtData is empty */}
           {districtData ? (<>
-          <button onClick={() => setDistrictData("")}>Go Back to State Information</button>
+          <button className="go-back-btn" onClick={() => setDistrictData("")}>Go Back to State Information</button>
           <Population districtData={districtData} width={width} height={heightPop} />
           </>)
           : (<>

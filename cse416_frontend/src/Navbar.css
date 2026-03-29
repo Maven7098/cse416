@@ -23,6 +23,23 @@
   letter-spacing: 0.5px;
 }
 
+.home-brand-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.home-favicon {
+  height: calc(1.5rem + 1.3rem);
+  width: calc(1.5rem + 1.3rem);
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #34000f;
+  outline: 2px solid #e8d4c8;
+  box-shadow: 0 1px 4px rgba(52, 0, 15, 0.25);
+  flex: 0 0 auto;
+}
+
 /* Home button styling - only for main navbar */
 .navbar.bg-body-tertiary .navbar-brand {
   color: #2c2c2c !important;
@@ -146,6 +163,33 @@
 .navbar.bg-body-tertiary {
   background-color: #f8f9fa !important;
   border-bottom: 2px solid #e0e0e0;
+}
+
+.team-bubble {
+  margin-left: auto;
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
+  border: 2px solid #34000f;
+  background-color: #34000f;
+  color: #e8d4c8;
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+  box-shadow: 0 1px 4px rgba(52, 0, 15, 0.2);
+}
+
+@media (max-width: 991.98px) {
+  .team-bubble {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 0.38rem 0.8rem;
+    font-size: 0.8rem;
+  }
 }
 
 /* Dark theme navbar (sub-navbars) */

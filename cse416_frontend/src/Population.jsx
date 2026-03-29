@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-const MARGIN = { top: 30, right: 60, bottom: 50, left: 60 };
+const MARGIN = { top: 10, right: 60, bottom: 50, left: 60 };
 const BAR_PADDING = 0.3;
 import titleCase from './TitleCase';
 
@@ -100,10 +100,9 @@ function Population({ width, height, districtData }){
     <div>
       <h3>District No.: {districtData.DISTRICT}</h3>
       <h5>District GeoID: {districtData.GEOID}</h5>
-    <div>
-      <p style={{margin: "2px"}}>Current Representative: {districtData.REPRESENT}</p>
-      <p style={{margin: "2px"}}>Race of Current Representative: {districtData.RRACE}</p>
-      <p style={{margin: "2px"}}>Margin of Victory: {districtData.WMARGIN}</p>
+    <div style={{marginBottom: "0"}}>
+      <p style={{margin: "2px"}}>Rep: {districtData.REPRESENT} | Margin: {districtData.WMARGIN}</p>
+      <p style={{margin: "2px"}}>Rep Race: {districtData.RRACE}</p>
     </div>
       <svg width={width} height={height}>
         <g

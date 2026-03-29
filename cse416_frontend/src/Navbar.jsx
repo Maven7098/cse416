@@ -18,7 +18,10 @@ function MainNavbar() {
     <div className="navbar-wrapper">
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container fluid className="px-0">
-          <Navbar.Brand as={Link} to="/">Home</Navbar.Brand>
+          <div className="home-brand-group">
+            <img src="/Maven7098.png" alt="Site icon" className="home-favicon" />
+            <Navbar.Brand as={Link} to="/">Home</Navbar.Brand>
+          </div>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
             <Nav className="mx-auto">
@@ -33,6 +36,7 @@ function MainNavbar() {
                 PreclearanceState (Georgia - GA) - District Ensembles</Nav.Link>
             </Nav>
           </Navbar.Collapse>
+          <div className="team-bubble" aria-label="Team Twins">Team Twins</div>
         </Container>
       </Navbar>
       <Outlet />
