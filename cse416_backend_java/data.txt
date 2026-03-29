@@ -1,0 +1,10 @@
+assets/ia/IA-State.json: State Information
+assets/ia/IA-Congress-Precinct.json: Precinct Information (Contains both EI Heatmap and Demographic Heatmap)
+assets/ia/IA-Congress-District-Current.json: Current District (Neither GA nor IA has Proposed Districts)
+assets/ia/IA-Congress-District-Proposed-VRA.json: VRA-Compliant Proposed District
+assets/ia/IA-Precinct-Output.json: Precinct chart (for Gingles analysis)
+assets/ia/IA-Precinct-EI.json: EI Analysis for voting preference, contains data for all 3 races (though only Hispanic is used in IA)
+assets/ia/IA-Precinct-KDE.json: Kernel Analysis, contains data for all 3 races (though only Hispanic is used in IA)
+assets/ia/IA-Ensemble-VRA.json: Ensemble Data (simulated election, VRA Compliant), maybe different for all 3 races
+assets/ia/IA-Box-VRA.json: Box and Whisker Data (Distribution of racial population per district)
+assets/ia/IA-Box-Current.json: Current racial distribution, used as a dot for Box and Whiskers Chart
