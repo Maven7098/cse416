@@ -17,30 +17,18 @@ import java.io.IOException;
 @RestController
 public class Cse416Controller {
 
+    private final HomeDataService homeDataService;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public Cse416Controller(HomeDataService homeDataService) {
+        this.homeDataService = homeDataService;
+    }
 
     // Get 2 GeoJSON for the Homepage
     // Maps to / => /
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<JsonNode> getHomePage() throws IOException {
-        
-        // Read file 1 from src/main/resources/assets/ia/IA-State.json
-        JsonNode stateOne = objectMapper.readTree(
-            new ClassPathResource("assets/ia/IA-State.json").getInputStream()
-        );
-        
-        // Read file 2 from src/main/resources/geo2.json
-        JsonNode stateTwo = objectMapper.readTree(
-            new ClassPathResource("assets/ga/GA-State.json").getInputStream()
-        );
-
-        // Combine them into a Map
-        ArrayNode response = objectMapper.createArrayNode();
-        response.add(stateOne);
-        response.add(stateTwo);
-
-        // Return as JSON
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(homeDataService.getHomePayload());
     }
 
     // Get a State Package
