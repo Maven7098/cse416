@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import './Map.css';
+import '../CSS/Map.css';
 import Legend from './MapLegend.jsx';
 import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
-import { data } from './Data.js'
-import { dataEi } from './DataEi.js';
 
 function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, longitude }){
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import L from 'leaflet';
 import { useMap } from 'react-leaflet';
-import './MapLegend.css'
+import '../CSS/MapLegend.css'
 
 const Legend = ({ grades, colors, title }) => {
   const map = useMap();

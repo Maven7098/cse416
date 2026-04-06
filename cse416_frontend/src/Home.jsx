@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import './Map.css';
 import { useNavigate, Outlet } from 'react-router'
 import axios from 'axios';
-import './Home.css'
+import 'leaflet/dist/leaflet.css';
+import './CSS/Map.css';
+import './CSS/Home.css'
 
 function Home() {
   // Get the image of Iowa and Georgia states from server

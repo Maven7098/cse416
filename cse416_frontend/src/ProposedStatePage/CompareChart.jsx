@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import EnsembleSplits from './EnsembleSplits';
 import BoxandWhiskerChart from './BoxandWhiskerChart';
 import 'leaflet/dist/leaflet.css';
-import './Map.css';
+import '../CSS/Map.css';
 import axios from 'axios';
 
 function CompareChart({ activeState, activeRace }){

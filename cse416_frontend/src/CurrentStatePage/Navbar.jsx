@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {Link, Outlet, useLocation} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Navbar.css';
+import '../CSS/Navbar.css';
 
 function MainNavbar() {
   const location = useLocation();

@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import Dropdown from 'react-bootstrap/Dropdown';
-import './CustomTab.css'
+import '../CSS/CustomTab.css'
 import CompareMap from './CompareMap.jsx';
 import CompareChart from './CompareChart.jsx';
 import { useState } from 'react';

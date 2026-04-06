@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import {NavLink, Outlet} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Navbar.css';
+import '../CSS/Navbar.css';
 
 function MapNavbar({activeState, activeRace, setActiveRace}) {
   let activeStateName = ""

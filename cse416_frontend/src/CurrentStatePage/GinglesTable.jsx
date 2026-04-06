@@ -1,8 +1,8 @@
 // From https://galencasstevens.com/pagination-with-react-bootstrap/
 
 import { useEffect, useState } from 'react';
-import PaginationHelper from './PaginationHelper.jsx';
-import './GinglesTable.css'
+import PaginationHelper from '../Chart/PaginationHelper.jsx';
+import '../CSS/GinglesTable.css'
 
 function GinglesTable ({ data, race, activePrecinct }) {
     // I guess a simple table will do?

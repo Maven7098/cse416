@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
-import SummaryStats from "./SummaryStats.jsx";
-import AxisLeft from "./AxisLeft";
-import AxisBottom from "./AxisBottomCategoric";
-import VerticalBox from "./VerticalBox";
+import SummaryStats from "../Chart/SummaryStats";
+import AxisLeft from "../Chart/AxisLeft";
+import AxisBottom from "../Chart/AxisBottomCategoric";
+import VerticalBox from "../Chart/VerticalBox";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
 

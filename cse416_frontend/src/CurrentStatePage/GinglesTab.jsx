@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import GinglesMap from './GinglesMap';
 import EIMap from './EIMap';
-import './CustomTab.css'
+import '../CSS/CustomTab.css'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 

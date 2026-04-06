@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import MainNavbar from './Navbar.jsx'
 import Home from "./Home.jsx";
-import MapNavbar from "./MapNavbar.jsx";
-import Map from "./Map.jsx";
-import GinglesTab from "./GinglesTab.jsx";
-import ProposedNavbar from './ProposedNavbar.jsx'
-import ProposedVRAMap from './ProposedVRAMap.jsx'
-import CompareMapTab from "./CompareMapTab.jsx";
+import MapNavbar from "./CurrentStatePage/MapNavbar.jsx";
+import Map from "./CurrentStatePage/Map.jsx";
+import GinglesTab from "./CurrentStatePage/GinglesTab.jsx";
+import ProposedNavbar from './ProposedStatePage/ProposedNavbar.jsx'
+import ProposedVRAMap from './ProposedStatePage/ProposedVRAMap.jsx'
+import CompareMapTab from "./ProposedStatePage/CompareMapTab.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // import NoPage from "./pages/NoPage";

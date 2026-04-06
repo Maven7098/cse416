@@ -1,4 +1,4 @@
-import styles from "./tooltip.module.css";
+import styles from "../CSS/tooltip.module.css";
 
 // Information needed to build the tooltip
 
