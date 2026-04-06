@@ -46,9 +46,8 @@ function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, l
         weight: 2,
         opacity: 0.5,
         fillOpacity: 0.5
-    };
-  }
-    /*
+        };
+    }
     function getColor(d) {
     return d > 1000000 ? '#800026' :
            d > 500000  ? '#BD0026' :
@@ -93,7 +92,6 @@ function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, l
             fillOpacity: 0.7
         };
     }
-    */
     
     const width = 680;
     const eiHeight = 330;
@@ -125,10 +123,10 @@ function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, l
                     <h3>Support for Candidate</h3>
                     <h5>EI Analysis</h5>
                     {/* EI Analysis */}
-                    <EIAnalysis data={dataEi} width={width} height={eiHeight} race={activeRace} />
+                    <EIAnalysis data={eiData} width={width} height={eiHeight} race={activeRace} />
                     <h3>EI KDE (Kernel Data) Results</h3>
                     {/* EI KDE Results */}
-                    <EIKDE data={data} width={width} height={eiHeight} race={activeRace}/>
+                    <EIKDE data={eiKdeData} width={width} height={eiHeight} race={activeRace}/>
                 </div>
             </div>
         </div>

@@ -24,12 +24,12 @@ public class GetStatePolarizationService {
         if (currentState.equals("ia")){
             // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
             JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Congress-Precinct.json").getInputStream()
+                new ClassPathResource("assets/ia/IA-Precinct-EI-GeoJSON.json").getInputStream()
             );
             // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode gingles = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Precinct-Output.json").getInputStream()
+                new ClassPathResource("assets/ia/IA-Precinct-Gingles.json").getInputStream()
             );
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode currentEi = objectMapper.readTree(
@@ -53,11 +53,11 @@ public class GetStatePolarizationService {
         else if (currentState.equals("ga")){
             // Read file 1 from src/main/resources/assets/ga/GA-Congress-District.json
             JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Congress-Precinct.json").getInputStream()
+                new ClassPathResource("assets/ga/GA-Precinct-EI-GeoJSON.json").getInputStream()
             );
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode gingles = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Precinct-Output.json").getInputStream()
+                new ClassPathResource("assets/ga/GA-Precinct-Gingles.json").getInputStream()
             );
             // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode currentEi = objectMapper.readTree(

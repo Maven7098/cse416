@@ -20,15 +20,11 @@ public class GetStateSummaryService {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
-    public JsonNode getHomePayload(String stateCode) throws IOException {
-        if (stateCode.equals("ia") || stateCode.equals("ga")){
+    public JsonNode getHomePayload(String currentState) throws IOException {
+        if (currentState.equals("ia") || currentState.equals("ga")){
             // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
             JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Congress-District.json").getInputStream()
-            );
-            // Read file 2 from src/main/resources/assets/ia/IA-Congress-Precinct.json
-            JsonNode currentPrecinct = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Congress-Precinct.json").getInputStream()
+                new ClassPathResource("assets/ia/IA-Congress-District-Current-GeoJSON.json").getInputStream()
             );
             // Read file 3 from src/main/resources/assets/ia/IA-State-Info.json
             JsonNode currentStateInfo = objectMapper.readTree(
@@ -38,7 +34,6 @@ public class GetStateSummaryService {
             // Combine them into a Map
             ArrayNode response = objectMapper.createArrayNode();
             response.add(currentDistrict);
-            response.add(currentPrecinct);
             response.add(currentStateInfo);
                 
             // Return as JSON
@@ -59,10 +54,10 @@ public class GetStateSummaryService {
     // Get a State Package
     // Consists of 2 GeoJSON (District for District Select, Precinct for Heatmap)
     // And a State Data (Right-hand side display)
-    private JsonNode getStatePayload(String stateCode) throws IOException {
-        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findByStateCode(stateCode);
+    private JsonNode getStatePayload(String currentState) throws IOException {
+        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findByStateCode(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
-            throw new IOException("Missing home_geojson payload for state: " + stateCode);
+            throw new IOException("Missing home_geojson payload for state: " + currentState);
         }
         return objectMapper.readTree(stateDoc.get().getPayload().toJson());
     }
