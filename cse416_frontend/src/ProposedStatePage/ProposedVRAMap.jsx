@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import '../CSS/Map.css';
+import '../CSS/StateInfo.css';
 import EnsembleSplits from './EnsembleSplits.jsx'
 import BoxandWhiskerChart from './BoxandWhiskerChart.jsx'
 import axios from 'axios';

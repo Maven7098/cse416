@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
-import '../CSS/Map.css';
+import '../CSS/StateInfo.css';
 import GinglesData from './GinglesData.jsx'
 import GinglesTable from './GinglesTable.jsx'
 

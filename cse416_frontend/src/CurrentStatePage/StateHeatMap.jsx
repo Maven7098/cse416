@@ -1,0 +1,93 @@
+import { useEffect, useState, useRef } from 'react';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import '../CSS/StateInfo.css';
+
+import Legend from './MapLegend.jsx';
+import axios from 'axios';
+
+function StateHeatMap({ activeState, activeRace, latitude, longitude }){
+  const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
+  const [censusBlockGeoJsonData, setCensusBlockGeoJsonData] = useState("");
+  const [currentMode, setCurrentMode] = useState("Precinct");
+
+  // Set the Precinct and Census Block GeoJSON Data
+  useEffect(() => {
+      axios.get(`http://localhost:8080/heatmap?currentState=${activeState}`)
+      .then(response => {setPrecinctGeoJsonData(response.data[0])
+            setCensusBlockGeoJsonData(response.data[1])})
+      .catch(error => console.log(error.response.data))
+  }, [activeState]);
+
+  // This is to force the map to load upon first click
+  const resizeMap = (mapRef) => {
+    const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
+    const container = document.getElementById('map-container-district')
+    if (container) {
+      resizeObserver.observe(container)
+    }
+  }
+  const mapRef = useRef(null)
+
+  function getColor(d) {
+    return d > 1000 ? '#800026' :
+           d > 800  ? '#BD0026' :
+           d > 600  ? '#E31A1C' :
+           d > 400  ? '#FC4E2A' :
+           d > 200  ? '#FD8D3C' :
+                      '#FFEDA0';
+  }
+
+  function precinctHeatMap(feature) {
+    // Need to find data on which President won which district
+    // No third party won any district in Georgia or Iowa, so I only keep 2 values
+    let mapRace;
+
+    switch (activeRace) {
+      case "HISPANIC":
+        mapRace = feature.properties.HISPANIC;
+        break;
+      case "BLACK":
+        mapRace = feature.properties.BLACK;
+        break;
+      case "ASIAN":
+        mapRace = feature.properties.ASIAN;
+        break;
+    }
+    
+    return {
+        // property type should be chosen later on (after graph rendering is done)
+        fillColor: getColor(mapRace),
+        opacity: 1,
+        fillOpacity: 0.5
+    };
+  }
+
+  const grades = [0, 200, 400, 600, 800, 1000];
+  const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+
+  return (
+    <div>
+      <div className="leaflet-containerset">
+        <div className='leaflet-container-big'>
+          <h3>Select District</h3>
+          <MapContainer center={[latitude, longitude]} key={currentMode === "Precinct" ? JSON.stringify(precinctGeoJsonData) : JSON.stringify(censusBlockGeoJsonData)}
+          zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
+          whenReady={() => resizeMap(mapRef)}>
+            <Legend grades={grades} colors={colors} title={currentRace}/>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            {/* Either render Precinct or Census Block depending on choice */}
+            {currentMode === "Precinct" 
+            ? <GeoJSON data={precinctGeoJsonData} style={precinctHeatMap} key={JSON.stringify(precinctGeoJsonData)} />
+            : <GeoJSON data={censusBlockGeoJsonData} style={precinctHeatMap} key={JSON.stringify(censusBlockGeoJsonData)}/>}
+          </MapContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StateHeatMap;

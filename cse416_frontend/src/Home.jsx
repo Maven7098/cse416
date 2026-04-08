@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { useNavigate, Outlet } from 'react-router'
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
-import './CSS/Map.css';
+import './CSS/StateInfo.css';
 import './CSS/Home.css'
 
 function Home() {
