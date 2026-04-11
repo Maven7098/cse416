@@ -40,11 +40,11 @@ public class DataSeedService {
         try {
             logger.info("Seeding home_geojson collection...");
 
-            if (homeGeoJsonRepository.findByStateCode("ia").isEmpty()) {
+            if (homeGeoJsonRepository.findBycurrentState("ia").isEmpty()) {
                 String iaJsonString = loadJsonStringFromClasspath("assets/ia/IA-State.json");
                 if (iaJsonString != null && !iaJsonString.isEmpty()) {
                     HomeGeoJsonDocument iaDoc = new HomeGeoJsonDocument();
-                    iaDoc.setStateCode("ia");
+                    iaDoc.setcurrentState("ia");
                     iaDoc.setPayload(Document.parse(iaJsonString));
                     homeGeoJsonRepository.save(iaDoc);
                     logger.info("  ✓ Seeded IA home_geojson document");
@@ -53,11 +53,11 @@ public class DataSeedService {
                 logger.info("  ✓ IA home_geojson document already exists. Skipping.");
             }
 
-            if (homeGeoJsonRepository.findByStateCode("ga").isEmpty()) {
+            if (homeGeoJsonRepository.findBycurrentState("ga").isEmpty()) {
                 String gaJsonString = loadJsonStringFromClasspath("assets/ga/GA-State.json");
                 if (gaJsonString != null && !gaJsonString.isEmpty()) {
                     HomeGeoJsonDocument gaDoc = new HomeGeoJsonDocument();
-                    gaDoc.setStateCode("ga");
+                    gaDoc.setcurrentState("ga");
                     gaDoc.setPayload(Document.parse(gaJsonString));
                     homeGeoJsonRepository.save(gaDoc);
                     logger.info("  ✓ Seeded GA home_geojson document");
@@ -94,7 +94,7 @@ public class DataSeedService {
             logger.info("Seeding ensemble collection... (TODO)");
             // Example structure:
             // 1. Load IA-Ensemble-Data-VRA.json
-            // 2. Create EnsembleDocument with stateCode, mode, and payload
+            // 2. Create EnsembleDocument with currentState, mode, and payload
             // 3. Save to ensembleRepository
         } catch (IOException e) {
             logger.error("Error seeding ensemble data", e);

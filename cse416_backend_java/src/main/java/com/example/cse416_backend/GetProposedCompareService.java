@@ -149,7 +149,7 @@ public class GetProposedCompareService {
     // Consists of 2 GeoJSON (District for District Select, Precinct for Heatmap)
     // And a State Data (Right-hand side display)
     private JsonNode getStatePayload(String currentState) throws IOException {
-        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findByStateCode(currentState);
+        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
             throw new IOException("Missing home_geojson payload for state: " + currentState);
         }

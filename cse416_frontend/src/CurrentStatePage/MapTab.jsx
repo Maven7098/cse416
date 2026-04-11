@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import StateInfo from './StateInfo.jsx';
-import StateHeatMap from './StateHeatMap.jsx';
+import StateHeatmap from './StateHeatmap.jsx';
 import '../CSS/CustomTab.css'
 
 
@@ -25,7 +25,7 @@ function MapTab({activeState, activeRace, latitude, longitude}) {
         <Col lg={true}>
           <Tab.Content>
             <Tab.Pane eventKey="info"><StateInfo activeState={activeState} latitude={latitude} longitude={longitude} /></Tab.Pane>
-            <Tab.Pane eventKey="heatmap"><StateHeatMap activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude}  /></Tab.Pane>
+            <Tab.Pane eventKey="heatmap"><StateHeatmap activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude}  /></Tab.Pane>
           </Tab.Content>
         </Col>
       </Row>

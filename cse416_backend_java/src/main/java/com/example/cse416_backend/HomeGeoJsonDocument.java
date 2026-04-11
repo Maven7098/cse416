@@ -10,8 +10,8 @@ public class HomeGeoJsonDocument {
     @Id
     private String id;
 
-    @Field("stateCode")
-    private String stateCode;
+    @Field("currentState")
+    private String currentState;
 
     @Field("payload")
     private org.bson.Document payload;
@@ -24,12 +24,12 @@ public class HomeGeoJsonDocument {
         this.id = id;
     }
 
-    public String getStateCode() {
-        return stateCode;
+    public String getcurrentState() {
+        return currentState;
     }
 
-    public void setStateCode(String stateCode) {
-        this.stateCode = stateCode;
+    public void setcurrentState(String currentState) {
+        this.currentState = currentState;
     }
 
     public org.bson.Document getPayload() {

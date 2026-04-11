@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HomeGeoJsonRepository extends MongoRepository<HomeGeoJsonDocument, String> {
-    Optional<HomeGeoJsonDocument> findByStateCode(String stateCode);
+    Optional<HomeGeoJsonDocument> findBycurrentState(String currentState);
 }

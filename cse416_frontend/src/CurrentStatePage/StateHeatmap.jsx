@@ -6,7 +6,7 @@ import '../CSS/StateInfo.css';
 import Legend from './MapLegend.jsx';
 import axios from 'axios';
 
-function StateHeatMap({ activeState, activeRace, latitude, longitude }){
+function StateHeatmap({ activeState, activeRace, latitude, longitude }){
   const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
   const [censusBlockGeoJsonData, setCensusBlockGeoJsonData] = useState("");
   const [currentMode, setCurrentMode] = useState("Precinct");
@@ -38,7 +38,7 @@ function StateHeatMap({ activeState, activeRace, latitude, longitude }){
                       '#FFEDA0';
   }
 
-  function precinctHeatMap(feature) {
+  function precinctHeatmap(feature) {
     // Need to find data on which President won which district
     // No third party won any district in Georgia or Iowa, so I only keep 2 values
     let mapRace;
@@ -81,8 +81,8 @@ function StateHeatMap({ activeState, activeRace, latitude, longitude }){
             />
             {/* Either render Precinct or Census Block depending on choice */}
             {currentMode === "Precinct" 
-            ? <GeoJSON data={precinctGeoJsonData} style={precinctHeatMap} key={JSON.stringify(precinctGeoJsonData)} />
-            : <GeoJSON data={censusBlockGeoJsonData} style={precinctHeatMap} key={JSON.stringify(censusBlockGeoJsonData)}/>}
+            ? <GeoJSON data={precinctGeoJsonData} style={precinctHeatmap} key={JSON.stringify(precinctGeoJsonData)} />
+            : <GeoJSON data={censusBlockGeoJsonData} style={precinctHeatmap} key={JSON.stringify(censusBlockGeoJsonData)}/>}
           </MapContainer>
         </div>
       </div>
@@ -90,4 +90,4 @@ function StateHeatMap({ activeState, activeRace, latitude, longitude }){
   );
 };
 
-export default StateHeatMap;
+export default StateHeatmap;

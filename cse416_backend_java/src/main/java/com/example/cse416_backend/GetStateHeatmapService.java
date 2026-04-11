@@ -49,10 +49,10 @@ public class GetStateHeatmapService {
         }
     }
 
-    private JsonNode getStatePayload(String stateCode) throws IOException {
-        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findByStateCode(stateCode);
+    private JsonNode getStatePayload(String currentState) throws IOException {
+        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
-            throw new IOException("Missing home_geojson payload for state: " + stateCode);
+            throw new IOException("Missing home_geojson payload for state: " + currentState);
         }
         return objectMapper.readTree(stateDoc.get().getPayload().toJson());
     }
