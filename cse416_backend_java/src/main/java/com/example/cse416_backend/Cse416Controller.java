@@ -1,10 +1,6 @@
 package com.example.cse416_backend;
 
 import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ArrayNode;
-
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,7 +73,7 @@ public class Cse416Controller {
     // Consists of 1 GeoJSON object (District for proposed map)
     // And 2 Chart JSON Data (BarChart, Box&Whisker)
     @GetMapping(value = "/proposed", produces = "application/json")
-    public ResponseEntity<JsonNode> getProposed(@RequestParam String currentState, String currentMode) throws IOException {
+    public ResponseEntity<JsonNode> getProposedPack(@RequestParam String currentState, String currentMode) throws IOException {
         return ResponseEntity.ok(proposedDataService.getHomePayload(currentState, currentMode));
     }
 
@@ -86,7 +82,7 @@ public class Cse416Controller {
     // Consists of 1 GeoJSON object (Precinct for Heatmap)
     // And 3 Chart JSON Data (Gingles, EI Distribution, EI KDE)
     @GetMapping(value = "/compare", produces = "application/json")
-    public ResponseEntity<JsonNode> getCompare(@RequestParam String currentState, String currentMode) throws IOException {
+    public ResponseEntity<JsonNode> getComparePack(@RequestParam String currentState, String currentMode) throws IOException {
         return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState, currentMode));
     }
 }
