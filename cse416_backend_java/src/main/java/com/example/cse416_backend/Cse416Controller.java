@@ -78,11 +78,11 @@ public class Cse416Controller {
     }
 
     // DTO for comparison
-    // Satisfies GUI-20, GUI-21, GUI-22, GUI-12, GUI-13, GUI-14, GUI-15
-    // Consists of 1 GeoJSON object (Precinct for Heatmap)
-    // And 3 Chart JSON Data (Gingles, EI Distribution, EI KDE)
+    // Satisfies GUI-20, GUI-21, GUI-22
+    // Unclear if this is even required in the first place
+    // proposed DTO can be called twice (in vra and non-vra)
     @GetMapping(value = "/compare", produces = "application/json")
-    public ResponseEntity<JsonNode> getComparePack(@RequestParam String currentState, String currentMode) throws IOException {
-        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState, currentMode));
+    public ResponseEntity<JsonNode> getComparePack(@RequestParam String currentState) throws IOException {
+        return null;
     }
 }
