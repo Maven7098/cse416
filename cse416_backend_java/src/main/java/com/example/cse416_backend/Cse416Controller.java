@@ -14,17 +14,17 @@ import java.io.IOException;
 public class Cse416Controller {
 
     // The Prepared DTO (Data Transfer Obj's)
-    private final GetHomeDataService homeDataService;
-    private final GetStateSummaryService stateSummaryService;
-    private final GetStateHeatmapService stateHeatmapService;
-    private final GetStatePolarizationService statePolarizationService;
-    private final GetProposedDataService proposedDataService;
-    private final GetProposedCompareService proposedCompareService;
+    private final HomeDataService homeDataService;
+    private final StateSummaryService stateSummaryService;
+    private final StateHeatmapService stateHeatmapService;
+    private final StatePolarizationService statePolarizationService;
+    private final ProposedDataService proposedDataService;
+    private final ProposedCompareService proposedCompareService;
 
     // Map the DTO (Objects)
-    public Cse416Controller(GetHomeDataService homeDataService, GetStateSummaryService stateSummaryService,
-        GetStateHeatmapService stateHeatmapService, GetStatePolarizationService statePolarizationService,
-        GetProposedDataService proposedDataService, GetProposedCompareService proposedCompareService ){
+    public Cse416Controller(HomeDataService homeDataService, StateSummaryService stateSummaryService,
+        StateHeatmapService stateHeatmapService, StatePolarizationService statePolarizationService,
+        ProposedDataService proposedDataService, ProposedCompareService proposedCompareService ){
         this.homeDataService = homeDataService;
         this.stateSummaryService = stateSummaryService;
         this.stateHeatmapService = stateHeatmapService;
@@ -79,10 +79,8 @@ public class Cse416Controller {
 
     // DTO for comparison
     // Satisfies GUI-20, GUI-21, GUI-22
-    // Unclear if this is even required in the first place
-    // proposed DTO can be called twice (in vra and non-vra)
     @GetMapping(value = "/compare", produces = "application/json")
     public ResponseEntity<JsonNode> getComparePack(@RequestParam String currentState) throws IOException {
-        return null;
+        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState));;
     }
 }

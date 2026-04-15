@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-public class GetStatePolarizationService {
+public class StatePolarizationService {
 
     private final HomeGeoJsonRepository homeGeoJsonRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public GetStatePolarizationService(HomeGeoJsonRepository homeGeoJsonRepository) {
+    public StatePolarizationService(HomeGeoJsonRepository homeGeoJsonRepository) {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 

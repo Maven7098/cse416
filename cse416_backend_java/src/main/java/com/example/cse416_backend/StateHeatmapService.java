@@ -11,37 +11,35 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-public class GetStateSummaryService {
+public class StateHeatmapService {
 
     private final HomeGeoJsonRepository homeGeoJsonRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public GetStateSummaryService(HomeGeoJsonRepository homeGeoJsonRepository) {
+    public StateHeatmapService(HomeGeoJsonRepository homeGeoJsonRepository) {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
     public JsonNode getHomePayload(String currentState) throws IOException {
         if (currentState.equals("ia") || currentState.equals("ga")){
-            // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
-            JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Congress-District-Current-GeoJSON.json").getInputStream()
-            );
-            // Read file 3 from src/main/resources/assets/ia/IA-State-Info.json
-            JsonNode currentStateInfo = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-State-Info.json").getInputStream()
-            );
+        JsonNode iaNode = getStatePayload("ia");
+        JsonNode gaNode = getStatePayload("ga");
 
-            // Combine them into a Map
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(currentDistrict);
-            response.add(currentStateInfo);
-                
-            // Return as JSON
-            return response;
-        }
-        // Should only accept "ia" and "ga", nothing else
-        // (we are not doing other states)
-        else{
+        // Heat map for Precinct (GUI-4)
+        JsonNode currentPrecinct = objectMapper.readTree(
+            new ClassPathResource("assets/ia/IA-Congress-Precinct-Current-GeoJSON.json").getInputStream()
+        );
+        // Heat map for Census Block (GUI-5)
+        JsonNode currentCensusBlock = objectMapper.readTree(
+            new ClassPathResource("assets/ia/IA-Congress-CensusBlock-Current-GeoJSON.json").getInputStream()
+        );
+
+        ArrayNode response = objectMapper.createArrayNode();
+        response.add(currentPrecinct);
+        response.add(currentCensusBlock);
+        return response;
+    }
+    else{
             ArrayNode response = objectMapper.createArrayNode();
             response.add((JsonNode) null);
             response.add((JsonNode) null);
@@ -51,9 +49,6 @@ public class GetStateSummaryService {
         }
     }
 
-    // Get a State Package
-    // Consists of 2 GeoJSON (District for District Select, Precinct for Heatmap)
-    // And a State Data (Right-hand side display)
     private JsonNode getStatePayload(String currentState) throws IOException {
         Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {

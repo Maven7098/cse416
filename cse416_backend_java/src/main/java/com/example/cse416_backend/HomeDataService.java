@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-public class GetHomeDataService {
+public class HomeDataService {
 
     private final HomeGeoJsonRepository homeGeoJsonRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public GetHomeDataService(HomeGeoJsonRepository homeGeoJsonRepository) {
+    public HomeDataService(HomeGeoJsonRepository homeGeoJsonRepository) {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 

@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-public class GetProposedDataService {
+public class ProposedCompareService {
 
     private final HomeGeoJsonRepository homeGeoJsonRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public GetProposedDataService(HomeGeoJsonRepository homeGeoJsonRepository) {
+    public ProposedCompareService(HomeGeoJsonRepository homeGeoJsonRepository) {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
