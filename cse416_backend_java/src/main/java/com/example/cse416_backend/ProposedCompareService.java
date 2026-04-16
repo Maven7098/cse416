@@ -20,129 +20,108 @@ public class ProposedCompareService {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
+    private ArrayNode loadCurrentBoxData(String currentState) throws IOException {
+        String stateCodeUpper = currentState.toUpperCase();
+        ArrayNode currentBoxData = objectMapper.createArrayNode();
+        currentBoxData.addAll((ArrayNode) objectMapper.readTree(
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-Current-Asian.json").getInputStream()
+        ));
+        currentBoxData.addAll((ArrayNode) objectMapper.readTree(
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-Current-Black.json").getInputStream()
+        ));
+        currentBoxData.addAll((ArrayNode) objectMapper.readTree(
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-Current-Hispanic.json").getInputStream()
+        ));
+        return currentBoxData;
+    }
+
     public JsonNode getHomePayload(String currentState, String currentMode) throws IOException {
-        if (currentState.equals("ia") && currentMode.equals("vra")){
-            // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
-            JsonNode proposedDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Congress-District-VRA.json").getInputStream()
+        if (!(currentState.equals("ia") || currentState.equals("ga"))) {
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add((JsonNode) null);
+            response.add((JsonNode) null);
+            response.add((JsonNode) null);
+            return response;
+        }
+
+        String stateCodeUpper = currentState.toUpperCase();
+
+        if (currentMode.equals("map")) {
+            JsonNode currentDistrict = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-Current-GeoJSON.json").getInputStream()
             );
-            // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Ensemble-VRA.json").getInputStream()
+            JsonNode proposedDistrictVra = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + currentState + "_recom_generated_plan.geojson").getInputStream()
             );
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode boxChart = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Box-VRA.json").getInputStream()
-            );
-            JsonNode circleChart = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Box-Current.json").getInputStream()
+            JsonNode proposedDistrictNonVra = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-NonVRA-GeoJSON.json").getInputStream()
             );
 
-            // Combine them into a Map
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add(currentDistrict);
+            response.add(proposedDistrictVra);
+            response.add(proposedDistrictNonVra);
+            return response;
+        }
+
+        if (currentMode.equals("chart")) {
+            JsonNode vraEnsemble = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Ensemble-Data-VRA.json").getInputStream()
+            );
+            JsonNode nonVraEnsemble = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Ensemble-Data-NonVRA.json").getInputStream()
+            );
+            JsonNode currentBox = loadCurrentBoxData(currentState);
+            JsonNode vraBox = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-VRA.json").getInputStream()
+            );
+            JsonNode nonVraBox = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-NonVRA.json").getInputStream()
+            );
+
+            ArrayNode response = objectMapper.createArrayNode();
+            response.add(vraEnsemble);
+            response.add(nonVraEnsemble);
+            response.add(currentBox);
+            response.add(vraBox);
+            response.add(nonVraBox);
+            return response;
+        }
+
+        if (currentMode.equals("vra") || currentMode.equals("non-vra")) {
+            JsonNode proposedDistrict;
+            if (currentMode.equals("vra")) {
+                proposedDistrict = objectMapper.readTree(
+                    new ClassPathResource("assets/" + currentState + "/" + currentState + "_recom_generated_plan.geojson").getInputStream()
+                );
+            } else {
+                proposedDistrict = objectMapper.readTree(
+                    new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-NonVRA-GeoJSON.json").getInputStream()
+                );
+            }
+            JsonNode ensemble = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Ensemble-Data-" + (currentMode.equals("vra") ? "VRA" : "NonVRA") + ".json").getInputStream()
+            );
+            JsonNode boxChart = objectMapper.readTree(
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-" + (currentMode.equals("vra") ? "VRA" : "NonVRA") + ".json").getInputStream()
+            );
+            JsonNode circleChart = loadCurrentBoxData(currentState);
+
             ArrayNode response = objectMapper.createArrayNode();
             response.add(proposedDistrict);
             response.add(ensemble);
             response.add(boxChart);
             response.add(circleChart);
-                
-            // Return as JSON
             return response;
         }
-        if (currentState.equals("ia") && currentMode.equals("non-vra")){
-            // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
-            JsonNode proposedDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Congress-District-NonVRA.json").getInputStream()
-            );
-            // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Ensemble-NonVRA.json").getInputStream()
-            );
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode boxChart = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Box-NonVRA.json").getInputStream()
-            );
-            JsonNode circleChart = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Box-Current.json").getInputStream()
-            );
 
-            // Combine them into a Map
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(proposedDistrict);
-            response.add(ensemble);
-            response.add(boxChart);
-            response.add(circleChart);
-                
-            // Return as JSON
-            return response;
-        }
-        if (currentState.equals("ga") && currentMode.equals("vra")){
-            // Read file 1 from src/main/resources/assets/ga/GA-Congress-District.json
-            JsonNode proposedDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Congress-District-VRA.json").getInputStream()
-            );
-            // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Ensemble-VRA.json").getInputStream()
-            );
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode boxChart = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Box-VRA.json").getInputStream()
-            );
-            JsonNode circleChart = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Box-Current.json").getInputStream()
-            );
-
-            // Combine them into a Map
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(proposedDistrict);
-            response.add(ensemble);
-            response.add(boxChart);
-            response.add(circleChart);
-                
-            // Return as JSON
-            return response;
-        }
-        if (currentState.equals("ga") && currentMode.equals("non-vra")){
-            // Read file 1 from src/main/resources/assets/ga/GA-Congress-District.json
-            JsonNode proposedDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Congress-District-NonVRA.json").getInputStream()
-            );
-            // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Ensemble-NonVRA.json").getInputStream()
-            );
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode boxChart = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Box-NonVRA.json").getInputStream()
-            );
-            JsonNode circleChart = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Box-Current.json").getInputStream()
-            );
-
-            // Combine them into a Map
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(proposedDistrict);
-            response.add(ensemble);
-            response.add(boxChart);
-            response.add(circleChart);
-                
-            // Return as JSON
-            return response;
-        }
         // Should only accept "ia" and "ga", nothing else
         // (we are not doing other states)
-        else{
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-
-            return response;
-        }
+        ArrayNode response = objectMapper.createArrayNode();
+        response.add((JsonNode) null);
+        response.add((JsonNode) null);
+        response.add((JsonNode) null);
+        return response;
     }
 
     // Get a State Package

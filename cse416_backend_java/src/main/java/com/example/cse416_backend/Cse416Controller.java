@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
 @RestController
 public class Cse416Controller {
 
@@ -53,7 +53,7 @@ public class Cse416Controller {
     // Get a Heatmap Package
     // Satisfies GUI-4, GUI-5
     // Consists of 2 GeoJSON (Precinct for Heatmap, Census Block for Heatmap)
-    @GetMapping(value = "/district", produces = "application/json")
+    @GetMapping(value = "/heatmap", produces = "application/json")
     public ResponseEntity<JsonNode> getStateHeatmapPack(@RequestParam String currentState) throws IOException {
         return ResponseEntity.ok(stateHeatmapService.getHomePayload(currentState));
     }
@@ -73,14 +73,14 @@ public class Cse416Controller {
     // Consists of 1 GeoJSON object (District for proposed map)
     // And 2 Chart JSON Data (BarChart, Box&Whisker)
     @GetMapping(value = "/proposed", produces = "application/json")
-    public ResponseEntity<JsonNode> getProposedPack(@RequestParam String currentState, String currentMode) throws IOException {
+    public ResponseEntity<JsonNode> getProposedPack(@RequestParam String currentState, @RequestParam String currentMode) throws IOException {
         return ResponseEntity.ok(proposedDataService.getHomePayload(currentState, currentMode));
     }
 
     // DTO for comparison
     // Satisfies GUI-20, GUI-21, GUI-22
     @GetMapping(value = "/compare", produces = "application/json")
-    public ResponseEntity<JsonNode> getComparePack(@RequestParam String currentState) throws IOException {
-        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState));;
+    public ResponseEntity<JsonNode> getComparePack(@RequestParam String currentState, @RequestParam String currentMode) throws IOException {
+        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState, currentMode));
     }
 }

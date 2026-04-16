@@ -22,13 +22,14 @@ public class StateSummaryService {
 
     public JsonNode getHomePayload(String currentState) throws IOException {
         if (currentState.equals("ia") || currentState.equals("ga")){
+            String stateCodeUpper = currentState.toUpperCase();
             // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
             JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Congress-District-Current-GeoJSON.json").getInputStream()
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-Current-GeoJSON.json").getInputStream()
             );
             // Read file 3 from src/main/resources/assets/ia/IA-State-Info.json
             JsonNode currentStateInfo = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-State-Info.json").getInputStream()
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-State-Info.json").getInputStream()
             );
 
             // Combine them into a Map

@@ -21,61 +21,24 @@ public class StatePolarizationService {
     }
 
     public JsonNode getHomePayload(String currentState) throws IOException {
-        if (currentState.equals("ia")){
-            // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
+        if (currentState.equals("ia") || currentState.equals("ga")) {
+            String stateCodeUpper = currentState.toUpperCase();
             JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Precinct-EI-GeoJSON.json").getInputStream()
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Precinct-EI-GeoJSON.json").getInputStream()
             );
-            // IA does not return ASIAN or BLACK values as they are not viable ethnic categories
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
             JsonNode gingles = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Precinct-Gingles.json").getInputStream()
-            );
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode currentEi = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Precinct-EI.json").getInputStream()
-            );
-            // KDE File
-            JsonNode currentKde = objectMapper.readTree(
-                new ClassPathResource("assets/ia/IA-Precinct-KDE.json").getInputStream()
+                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Precinct-Gingles.json").getInputStream()
             );
 
-            // Combine them into a Map
+            // EI/KDE split files are not present in the remapped dataset.
+            JsonNode currentEi = objectMapper.createArrayNode();
+            JsonNode currentKde = objectMapper.createArrayNode();
+
             ArrayNode response = objectMapper.createArrayNode();
             response.add(gingles);
             response.add(currentDistrict);
             response.add(currentEi);
             response.add(currentKde);
-                
-            // Return as JSON
-            return response;
-        }
-        else if (currentState.equals("ga")){
-            // Read file 1 from src/main/resources/assets/ga/GA-Congress-District.json
-            JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Precinct-EI-GeoJSON.json").getInputStream()
-            );
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode gingles = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Precinct-Gingles.json").getInputStream()
-            );
-            // EI file (Black / NonBlack / Hispanic / NonHispanic / Asian / NonAsian / White? / NonWhite?)
-            JsonNode currentEi = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Precinct-EI.json").getInputStream()
-            );
-            // KDE File
-            JsonNode currentKde = objectMapper.readTree(
-                new ClassPathResource("assets/ga/GA-Precinct-KDE.json").getInputStream()
-            );
-
-            // Combine them into a Map
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(gingles);
-            response.add(currentDistrict);
-            response.add(currentEi);
-            response.add(currentKde);
-
-            // Return as JSON
             return response;
         }
         // Should only accept "ia" and "ga", nothing else

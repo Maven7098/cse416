@@ -22,16 +22,15 @@ public class StateHeatmapService {
 
     public JsonNode getHomePayload(String currentState) throws IOException {
         if (currentState.equals("ia") || currentState.equals("ga")){
-        JsonNode iaNode = getStatePayload("ia");
-        JsonNode gaNode = getStatePayload("ga");
+        String stateCodeUpper = currentState.toUpperCase();
 
         // Heat map for Precinct (GUI-4)
         JsonNode currentPrecinct = objectMapper.readTree(
-            new ClassPathResource("assets/ia/IA-Congress-Precinct-Current-GeoJSON.json").getInputStream()
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-Precinct-GeoJSON.json").getInputStream()
         );
         // Heat map for Census Block (GUI-5)
         JsonNode currentCensusBlock = objectMapper.readTree(
-            new ClassPathResource("assets/ia/IA-Congress-CensusBlock-Current-GeoJSON.json").getInputStream()
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-CensusBlock-GeoJSON.json").getInputStream()
         );
 
         ArrayNode response = objectMapper.createArrayNode();
