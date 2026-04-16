@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-const MARGIN = { top: 10, right: 60, bottom: 50, left: 60 };
+const MARGIN = { top: 10, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
 import titleCase from '../Chart/TitleCase';
 
@@ -98,7 +98,7 @@ function Population({ width, height, districtData }){
 
   return (
     <div>
-      <h3>District No.: {districtData.DISTRICT}</h3>
+      <h4>District No.: {districtData.DISTRICT}</h4>
       <h5>District GeoID: {districtData.GEOID}</h5>
     <div style={{marginBottom: "0"}}>
       <p style={{margin: "2px"}}>Representative: {districtData.REPRESENT} | Margin: {districtData.WMARGIN}</p>

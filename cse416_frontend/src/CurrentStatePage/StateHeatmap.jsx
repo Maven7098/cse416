@@ -16,7 +16,7 @@ function StateHeatmap({ activeState, activeRace, latitude, longitude }){
       axios.get(`http://localhost:8080/heatmap?currentState=${activeState}`)
       .then(response => {setPrecinctGeoJsonData(response.data[0])
             setCensusBlockGeoJsonData(response.data[1])})
-      .catch(error => console.log(error.response.data))
+      .catch(error => console.log(error.response?.data ?? error.message))
   }, [activeState]);
 
   // This is to force the map to load upon first click
@@ -65,6 +65,12 @@ function StateHeatmap({ activeState, activeRace, latitude, longitude }){
 
   const grades = [0, 200, 400, 600, 800, 1000];
   const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+  const currentRace =
+    activeRace === "HISPANIC"
+      ? "Hispanic / Latino Population"
+      : activeRace === "ASIAN"
+      ? "Asian / Asian American Population"
+      : "Black / African American Population";
 
   return (
     <div>

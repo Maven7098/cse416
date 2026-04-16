@@ -26,7 +26,7 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
           setEiData(response.data[2]);
           setEiKdeData(response.data[3]);
         })
-        .catch(error => console.log(error.response.data))
+        .catch(error => console.log(error.response?.data ?? error.message))
     }, [activeState]);
 
     return (

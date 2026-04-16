@@ -53,6 +53,28 @@
     font-weight: 700;
 }
 
+.stateinfo-tabs .nav-link {
+    color: #6a1b2a !important;
+    background-color: #f7ece6 !important;
+    border: 1px solid #e3cfc3 !important;
+    border-radius: 0.5rem;
+    margin-bottom: 0.55rem;
+    font-weight: 600;
+}
+
+.stateinfo-tabs .nav-link:hover,
+.stateinfo-tabs .nav-link:focus {
+    color: #34000f !important;
+    background-color: #e9d6cb !important;
+}
+
+.stateinfo-tabs .nav-link.active {
+    color: #e8d4c8 !important;
+    background-color: #34000f !important;
+    border-color: #34000f !important;
+    font-weight: 700;
+}
+
 .row{
     --bs-gutter-x: 0 !important;
 }

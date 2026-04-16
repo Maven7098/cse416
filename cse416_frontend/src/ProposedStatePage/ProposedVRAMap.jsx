@@ -21,7 +21,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
         setBoxandWhiskerData(response.data[2]);
         setCircleData(response.data[3]);
       })
-      .catch(error => console.log(error.response.data))
+      .catch(error => console.log(error.response?.data ?? error.message))
       // If Active State changes, then also reset districtData
       setDistrictGeoJsonData("")
   }, [activeState, mode]);

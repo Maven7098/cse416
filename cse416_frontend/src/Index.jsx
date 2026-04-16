@@ -1,15 +1,16 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import MainNavbar from './Navbar.jsx'
+import MainNavbar from './CurrentStatePage/Navbar.jsx'
 import Home from "./Home.jsx";
 import MapNavbar from "./CurrentStatePage/MapNavbar.jsx";
-import Map from "./CurrentStatePage/Map.jsx";
+import MapTab from "./CurrentStatePage/MapTab.jsx";
 import GinglesTab from "./CurrentStatePage/GinglesTab.jsx";
 import ProposedNavbar from './ProposedStatePage/ProposedNavbar.jsx'
 import ProposedVRAMap from './ProposedStatePage/ProposedVRAMap.jsx'
 import CompareMapTab from "./ProposedStatePage/CompareMapTab.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './CSS/index.css';
 
 // import NoPage from "./pages/NoPage";
 
@@ -23,11 +24,11 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="iowa" element={<>
             <MapNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <Map activeState="ia" activeRace={activeRace} latitude={41.8780} longitude={-93.0977} />
+            <MapTab activeState="ia" activeRace={activeRace} latitude={41.8780} longitude={-93.0977} />
             </>} />
           <Route path="georgia" element={<>
             <MapNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <Map activeState="ga" activeRace={activeRace} latitude={33.2478} longitude={-83.4411} />
+            <MapTab activeState="ga" activeRace={activeRace} latitude={33.2478} longitude={-83.4411} />
             </>} />
           <Route path="iowa/polarization" element={<>
             <MapNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />

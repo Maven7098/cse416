@@ -1,11 +1,15 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
-import Axis from "./Axis";
+import Axis from "../Chart/Axis";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 const COLORS = ["#e0ac2b", "#e85252"];
 
 function EIAnalysis ({ width, height, data, race }) {
+  if (!data || data.length === 0) {
+    return <div style={{ padding: "1rem" }}>EI analysis data is not available yet.</div>;
+  }
+
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
   // Only return WHITE and the matching Minority Group

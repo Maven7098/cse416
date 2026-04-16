@@ -31,7 +31,7 @@ function CompareChart({ activeState, activeRace }){
             setCurrentBoxandWhiskerData(response.data[2]);
             setVraBoxandWhiskerData(response.data[3]);
             setNonVraBoxandWhiskerData(response.data[4]);})
-      .catch(error => console.log(error.response.data))
+      .catch(error => console.log(error.response?.data ?? error.message))
   }, [activeState]);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ function CompareChart({ activeState, activeRace }){
             {/* GUI-17: Display Box & Whisker Data */}
             <h3>Box and Whisker Data</h3>
             {(districtOne[1] && currentBoxandWhiskerData) &&
-            <BoxandWhiskerChart data={districtOne[1].filter((data) => data.RACE === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.RACE === activeRace)} width={width} height={proposedHeight}/>}
+            <BoxandWhiskerChart data={districtOne[1].filter((data) => data.race === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.race === activeRace)} width={width} height={proposedHeight}/>}
             {/* <BoxandWhiskerExtra /> */}
           </div>
         </div>

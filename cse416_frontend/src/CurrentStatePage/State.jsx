@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
 import titleCase from '../Chart/TitleCase.js'
 
-const MARGIN = { top: 0, right: 60, bottom: 50, left: 60 };
+  const MARGIN = { top: 0, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
 
 function State({ width, height, activeState }){
@@ -108,18 +108,18 @@ function State({ width, height, activeState }){
     <div>
         <div style={{ display: "flex", alignItems: "center", justifyContent:"space-evenly", flexDirection: "row", textAlign: "center"}}>
             <div style={{flexDirection: "column"}}>
-                <h3>Democrats:</h3>
+                <h4>Democrats</h4>
                 <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.DSEAT}</p>
                 <p style={{marginBottom: "2px"}}>Voter %: {activeState.DVOTE}%</p>
             </div>
             <div style={{flexDirection: "column"}}>
-                <h3>Republicans:</h3>
+                <h4>Republicans</h4>
                 <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.RSEAT}</p>
                 <p style={{marginBottom: "2px"}}>Voter %: {activeState.RVOTE}%</p>
             </div>
         </div>
         <p style={{margin: "1em"}}>Current Districting Party: {activeState.PARTY}</p>
-        <h3>Total Population: {activeState.TOTAL}</h3>
+        <h4>Total Population: {activeState.TOTAL}</h4>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}

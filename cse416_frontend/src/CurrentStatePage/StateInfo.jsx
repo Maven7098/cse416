@@ -16,7 +16,7 @@ function StateInfo({ activeState, latitude, longitude }){
       axios.get(`http://localhost:8080/district?currentState=${activeState}`)
       .then(response => {setDistrictGeoJsonData(response.data[0]);
             setCurrentState(response.data[1])})
-      .catch(error => console.log(error.response.data))
+      .catch(error => console.log(error.response?.data ?? error.message))
       // If Active State changes, then also reset districtData
       setDistrictData("")
   }, [activeState]);
@@ -84,9 +84,9 @@ function StateInfo({ activeState, latitude, longitude }){
     });
   }
 
-  const width = 960;
-  const heightPop = 610;
-  const heightState = 600;
+  const width = 820;
+  const heightPop = 480;
+  const heightState = 430;
 
   return (
     // Load the GeoJSON for the districting map
@@ -101,12 +101,11 @@ function StateInfo({ activeState, latitude, longitude }){
           <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
           zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
           whenReady={() => resizeMap(mapRef)}>
-            <Legend grades={grades} colors={colors} title={currentRace}/>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <GeoJSON data={districtGeoJsonData} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
+              <GeoJSON data={districtGeoJsonData} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(districtGeoJsonData)}/>
           </MapContainer>
         </div>
         <div className='leaflet-container-big'>

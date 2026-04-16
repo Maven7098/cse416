@@ -2,13 +2,17 @@
 
 import * as d3 from "d3";
 import { useState } from "react";
-import Tooltip from "./Tooltip";
-import Axis from "./Axis";
+import Tooltip from "../Chart/Tooltip";
+import Axis from "../Chart/Axis";
 import { regressionLinear } from "d3-regression";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
 function GinglesData ({ width, height, data, race, setActivePrecinct }) {
+  if (!data || data.length === 0) {
+    return <div style={{ padding: "1rem" }}>No polarization data is available for this state.</div>;
+  }
+
   // Force re-render and animation trigger when race changes
   const key = `${race}-${data.length}`;
 

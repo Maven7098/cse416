@@ -19,7 +19,7 @@ function Home() {
         setGeorgia(response.data[1]);
         setPlaces(response);
       })
-      .catch(error => console.log(error.response.data))
+      .catch(error => console.log(error.response?.data ?? error.message))
     }, []);
   
   const resizeMap = (mapRef) => {

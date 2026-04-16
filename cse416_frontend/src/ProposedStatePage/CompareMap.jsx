@@ -19,7 +19,7 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
       .then(response => {setDistrictGeoJsonData(response.data[0]);
             setProposedGeoJsonDataVra(response.data[1]);
             setProposedGeoJsonDataNonVra(response.data[2])})
-      .catch(error => console.log(error.response.data))
+      .catch(error => console.log(error.response?.data ?? error.message))
   }, [activeState]);
 
   // Switch District #1 and #2 based on current Mode
@@ -47,10 +47,9 @@ function CompareMap({ activeState, currentMode, latitude, longitude }){
       setDistrictOne("");
       setDistrictOneName("District 1")
       setDistrictTwo("");
-      setDistrictOne("");
       setDistrictTwoName("District 2")
     }
-  }, [currentMode])
+  }, [currentMode, districtGeoJsonData, proposedGeoJsonDataVra, proposedGeoJsonDataNonVra])
 
     const resizeMapOne = (mapRefOne) => {
       const resizeObserverOne = new ResizeObserver(() => mapRefOne.current?.invalidateSize())
