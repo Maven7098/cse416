@@ -19,9 +19,11 @@ public class HomeDataService {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
-    public JsonNode getHomePayload() throws IOException {
-        JsonNode iaNode = getStatePayload("ia");
-        JsonNode gaNode = getStatePayload("ga");
+    // Call getMongoPayload
+    // And merge them as ArrayNode
+    public ArrayNode getHomePayload() throws IOException {
+        JsonNode iaNode = getMongoPayload("ia");
+        JsonNode gaNode = getMongoPayload("ga");
 
         ArrayNode response = objectMapper.createArrayNode();
         response.add(iaNode);
@@ -29,7 +31,10 @@ public class HomeDataService {
         return response;
     }
 
-    private JsonNode getStatePayload(String currentState) throws IOException {
+    // Get the state GeoJSON file from Mongo
+    // Unlike other GeoJSON files, State sized files are small enough to be stored
+    // Should we get the currentState variable or leave it out?
+    private JsonNode getMongoPayload(String currentState) throws IOException {
         Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
             throw new IOException("Missing home_geojson payload for state: " + currentState);

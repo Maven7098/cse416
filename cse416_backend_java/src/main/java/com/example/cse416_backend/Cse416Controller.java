@@ -1,6 +1,6 @@
 package com.example.cse416_backend;
 
-import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +37,7 @@ public class Cse416Controller {
     // Satisfies GUI-1
     // Maps to / => /
     @GetMapping(value = "/", produces = "application/json")
-    public ResponseEntity<JsonNode> getHomePage() throws IOException {
+    public ResponseEntity<ArrayNode> getHomePage() throws IOException {
         return ResponseEntity.ok(homeDataService.getHomePayload());
     }
 
@@ -46,7 +46,7 @@ public class Cse416Controller {
     // Consists of a GeoJSON (District for District Select, District data embedded in GeoJSON)
     // And a State Data (Right-hand side display)
     @GetMapping(value = "/district", produces = "application/json")
-    public ResponseEntity<JsonNode> getStateSummaryPack(@RequestParam String currentState) throws IOException {
+    public ResponseEntity<ArrayNode> getStateSummaryPack(@RequestParam String currentState) throws IOException {
         return ResponseEntity.ok(stateSummaryService.getHomePayload(currentState));
     }
 
@@ -54,7 +54,7 @@ public class Cse416Controller {
     // Satisfies GUI-4, GUI-5
     // Consists of 2 GeoJSON (Precinct for Heatmap, Census Block for Heatmap)
     @GetMapping(value = "/heatmap", produces = "application/json")
-    public ResponseEntity<JsonNode> getStateHeatmapPack(@RequestParam String currentState) throws IOException {
+    public ResponseEntity<ArrayNode> getStateHeatmapPack(@RequestParam String currentState) throws IOException {
         return ResponseEntity.ok(stateHeatmapService.getHomePayload(currentState));
     }
 
@@ -64,7 +64,7 @@ public class Cse416Controller {
     // Consists of 1 GeoJSON object (Precinct for Heatmap)
     // And 3 Chart JSON Data (Gingles, EI Distribution, EI KDE)
     @GetMapping(value = "/polarization", produces = "application/json")
-    public ResponseEntity<JsonNode> getStatePolarizationPack(@RequestParam String currentState) throws IOException {
+    public ResponseEntity<ArrayNode> getStatePolarizationPack(@RequestParam String currentState) throws IOException {
         return ResponseEntity.ok(statePolarizationService.getHomePayload(currentState));
     }
 
@@ -73,14 +73,15 @@ public class Cse416Controller {
     // Consists of 1 GeoJSON object (District for proposed map)
     // And 2 Chart JSON Data (BarChart, Box&Whisker)
     @GetMapping(value = "/proposed", produces = "application/json")
-    public ResponseEntity<JsonNode> getProposedPack(@RequestParam String currentState, @RequestParam String currentMode) throws IOException {
+    public ResponseEntity<ArrayNode> getProposedPack(@RequestParam String currentState, @RequestParam String currentMode) throws IOException {
         return ResponseEntity.ok(proposedDataService.getHomePayload(currentState, currentMode));
     }
 
     // DTO for comparison
     // Satisfies GUI-20, GUI-21, GUI-22
+    // Consists of Chart JSON Data (VRA Impact Threshold Table, Box and Whisker, Minority Effectiveness Histogram)
     @GetMapping(value = "/compare", produces = "application/json")
-    public ResponseEntity<JsonNode> getComparePack(@RequestParam String currentState, @RequestParam String currentMode) throws IOException {
-        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState, currentMode));
+    public ResponseEntity<ArrayNode> getComparePack(@RequestParam String currentState) throws IOException {
+        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState));
     }
 }

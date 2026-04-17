@@ -1,14 +1,14 @@
 package com.example.cse416_backend;
 
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ArrayNode;
+import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.Optional;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 @Service
 public class StateSummaryService {
@@ -20,42 +20,34 @@ public class StateSummaryService {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
-    public JsonNode getHomePayload(String currentState) throws IOException {
+    // Calls both getLocalPayload and getMongoPayload
+    // And appends them as a JsonNode (or ArrayNode)
+    public ArrayNode getHomePayload(String currentState) throws IOException {
+        ArrayNode response = objectMapper.createArrayNode();
         if (currentState.equals("ia") || currentState.equals("ga")){
-            String stateCodeUpper = currentState.toUpperCase();
-            // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
-            JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-Current-GeoJSON.json").getInputStream()
-            );
-            // Read file 3 from src/main/resources/assets/ia/IA-State-Info.json
-            JsonNode currentStateInfo = objectMapper.readTree(
-                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-State-Info.json").getInputStream()
-            );
-
-            // Combine them into a Map
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(currentDistrict);
-            response.add(currentStateInfo);
-                
-            // Return as JSON
-            return response;
+            response.add(getLocalPayload(currentState));
+            response.add(getMongoPayload(currentState));
         }
         // Should only accept "ia" and "ga", nothing else
         // (we are not doing other states)
-        else{
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-
-            return response;
-        }
+        return response;
     }
 
-    // Get a State Package
-    // Consists of 2 GeoJSON (District for District Select, Precinct for Heatmap)
-    // And a State Data (Right-hand side display)
-    private JsonNode getStatePayload(String currentState) throws IOException {
+    // Return the State (IA or GA) District GeoJSON file from local storage
+    private JsonNode getLocalPayload(String currentState) throws IOException {
+        String stateCodeUpper = currentState.toUpperCase();
+        // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
+        JsonNode currentDistrict = objectMapper.readTree(
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-Current-GeoJSON.json").getInputStream()
+        );
+
+        // Combine them into a Map
+        return currentDistrict;
+    }
+
+    // Return the State information (State data summary) as per GUI-3 from Mongo
+    // Read file 3 from src/main/resources/assets/ia/IA-State-Info.json
+    private JsonNode getMongoPayload(String currentState) throws IOException{
         Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
             throw new IOException("Missing home_geojson payload for state: " + currentState);

@@ -20,68 +20,47 @@ public class ProposedDataService {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
-    private ArrayNode loadCurrentBoxData(String currentState) throws IOException {
-        String stateCodeUpper = currentState.toUpperCase();
-        ArrayNode currentBoxData = objectMapper.createArrayNode();
-        currentBoxData.addAll((ArrayNode) objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-Current-Asian.json").getInputStream()
-        ));
-        currentBoxData.addAll((ArrayNode) objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-Current-Black.json").getInputStream()
-        ));
-        currentBoxData.addAll((ArrayNode) objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-Current-Hispanic.json").getInputStream()
-        ));
-        return currentBoxData;
-    }
-
-    public JsonNode getHomePayload(String currentState, String currentMode) throws IOException {
-        if ((currentState.equals("ia") || currentState.equals("ga")) &&
-            (currentMode.equals("vra") || currentMode.equals("non-vra"))) {
-            String stateCodeUpper = currentState.toUpperCase();
-
-            JsonNode proposedDistrict;
-            if (currentMode.equals("vra")) {
-                proposedDistrict = objectMapper.readTree(
-                    new ClassPathResource("assets/" + currentState + "/" + currentState + "_recom_generated_plan.geojson").getInputStream()
-                );
-            } else {
-                proposedDistrict = objectMapper.readTree(
-                    new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-NonVRA-GeoJSON.json").getInputStream()
-                );
+    // Calls both getLocalPayload and getMongoPayload
+    // And appends them as a JsonNode (or ArrayNode)
+    public ArrayNode getHomePayload(String currentState, String currentMode) throws IOException {
+        ArrayNode response = objectMapper.createArrayNode();
+        if (currentState.equals("ia") || currentState.equals("ga")){
+            if(currentMode.equals("vra")){
+                response.add(getLocalPayload(currentState, "VRA"));
+                response.add(getMongoPayload(currentState, "VRA"));
             }
-
-            JsonNode ensemble = objectMapper.readTree(
-                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Ensemble-Data-" + (currentMode.equals("vra") ? "VRA" : "NonVRA") + ".json").getInputStream()
-            );
-            JsonNode boxChart = objectMapper.readTree(
-                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Box-Data-" + (currentMode.equals("vra") ? "VRA" : "NonVRA") + ".json").getInputStream()
-            );
-            JsonNode circleChart = loadCurrentBoxData(currentState);
-
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(proposedDistrict);
-            response.add(ensemble);
-            response.add(boxChart);
-            response.add(circleChart);
-            return response;
+            else if(currentMode.equals("non-vra")){
+                response.add(getLocalPayload(currentState, "NonVRA"));
+                response.add(getMongoPayload(currentState, "NonVRA"));
+            }
         }
         // Should only accept "ia" and "ga", nothing else
         // (we are not doing other states)
-        else{
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-
-            return response;
-        }
+        return response;
     }
 
-    // Get a State Package
-    // Consists of 2 GeoJSON (District for District Select, Precinct for Heatmap)
-    // And a State Data (Right-hand side display)
-    private JsonNode getStatePayload(String currentState) throws IOException {
+    // Return the State (IA or GA) District GeoJSON file from local storage
+    // Satisfies GUI-19 (display 'a' interesting district) - can it be multiple district plans though?
+    // vra or non-vra: Should it be a string or a C-style boolean (1 or 0)?
+    private JsonNode getLocalPayload(String currentState, String currentMode) throws IOException {
+        ArrayNode response = objectMapper.createArrayNode();
+        String stateCodeUpper = currentState.toUpperCase();
+        // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
+        JsonNode currentDistrict = objectMapper.readTree(
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-Proposed-GeoJSON-" + currentMode + ".json").getInputStream()
+        );
+
+        // Combine them into a Map
+        response.add(currentDistrict);
+            
+        // Return as JSON
+        return response;
+    }
+
+    // Return the following:
+    // Ensemble Splits Chart (GUI-16)
+    // Box and Whisker Chart (GUI-17)
+    private JsonNode getMongoPayload(String currentState, String currentMode) throws IOException {
         Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
             throw new IOException("Missing home_geojson payload for state: " + currentState);

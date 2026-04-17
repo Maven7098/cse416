@@ -8,22 +8,32 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 public class StateHeatmapService {
-
-    private final HomeGeoJsonRepository homeGeoJsonRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public StateHeatmapService(HomeGeoJsonRepository homeGeoJsonRepository) {
-        this.homeGeoJsonRepository = homeGeoJsonRepository;
+    public StateHeatmapService() {
     }
 
-    public JsonNode getHomePayload(String currentState) throws IOException {
-        if (currentState.equals("ia") || currentState.equals("ga")){
-        String stateCodeUpper = currentState.toUpperCase();
+    // Calls both getLocalPayload and getMongoPayload
+    // And appends them as a JsonNode (or ArrayNode)
+    public ArrayNode getHomePayload(String currentState) throws IOException {
+        ArrayNode response = objectMapper.createArrayNode();
+        // If state is IA or GA, call LocalPayload to fill response
+        if(currentState.equals("ia") || currentState.equals("ga")){
+            response.add(getLocalPayload(currentState));
+        }
+        // Should only accept "ia" and "ga", nothing else
+        // (we are not doing other states)
+        return response;
+    }
 
+    // Get Precinct and Census Block Heatmap GeoJSON files
+    // As both are stored locally, the Mongo is not called (No getMongoPayload)
+    private ArrayNode getLocalPayload(String currentState) throws IOException {
+        ArrayNode response = objectMapper.createArrayNode();
+        String stateCodeUpper = currentState.toUpperCase();
         // Heat map for Precinct (GUI-4)
         JsonNode currentPrecinct = objectMapper.readTree(
             new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-Precinct-GeoJSON.json").getInputStream()
@@ -32,27 +42,8 @@ public class StateHeatmapService {
         JsonNode currentCensusBlock = objectMapper.readTree(
             new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-CensusBlock-GeoJSON.json").getInputStream()
         );
-
-        ArrayNode response = objectMapper.createArrayNode();
         response.add(currentPrecinct);
         response.add(currentCensusBlock);
         return response;
-    }
-    else{
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-
-            return response;
-        }
-    }
-
-    private JsonNode getStatePayload(String currentState) throws IOException {
-        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
-        if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
-            throw new IOException("Missing home_geojson payload for state: " + currentState);
-        }
-        return objectMapper.readTree(stateDoc.get().getPayload().toJson());
     }
 }

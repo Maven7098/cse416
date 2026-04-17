@@ -20,43 +20,43 @@ public class StatePolarizationService {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
     }
 
-    public JsonNode getHomePayload(String currentState) throws IOException {
-        if (currentState.equals("ia") || currentState.equals("ga")) {
-            String stateCodeUpper = currentState.toUpperCase();
-            JsonNode currentDistrict = objectMapper.readTree(
-                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Precinct-EI-GeoJSON.json").getInputStream()
-            );
-            JsonNode gingles = objectMapper.readTree(
-                new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Precinct-Gingles.json").getInputStream()
-            );
-
-            // EI/KDE split files are not present in the remapped dataset.
-            JsonNode currentEi = objectMapper.createArrayNode();
-            JsonNode currentKde = objectMapper.createArrayNode();
-
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add(gingles);
-            response.add(currentDistrict);
-            response.add(currentEi);
-            response.add(currentKde);
-            return response;
+    // Calls both getLocalPayload and getMongoPayload
+    // And appends them as a JsonNode (or ArrayNode)
+    public ArrayNode getHomePayload(String currentState) throws IOException {
+        ArrayNode response = objectMapper.createArrayNode();
+        if (currentState.equals("ia") || currentState.equals("ga")){
+            response.add(getLocalPayload(currentState));
+            response.add(getMongoPayload(currentState));
         }
         // Should only accept "ia" and "ga", nothing else
         // (we are not doing other states)
-        else{
-            ArrayNode response = objectMapper.createArrayNode();
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-            response.add((JsonNode) null);
-
-            return response;
-        }
+        return response;
     }
 
-    // Get a State Package
-    // Consists of 2 GeoJSON (District for District Select, Precinct for Heatmap)
-    // And a State Data (Right-hand side display)
-    private JsonNode getStatePayload(String currentState) throws IOException {
+    // Return the State (IA or GA) District GeoJSON file from local storage
+    // Display EI Heatmap (GUI-14)
+    private JsonNode getLocalPayload(String currentState) throws IOException {
+        ArrayNode response = objectMapper.createArrayNode();
+
+        String stateCodeUpper = currentState.toUpperCase();
+        // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
+        JsonNode currentDistrict = objectMapper.readTree(
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Precinct-EI-GeoJSON.json").getInputStream()
+        );
+
+        // Combine them into a Map
+        response.add(currentDistrict);
+            
+        // Return as JSON
+        return response;
+    }
+
+    // Return the following:
+    // Gingles Table (GUI-9, 10, 11)
+    // Gingles Regression (as a math formula) (GUI-9)
+    // EI Chart (GUI-13)
+    // EI KDE Results (GUI-15)
+    private JsonNode getMongoPayload(String currentState) throws IOException {
         Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
             throw new IOException("Missing home_geojson payload for state: " + currentState);
