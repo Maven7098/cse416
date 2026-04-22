@@ -76,9 +76,9 @@ function Home() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               />
-              <GeoJSON data={iowa} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(iowa)}>
+              <GeoJSON data={iowa} style={districtWindow} onEachFeature={onEachFeature} key="iowa-geojson">
                 </GeoJSON>
-              <GeoJSON data={georgia} style={districtWindow} onEachFeature={onEachFeature} key={JSON.stringify(georgia)}>
+              <GeoJSON data={georgia} style={districtWindow} onEachFeature={onEachFeature} key="georgia-geojson">
                 </GeoJSON>
             </MapContainer>
           </div>

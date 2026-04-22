@@ -42,6 +42,34 @@
   border-radius: 15px;
 }
 
+.stateinfo-main-content {
+  height: 85.5vh;
+  padding: 20px 10px 5px 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.stateinfo-main-content > .row {
+  height: 100%;
+  gap: 15px;
+}
+
+.stateinfo-main-content .tab-content,
+.stateinfo-main-content .tab-pane,
+.stateinfo-main-content .tab-pane.active {
+  height: 100%;
+}
+
+.stateinfo-main-content .leaflet-containerset {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.stateinfo-main-content .leaflet-container-big {
+  min-height: 0;
+}
+
 /* Leaflet Popup Theming */
 .leaflet-popup-content-wrapper {
   background-color: #e8d4c8 !important;

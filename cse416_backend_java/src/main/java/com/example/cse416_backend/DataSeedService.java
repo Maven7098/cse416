@@ -139,7 +139,7 @@ public class DataSeedService {
         // Seed NonVRA data (merged from four race-specific files)
         if (boxDataRepository.findByCurrentStateAndMode(stateCode, "NonVRA").isEmpty()) {
             String nonvraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-NonVRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Box-NonVRA.json");
             String nonvraAsianJson = loadJsonStringFromClasspath(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-NonVRA-Asian.json");
             String nonvraBlackJson = loadJsonStringFromClasspath(
@@ -163,7 +163,7 @@ public class DataSeedService {
         // Seed VRA data (merged from four race-specific files)
         if (boxDataRepository.findByCurrentStateAndMode(stateCode, "VRA").isEmpty()) {
             String vraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-VRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Box-VRA.json");
             String vraAsianJson = loadJsonStringFromClasspath(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-VRA-Asian.json");
             String vraBlackJson = loadJsonStringFromClasspath(
@@ -202,7 +202,7 @@ public class DataSeedService {
         // Seed NonVRA data
         if (ensembleDataRepository.findByCurrentStateAndMode(stateCode, "NonVRA").isEmpty()) {
             String nonvraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Ensemble-Data-NonVRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Ensemble-NonVRA.json");
             if (nonvraJson != null && !nonvraJson.isEmpty()) {
                 EnsembleDataDocument doc = new EnsembleDataDocument(
                     stateCode, "NonVRA", Document.parse(nonvraJson));
@@ -214,7 +214,7 @@ public class DataSeedService {
         // Seed VRA data
         if (ensembleDataRepository.findByCurrentStateAndMode(stateCode, "VRA").isEmpty()) {
             String vraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Ensemble-Data-VRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Ensemble-VRA.json");
             if (vraJson != null && !vraJson.isEmpty()) {
                 EnsembleDataDocument doc = new EnsembleDataDocument(
                     stateCode, "VRA", Document.parse(vraJson));
@@ -265,7 +265,7 @@ public class DataSeedService {
         
         if (precinctsGinglesRepository.findByCurrentState(stateCode).isEmpty()) {
             String ginglesJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Precinct-Gingles.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles.json");
             if (ginglesJson != null && !ginglesJson.isEmpty()) {
                 Document payloadDoc = new Document();
                 payloadDoc.put("data", parseJsonAsArray(ginglesJson));

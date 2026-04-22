@@ -120,7 +120,7 @@ function EIAnalysis ({ width, height, data, race }) {
           fill="#e0ac2b"
         />
         <circle
-          key={race}
+          key={`race-${race || "unknown"}`}
           r={6}
           cx={boundsWidth - 215}
           cy={15}

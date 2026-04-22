@@ -22,7 +22,9 @@ public class StateHeatmapService {
         ArrayNode response = objectMapper.createArrayNode();
         // If state is IA or GA, call LocalPayload to fill response
         if(currentState.equals("ia") || currentState.equals("ga")){
-            response.add(getLocalPayload(currentState));
+            ArrayNode localPayload = getLocalPayload(currentState);
+            response.add(localPayload.get(0));
+            response.add(localPayload.get(1));
         }
         // Should only accept "ia" and "ga", nothing else
         // (we are not doing other states)
@@ -36,11 +38,11 @@ public class StateHeatmapService {
         String stateCodeUpper = currentState.toUpperCase();
         // Heat map for Precinct (GUI-4)
         JsonNode currentPrecinct = objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-Precinct-GeoJSON.json").getInputStream()
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Precinct-GeoJSON.json").getInputStream()
         );
         // Heat map for Census Block (GUI-5)
         JsonNode currentCensusBlock = objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-CensusBlock-GeoJSON.json").getInputStream()
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-CensusBlock-GeoJSON.json").getInputStream()
         );
         response.add(currentPrecinct);
         response.add(currentCensusBlock);

@@ -23,7 +23,7 @@ function StateInfo({ activeState, latitude, longitude }){
 
   const resizeMap = (mapRef) => {
     const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-    const container = document.getElementById('map-container-district')
+    const container = document.getElementById('map-container-stateinfo')
     if (container) {
       resizeObserver.observe(container)
     }
@@ -99,7 +99,7 @@ function StateInfo({ activeState, latitude, longitude }){
         <div className='leaflet-container-big'>
           <h3>Select District</h3>
           <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
-          zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
+          zoom={7} className="leaflet-container" ref={mapRef} id="map-container-stateinfo"
           whenReady={() => resizeMap(mapRef)}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -38,7 +38,7 @@ public class StateSummaryService {
         String stateCodeUpper = currentState.toUpperCase();
         // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
         JsonNode currentDistrict = objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-Current-GeoJSON.json").getInputStream()
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-District-Current-GeoJSON.json").getInputStream()
         );
 
         // Combine them into a Map

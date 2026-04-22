@@ -14,15 +14,19 @@ function StateHeatmap({ activeState, activeRace, latitude, longitude }){
   // Set the Precinct and Census Block GeoJSON Data
   useEffect(() => {
       axios.get(`http://localhost:8080/heatmap?currentState=${activeState}`)
-      .then(response => {setPrecinctGeoJsonData(response.data[0])
-            setCensusBlockGeoJsonData(response.data[1])})
+    .then(response => {
+      const payload = Array.isArray(response.data) ? response.data : [];
+      const normalized = Array.isArray(payload[0]) ? payload[0] : payload;
+      setPrecinctGeoJsonData(normalized[0] && typeof normalized[0] === 'object' ? normalized[0] : "");
+      setCensusBlockGeoJsonData(normalized[1] && typeof normalized[1] === 'object' ? normalized[1] : "");
+    })
       .catch(error => console.log(error.response?.data ?? error.message))
   }, [activeState]);
 
   // This is to force the map to load upon first click
   const resizeMap = (mapRef) => {
     const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-    const container = document.getElementById('map-container-district')
+    const container = document.getElementById('map-container-heatmap')
     if (container) {
       resizeObserver.observe(container)
     }
@@ -78,7 +82,7 @@ function StateHeatmap({ activeState, activeRace, latitude, longitude }){
         <div className='leaflet-container-big'>
           <h3>Select District</h3>
           <MapContainer center={[latitude, longitude]} key={currentMode === "Precinct" ? JSON.stringify(precinctGeoJsonData) : JSON.stringify(censusBlockGeoJsonData)}
-          zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
+          zoom={7} className="leaflet-container" ref={mapRef} id="map-container-heatmap"
           whenReady={() => resizeMap(mapRef)}>
             <Legend grades={grades} colors={colors} title={currentRace}/>
             <TileLayer
