@@ -3,6 +3,11 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
 
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+
 import Legend from './MapLegend.jsx';
 import axios from 'axios';
 
@@ -14,15 +19,19 @@ function StateHeatmap({ activeState, activeRace, latitude, longitude }){
   // Set the Precinct and Census Block GeoJSON Data
   useEffect(() => {
       axios.get(`http://localhost:8080/heatmap?currentState=${activeState}`)
-      .then(response => {setPrecinctGeoJsonData(response.data[0])
-            setCensusBlockGeoJsonData(response.data[1])})
+    .then(response => {
+      const payload = Array.isArray(response.data) ? response.data : [];
+      const normalized = Array.isArray(payload[0]) ? payload[0] : payload;
+      setPrecinctGeoJsonData(normalized[0] && typeof normalized[0] === 'object' ? normalized[0] : "");
+      setCensusBlockGeoJsonData(normalized[1] && typeof normalized[1] === 'object' ? normalized[1] : "");
+    })
       .catch(error => console.log(error.response?.data ?? error.message))
   }, [activeState]);
 
   // This is to force the map to load upon first click
   const resizeMap = (mapRef) => {
     const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-    const container = document.getElementById('map-container-district')
+    const container = document.getElementById('map-container-heatmap')
     if (container) {
       resizeObserver.observe(container)
     }
@@ -58,8 +67,8 @@ function StateHeatmap({ activeState, activeRace, latitude, longitude }){
     return {
         // property type should be chosen later on (after graph rendering is done)
         fillColor: getColor(mapRace),
-        opacity: 1,
-        fillOpacity: 0.5
+        opacity: 0,
+        fillOpacity: 0.7
     };
   }
 
@@ -73,26 +82,37 @@ function StateHeatmap({ activeState, activeRace, latitude, longitude }){
       : "Black / African American Population";
 
   return (
-    <div>
       <div className="leaflet-containerset">
-        <div className='leaflet-container-big'>
-          <h3>Select District</h3>
-          <MapContainer center={[latitude, longitude]} key={currentMode === "Precinct" ? JSON.stringify(precinctGeoJsonData) : JSON.stringify(censusBlockGeoJsonData)}
-          zoom={7} className="leaflet-container" ref={mapRef} id="map-container-district"
-          whenReady={() => resizeMap(mapRef)}>
-            <Legend grades={grades} colors={colors} title={currentRace}/>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {/* Either render Precinct or Census Block depending on choice */}
-            {currentMode === "Precinct" 
-            ? <GeoJSON data={precinctGeoJsonData} style={precinctHeatmap} key={JSON.stringify(precinctGeoJsonData)} />
-            : <GeoJSON data={censusBlockGeoJsonData} style={precinctHeatmap} key={JSON.stringify(censusBlockGeoJsonData)}/>}
-          </MapContainer>
-        </div>
+      <div className='leaflet-container-big'>
+        <Navbar expand="lg" className="data-bs-theme-dark">
+          <Container fluid className="px-5">
+            <Navbar.Brand className="subnav-brand-fixed">{currentMode} {currentRace} Population</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
+              <div className="d-lg-flex align-items-lg-center w-100">
+                <NavDropdown className="ms-lg-auto" title={`Selected: ${currentMode}`}>
+                  <NavDropdown.Item onClick={() => setCurrentMode("Precinct")}>Precinct</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => setCurrentMode("Census Block")}>Census Block</NavDropdown.Item>
+                </NavDropdown>
+              </div>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(precinctGeoJsonData)}
+        zoom={7} className="leaflet-container" ref={mapRef} id="map-container-stateinfo"
+        whenReady={() => resizeMap(mapRef)}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <Legend grades={grades} colors={colors} title={currentRace}/>
+          {currentMode == "Precinct"
+          ? <GeoJSON data={precinctGeoJsonData} style={precinctHeatmap} key={JSON.stringify(precinctGeoJsonData)}/>
+          : <GeoJSON data={censusBlockGeoJsonData} style={precinctHeatmap} key={JSON.stringify(censusBlockGeoJsonData)}/>}
+        </MapContainer>
       </div>
-    </div>
+      </div>
   );
 };
 

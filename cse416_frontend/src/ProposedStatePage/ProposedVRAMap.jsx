@@ -8,7 +8,7 @@ import axios from 'axios';
 
 function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
   const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
-  const [ensembleSplitData, setEnsembleSplitData] = useState([]);
+  const [ensembleSplitData, setEnsembleSplitData] = useState(null);
   const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
   const [circleData, setCircleData] = useState([]);
 
@@ -16,10 +16,18 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
   useEffect(() => {
       axios.get(`http://localhost:8080/proposed?currentState=${activeState}&currentMode=${mode}`)
       .then(response => {
-        setDistrictGeoJsonData(response.data[0]);
-        setEnsembleSplitData(response.data[1]);
-        setBoxandWhiskerData(response.data[2]);
-        setCircleData(response.data[3]);
+        const payload = Array.isArray(response.data) ? response.data : [];
+
+        const districtPayload = payload[0] && typeof payload[0] === "object" ? payload[0] : "";
+        let ensemblePayload = payload[1] && typeof payload[1] === "object" ? payload[1] : null;
+        if (Array.isArray(ensemblePayload) && ensemblePayload.length > 0) {
+          ensemblePayload = ensemblePayload[0];
+        }
+
+        setDistrictGeoJsonData(districtPayload);
+        setEnsembleSplitData(ensemblePayload && !Array.isArray(ensemblePayload) ? ensemblePayload : null);
+        setBoxandWhiskerData(Array.isArray(payload[2]) ? payload[2] : []);
+        setCircleData(Array.isArray(payload[3]) ? payload[3] : []);
       })
       .catch(error => console.log(error.response?.data ?? error.message))
       // If Active State changes, then also reset districtData
@@ -91,7 +99,7 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
           <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>}
           {/* GUI-17: Display Box & Whisker Data */}
           <h3 style={{marginBottom: "0.5rem"}}>Box and Whisker Data</h3>
-          {(boxandWhiskerData && circleData) && 
+          {(boxandWhiskerData.length > 0 && circleData.length > 0) && 
           <BoxandWhiskerChart data={boxandWhiskerData.filter((data) => data.race == activeRace)} circleData={circleData.filter((data) => data.race == activeRace)} width={width} height={proposedHeight}/>}
           {/* <BoxandWhiskerExtra /> */}
         </div>

@@ -7,6 +7,10 @@ const MARGIN = { top: 0, right: 60, bottom: 50, left: 60 };
 const BAR_PADDING = 0.3;
 
 function EnsembleSplits({ width, height, data }){
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return <div style={{ padding: "1rem" }}>No ensemble split data is available.</div>;
+  }
+
   // bounds = area inside the graph axis = calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -17,8 +21,12 @@ function EnsembleSplits({ width, height, data }){
   const {NAME, ...popData} = data;
   const eData = Object.keys(popData).map(key => ({
       name: key,
-      value: popData[key]
-  }));
+      value: Number(popData[key])
+  })).filter((d) => Number.isFinite(d.value));
+
+  if (eData.length === 0) {
+    return <div style={{ padding: "1rem" }}>No ensemble split data is available.</div>;
+  }
 
   // X axis is for groups since the barplot is vertical
   const groups = eData.map((d) => d.name);

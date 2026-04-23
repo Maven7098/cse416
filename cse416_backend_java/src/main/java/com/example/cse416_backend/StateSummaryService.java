@@ -13,11 +13,11 @@ import tools.jackson.databind.node.ArrayNode;
 @Service
 public class StateSummaryService {
 
-    private final HomeGeoJsonRepository homeGeoJsonRepository;
+    private final StateInfoRepository stateInfoRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public StateSummaryService(HomeGeoJsonRepository homeGeoJsonRepository) {
-        this.homeGeoJsonRepository = homeGeoJsonRepository;
+    public StateSummaryService(StateInfoRepository stateInfoRepository) {
+        this.stateInfoRepository = stateInfoRepository;
     }
 
     // Calls both getLocalPayload and getMongoPayload
@@ -38,7 +38,7 @@ public class StateSummaryService {
         String stateCodeUpper = currentState.toUpperCase();
         // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
         JsonNode currentDistrict = objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-Congress-District-Current-GeoJSON.json").getInputStream()
+            new ClassPathResource("assets/" + currentState + "/" + stateCodeUpper + "-District-Current-GeoJSON.json").getInputStream()
         );
 
         // Combine them into a Map
@@ -48,9 +48,9 @@ public class StateSummaryService {
     // Return the State information (State data summary) as per GUI-3 from Mongo
     // Read file 3 from src/main/resources/assets/ia/IA-State-Info.json
     private JsonNode getMongoPayload(String currentState) throws IOException{
-        Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
+        Optional<StateInfoDocument> stateDoc = stateInfoRepository.findByCurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
-            throw new IOException("Missing home_geojson payload for state: " + currentState);
+            throw new IOException("Missing state_info payload for state: " + currentState);
         }
         return objectMapper.readTree(stateDoc.get().getPayload().toJson());
     }

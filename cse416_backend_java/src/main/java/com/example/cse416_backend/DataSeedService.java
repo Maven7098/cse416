@@ -126,9 +126,9 @@ public class DataSeedService {
             
             if (currentAsianJson != null && currentBlackJson != null && currentHispanicJson != null) {
                 Document mergedDoc = new Document();
-                mergedDoc.put("Asian", Document.parse(currentAsianJson));
-                mergedDoc.put("Black", Document.parse(currentBlackJson));
-                mergedDoc.put("Hispanic", Document.parse(currentHispanicJson));
+                mergedDoc.put("Asian", parseJsonAsArray(currentAsianJson));
+                mergedDoc.put("Black", parseJsonAsArray(currentBlackJson));
+                mergedDoc.put("Hispanic", parseJsonAsArray(currentHispanicJson));
                 
                 BoxDataDocument doc = new BoxDataDocument(stateCode, "Current", mergedDoc);
                 boxDataRepository.save(doc);
@@ -139,7 +139,7 @@ public class DataSeedService {
         // Seed NonVRA data (merged from four race-specific files)
         if (boxDataRepository.findByCurrentStateAndMode(stateCode, "NonVRA").isEmpty()) {
             String nonvraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-NonVRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Box-NonVRA.json");
             String nonvraAsianJson = loadJsonStringFromClasspath(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-NonVRA-Asian.json");
             String nonvraBlackJson = loadJsonStringFromClasspath(
@@ -149,10 +149,10 @@ public class DataSeedService {
             
             if (nonvraJson != null && nonvraAsianJson != null && nonvraBlackJson != null && nonvraHispanicJson != null) {
                 Document mergedDoc = new Document();
-                mergedDoc.put("Base", Document.parse(nonvraJson));
-                mergedDoc.put("Asian", Document.parse(nonvraAsianJson));
-                mergedDoc.put("Black", Document.parse(nonvraBlackJson));
-                mergedDoc.put("Hispanic", Document.parse(nonvraHispanicJson));
+                mergedDoc.put("Base", parseJsonAsArray(nonvraJson));
+                mergedDoc.put("Asian", parseJsonAsArray(nonvraAsianJson));
+                mergedDoc.put("Black", parseJsonAsArray(nonvraBlackJson));
+                mergedDoc.put("Hispanic", parseJsonAsArray(nonvraHispanicJson));
                 
                 BoxDataDocument doc = new BoxDataDocument(stateCode, "NonVRA", mergedDoc);
                 boxDataRepository.save(doc);
@@ -163,7 +163,7 @@ public class DataSeedService {
         // Seed VRA data (merged from four race-specific files)
         if (boxDataRepository.findByCurrentStateAndMode(stateCode, "VRA").isEmpty()) {
             String vraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-VRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Box-VRA.json");
             String vraAsianJson = loadJsonStringFromClasspath(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-VRA-Asian.json");
             String vraBlackJson = loadJsonStringFromClasspath(
@@ -173,10 +173,10 @@ public class DataSeedService {
             
             if (vraJson != null && vraAsianJson != null && vraBlackJson != null && vraHispanicJson != null) {
                 Document mergedDoc = new Document();
-                mergedDoc.put("Base", Document.parse(vraJson));
-                mergedDoc.put("Asian", Document.parse(vraAsianJson));
-                mergedDoc.put("Black", Document.parse(vraBlackJson));
-                mergedDoc.put("Hispanic", Document.parse(vraHispanicJson));
+                mergedDoc.put("Base", parseJsonAsArray(vraJson));
+                mergedDoc.put("Asian", parseJsonAsArray(vraAsianJson));
+                mergedDoc.put("Black", parseJsonAsArray(vraBlackJson));
+                mergedDoc.put("Hispanic", parseJsonAsArray(vraHispanicJson));
                 
                 BoxDataDocument doc = new BoxDataDocument(stateCode, "VRA", mergedDoc);
                 boxDataRepository.save(doc);
@@ -202,7 +202,7 @@ public class DataSeedService {
         // Seed NonVRA data
         if (ensembleDataRepository.findByCurrentStateAndMode(stateCode, "NonVRA").isEmpty()) {
             String nonvraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Ensemble-Data-NonVRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Ensemble-NonVRA.json");
             if (nonvraJson != null && !nonvraJson.isEmpty()) {
                 EnsembleDataDocument doc = new EnsembleDataDocument(
                     stateCode, "NonVRA", Document.parse(nonvraJson));
@@ -214,7 +214,7 @@ public class DataSeedService {
         // Seed VRA data
         if (ensembleDataRepository.findByCurrentStateAndMode(stateCode, "VRA").isEmpty()) {
             String vraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Ensemble-Data-VRA.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Ensemble-VRA.json");
             if (vraJson != null && !vraJson.isEmpty()) {
                 EnsembleDataDocument doc = new EnsembleDataDocument(
                     stateCode, "VRA", Document.parse(vraJson));
@@ -265,12 +265,31 @@ public class DataSeedService {
         
         if (precinctsGinglesRepository.findByCurrentState(stateCode).isEmpty()) {
             String ginglesJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Precinct-Gingles.json");
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles.json");
             if (ginglesJson != null && !ginglesJson.isEmpty()) {
-                PrecinctsGinglesDocument doc = new PrecinctsGinglesDocument(stateCode, Document.parse(ginglesJson));
+                Document payloadDoc = new Document();
+                payloadDoc.put("data", parseJsonAsArray(ginglesJson));
+                PrecinctsGinglesDocument doc = new PrecinctsGinglesDocument(stateCode, payloadDoc);
                 precinctsGinglesRepository.save(doc);
                 logger.info("  Seeded " + stateCodeUpper + " precincts_gingles document");
             }
+        }
+    }
+
+    private Object parseJsonAsArray(String jsonString) throws IOException {
+        if (jsonString == null || jsonString.trim().isEmpty()) {
+            return null;
+        }
+        
+        String trimmed = jsonString.trim();
+        // If it's a JSON array, wrap it in an object to parse correctly
+        if (trimmed.startsWith("[")) {
+            String wrappedJson = "{\"data\": " + jsonString + "}";
+            Document doc = Document.parse(wrappedJson);
+            return doc.get("data");
+        } else {
+            // If it's already an object, parse it directly
+            return Document.parse(jsonString);
         }
     }
 }
