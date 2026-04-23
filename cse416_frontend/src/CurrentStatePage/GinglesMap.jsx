@@ -12,7 +12,7 @@ function GinglesMap({ginglesData, activeRace}){
     // For GUI-11: Set Active Precinct on parent page
     // Send them as Props to GinglesData
     // And Render them on GinglesChart (Rename it to GinglesTable?)
-    const [activePrecinct, setActivePrecinct] = useState();
+    const [activePrecinct, setActivePrecinct] = useState("");
     
     const width = 740;
     const height = 680;

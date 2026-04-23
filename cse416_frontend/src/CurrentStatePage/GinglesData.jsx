@@ -110,30 +110,56 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
     }
 
     return (
-      <circle
-        key={i}
-        r={4}
-        cx={xScale(100 * (activeRace / d.TOTAL))}
-        cy={yScale(100 * (d.DEMOCRATIC / d.TOTAL))}
-        stroke={(d.DEMOCRATIC > d.REPUBLICAN ? "#0000ff" : "#ff0000")}
-        fill={(d.DEMOCRATIC > d.REPUBLICAN ? "#0000ff" : "#ff0000")}
-        fillOpacity={0.7}
-        onMouseEnter={() =>
-          setHovered({
-            xPos: xScale(100 * (activeRace / d.TOTAL)),
-            yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
-            name: d.UNIQUE_ID,
-          })
-        }
-        onClick={() => {
-          setActivePrecinct(d.COUNT)
-        }}
-        onMouseLeave={() => setHovered(null)}
-        style={{
-          animation: `circlesFadeIn 0.1s ease-out forwards ${pointsStartDelay + i * 0.0007}s`,
-          opacity: 0
-        }}
-      />
+      <>
+        <circle
+          key={i}
+          r={4}
+          cx={xScale(100 * (activeRace / d.TOTAL))}
+          cy={yScale(100 * (d.DEMOCRATIC / d.TOTAL))}
+          stroke="#0000ff"
+          fill="#0000ff"
+          fillOpacity={0.7}
+          onMouseEnter={() =>
+            setHovered({
+              xPos: xScale(100 * (activeRace / d.TOTAL)),
+              yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
+              name: d.UNIQUE_ID,
+            })
+          }
+          onClick={() => {
+            setActivePrecinct(d)
+          }}
+          onMouseLeave={() => setHovered(null)}
+          style={{
+            animation: `circlesFadeIn 0.1s ease-out forwards ${pointsStartDelay + i * 0.0007}s`,
+            opacity: 0
+          }}
+        />
+        <circle
+          key={i}
+          r={4}
+          cx={xScale(100 * (activeRace / d.TOTAL))}
+          cy={yScale(100 * (d.REPUBLICAN / d.TOTAL))}
+          stroke="#ff0000"
+          fill="#ff0000"
+          fillOpacity={0.7}
+          onMouseEnter={() =>
+            setHovered({
+              xPos: xScale(100 * (activeRace / d.TOTAL)),
+              yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
+              name: d.UNIQUE_ID,
+            })
+          }
+          onClick={() => {
+            setActivePrecinct(d)
+          }}
+          onMouseLeave={() => setHovered(null)}
+          style={{
+            animation: `circlesFadeIn 0.1s ease-out forwards ${pointsStartDelay + i * 0.0007}s`,
+            opacity: 0
+          }}
+        />
+      </>
     );
   });
 
