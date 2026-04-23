@@ -6,7 +6,11 @@ import Legend from './MapLegend.jsx';
 import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'
 
-function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, longitude }){
+import testEiData from './TestEi.json'
+import testEiKdeData from './TestEiKde.json'
+import Mpld3Chart from './Mpld3Chart.jsx';
+
+function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace, latitude, longitude }){
 
     // What type of data will we need for GinglesMap.jsx?
     // Left: Choropleth Map (GUI-14)
@@ -37,29 +41,37 @@ function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, l
     
     // GUI-14 (TODO Next)
     const grades = [0, 20, 40, 60, 80, 100];
-    const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+    let colors = [];
+    if(currentMode == 'D'){
+        colors = ['#EDA0FF', '#0000FF', '#0000D7', '#0000C6', '#0000B7', '#00009B'];
+    }
+    else{
+        colors = ['#FFEDA0', '#FF0000', '#D70000', '#C60000', '#B70000', '#9B0000'];
+    } 
 
-    function style(){
-    return {
-        fillColor: '#FFEDA0',
-        color: '#800026',
-        weight: 2,
-        opacity: 0.5,
-        fillOpacity: 0.5
-        };
+    // Grades of Blue (if Democrat is selected)
+    // Grades of Red (if Republican is selected)
+    function getColor(d, currentMode) {
+        if(currentMode == 'D'){
+            return d > 1 ? '#00009B' :
+                d > 0.8  ? '#0000B7' :
+                d > 0.6  ? '#0000C6' :
+                d > 0.4  ? '#0000D7' :
+                d > 0.2  ? '#0000FF' :
+                            '#EDA0FF';
+        }
+        else{
+            return d > 1 ? '#9B0000' :
+                d > 0.8  ? '#B70000' :
+                d > 0.6  ? '#C60000' :
+                d > 0.4  ? '#D70000' :
+                d > 0.2  ? '#FF0000' :
+                            '#FFEDA0';
+        }
     }
-    function getColor(d) {
-    return d > 1000000 ? '#800026' :
-           d > 500000  ? '#BD0026' :
-           d > 200000  ? '#E31A1C' :
-           d > 100000  ? '#FC4E2A' :
-           d > 50000   ? '#FD8D3C' :
-           d > 20000   ? '#FEB24C' :
-           d > 10000   ? '#FED976' :
-                      '#FFEDA0';
-    }
-    function getWinner(d) {
-        switch (d) {
+
+    function getWinner(currentMode) {
+        switch (currentMode) {
                 case 'R': return "#ff0000";
                 case 'D': return "#0000ff";
         }
@@ -70,24 +82,43 @@ function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, l
         // Need to find data on which President won which district
         // No third party won any district in Georgia or Iowa, so I only keep 2 values
         let mapRace;
+        let mapRaceVote;
 
         switch (activeRace) {
         case "HISPANIC":
             mapRace = feature.properties.HISPANIC;
+            if(currentMode == 'D'){
+                mapRaceVote = feature.properties.HISPANIC_DEM;
+            }
+            else{
+                mapRaceVote = feature.properties.HISPANIC_REP;
+            }
             break;
         case "BLACK":
             mapRace = feature.properties.BLACK;
+            if(currentMode == 'D'){
+                mapRaceVote = feature.properties.BLACK_DEM;
+            }
+            else{
+                mapRaceVote = feature.properties.BLACK_REP;
+            }
             break;
         case "ASIAN":
             mapRace = feature.properties.ASIAN;
+            if(currentMode == 'D'){
+                mapRaceVote = feature.properties.ASIAN_DEM;
+            }
+            else{
+                mapRaceVote = feature.properties.ASIAN_REP;
+            }
             break;
         }
         
         return {
             // property type should be chosen later on (after graph rendering is done)
-            fillColor: getColor(mapRace),
-            color: getWinner(feature.properties.WINNER),
-            weight: 2,
+            fillColor: getColor(mapRaceVote/mapRace, currentMode),
+            color: getWinner(currentMode),
+            weight: 1,
             opacity: 1,
             fillOpacity: 0.7
         };
@@ -95,6 +126,17 @@ function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, l
     
     const width = 680;
     const eiHeight = 330;
+
+    const MyChart = () => {
+        const svgRef = useRef();
+
+        useEffect(() => {
+            const svg = d3.select(svgRef.current);
+            testEiData
+        }, []);
+
+        return <svg ref={svgRef}></svg>;
+    };
 
     return (
         // Load the GeoJSON for the districting map
@@ -121,12 +163,21 @@ function EIMap({ precinctGeoJsonData, eiData, eiKdeData, activeRace, latitude, l
             <div className='leaflet-container-big'>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     <h3>Support for Candidate</h3>
-                    <h5>EI Analysis</h5>
                     {/* EI Analysis */}
-                    <EIAnalysis data={eiData} width={width} height={eiHeight} race={activeRace} />
-                    <h3>EI KDE (Kernel Data) Results</h3>
+                    {/* <EIAnalysis data={testEiData} width={width} height={eiHeight} race={activeRace} /> */}
+                    
                     {/* EI KDE Results */}
-                    <EIKDE data={eiKdeData} width={width} height={eiHeight} race={activeRace}/>
+                    <section>
+                        <h5>EI Analysis</h5>
+                        <Mpld3Chart data={testEiData} figId="ei-data" />
+                    </section>
+
+                    {/* Second Chart */}
+                    <section>
+                        <h5>EI KDE (Kernel Data) Results</h5>
+                        <Mpld3Chart data={testEiKdeData} figId="ei-kde" />
+                    </section>
+                    {/* <EIKDE data={testEiKdeData} width={width} height={eiHeight} race={activeRace}/> */}
                 </div>
             </div>
         </div>
