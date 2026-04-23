@@ -30,7 +30,7 @@ function MainNavbar() {
                 NonPreclearanceState (Iowa - IA)</Nav.Link>
               <Nav.Link as={Link} className={isGeorgiaActive ? 'active nav-link' : 'nav-link'} to="/georgia">
                 PreclearanceState (Georgia - GA)</Nav.Link>
-                <Nav.Link as={Link} className={isIowaEnsembleActive ? 'active nav-link' : 'nav-link'} to="/iowa/proposed/vra">
+              <Nav.Link as={Link} className={isIowaEnsembleActive ? 'active nav-link' : 'nav-link'} to="/iowa/proposed/vra">
                 NonPreclearanceState (Iowa - IA) - District Ensembles</Nav.Link>
               <Nav.Link as={Link} className={isGeorgiaEnsembleActive ? 'active nav-link' : 'nav-link'} to="/georgia/proposed/vra">
                 PreclearanceState (Georgia - GA) - District Ensembles</Nav.Link>
