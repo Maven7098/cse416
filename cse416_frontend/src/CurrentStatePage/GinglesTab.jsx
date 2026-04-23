@@ -2,7 +2,7 @@ import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
-import DropdownButton from 'react-bootstrap/DropdownButton'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 import Dropdown from 'react-bootstrap/Dropdown'
 
 import GinglesMap from './GinglesMap';
@@ -45,16 +45,11 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
             <Nav.Item>
               <Nav.Link eventKey="ei">EI</Nav.Link>
             </Nav.Item>
-          </Nav>
-          <Dropdown>
-            <Dropdown.Toggle id="select-mode">
-              Select Party
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
+            <NavDropdown title={`Select Party`}>
               <Dropdown.Item onClick={() => setCurrentMode('D')}>Democratic</Dropdown.Item>
               <Dropdown.Item onClick={() => setCurrentMode('R')}>Republican</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+            </NavDropdown>
+          </Nav>
         </Col>
         <Col lg={true}>
           <Tab.Content>
