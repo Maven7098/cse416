@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
+import '../CSS/mpld3.css';
 import Legend from './MapLegend.jsx';
 import EIAnalysis from './EIAnalysis.jsx'
 import EIKDE from './EIKDE.jsx'

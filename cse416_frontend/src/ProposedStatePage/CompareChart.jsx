@@ -1,75 +1,56 @@
 import { useEffect, useState } from 'react';
-import EnsembleSplits from './EnsembleSplits';
+import VraImpactThresholdTable from './VraImpactThresholdTable.jsx'
 import BoxandWhiskerChart from './BoxandWhiskerChart';
+import MinorityEffectivenessHistogram from './MinorityEffectivenessHistogram.jsx'
 import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
 import axios from 'axios';
 
 function CompareChart({ activeState, activeRace }){
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
-  const [currentBoxandWhiskerData, setCurrentBoxandWhiskerData] = useState([]);
-  const [vraEnsembleSplitData, setVraEnsembleSplitData] = useState([]);
-  const [vraBoxandWhiskerData, setVraBoxandWhiskerData] = useState([]);
-  const [nonVraEnsembleSplitData, setNonVraEnsembleSplitData] = useState([]);
-  const [nonVraBoxandWhiskerData, setNonVraBoxandWhiskerData] = useState([]);
-  const [districtOne, setDistrictOne] = useState([[],[]]);
-  const [districtTwo, setDistrictTwo] = useState([[],[]]);
+  const [vraImpactThresholdTable, setVraImpactThresholdTable] = useState([]);
+  const [compareBoxandWhiskerData, setCompareBoxandWhiskerData] = useState([]);
+  const [vraHistogram, setVraHistogram] = useState([]);
+  const [nonVraHistogram, setNonVraHistogram] = useState([]);
 
-  let districtOneName = "Proposed District (VRA Compliant)"
-  let districtTwoName = "Proposed District (Race Blind)"
-
-  const width = 700;
-  const proposedHeight = 320;
+  const width = 600;
+  const height = 320;
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   // There are racial versions of all of those data
   useEffect(() => {
-      axios.get(`http://localhost:8080/compare?currentState=${activeState}&currentMode=chart`)
+      axios.get(`http://localhost:8080/compare?currentState=${activeState}`)
       .then(response => {
-            setVraEnsembleSplitData(response.data[0]);
-            setNonVraEnsembleSplitData(response.data[1])
-            setCurrentBoxandWhiskerData(response.data[2]);
-            setVraBoxandWhiskerData(response.data[3]);
-            setNonVraBoxandWhiskerData(response.data[4]);})
+            setVraImpactThresholdTable(response.data[0]);
+            setCompareBoxandWhiskerData(response.data[1]);
+            setVraHistogram(response.data[2]);
+            setNonVraHistogram(response.data[3]);})
       .catch(error => console.log(error.response?.data ?? error.message))
   }, [activeState]);
 
-  useEffect(() => {
-    setDistrictOne([vraEnsembleSplitData, vraBoxandWhiskerData]);
-    setDistrictTwo([nonVraEnsembleSplitData, nonVraBoxandWhiskerData]);
-  },[vraEnsembleSplitData, nonVraEnsembleSplitData, vraBoxandWhiskerData, nonVraBoxandWhiskerData])
+  let vraImpactThresholdData = vraImpactThresholdTable.BLACK;
+  switch (activeRace) {
+        case "HISPANIC":
+            vraImpactThresholdData = vraImpactThresholdTable.HISPANIC;
+            break;
+        case "BLACK":
+            vraImpactThresholdData = vraImpactThresholdTable.BLACK;
+            break;
+        case "ASIAN":
+            vraImpactThresholdData = vraImpactThresholdTable.ASIAN;
+            break;
+    }
 
   return (
     // in accordance with the Navbar
     <div className="leaflet-containerset">
-        {(districtOne && districtTwo) && 
-        <>
-          <div className='leaflet-container-big'>
-          <h3>{districtOneName}</h3>
-          <div style={{display: 'flex', flexDirection: 'column'}}>
-            {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-            <EnsembleSplits data={districtOne[0]} width={width} height={proposedHeight}/>
-            {/* GUI-17: Display Box & Whisker Data */}
-            <h3>Box and Whisker Data</h3>
-            {(districtOne[1] && currentBoxandWhiskerData) &&
-            <BoxandWhiskerChart data={districtOne[1].filter((data) => data.race === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.race === activeRace)} width={width} height={proposedHeight}/>}
-            {/* <BoxandWhiskerExtra /> */}
-          </div>
-        </div>
-        <div className='leaflet-container-big'>
-          <h3>{districtTwoName}</h3>
-          <div style={{display: 'flex', flexDirection: 'column'}}>
-            {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-            <EnsembleSplits data={districtTwo[0]} width={width} height={proposedHeight}/>
-            {/* GUI-17: Display Box & Whisker Data */}
-            <h3>Box and Whisker Data</h3>
-            {(districtTwo[1] && currentBoxandWhiskerData) && 
-            <BoxandWhiskerChart data={districtTwo[1].filter((data) => data.race === activeRace)} circleData={currentBoxandWhiskerData.filter((data) => data.race === activeRace)} width={width} height={proposedHeight}/>}
-            {/* <BoxandWhiskerExtra /> */}
-          </div>
-        </div>
-        </>
-      }
+      <div className='leaflet-container-big'>
+        <VraImpactThresholdTable data={vraImpactThresholdData} />
+      </div>
+      <div className='leaflet-container-big'>
+        <BoxandWhiskerChart width={width} height={height} data={compareBoxandWhiskerData} />
+        <MinorityEffectivenessHistogram vraData={vraHistogram} nonVraData={nonVraHistogram} width={width} height={height} />
+      </div>
     </div>
   );
 };

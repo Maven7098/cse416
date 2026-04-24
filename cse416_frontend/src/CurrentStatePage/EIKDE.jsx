@@ -35,10 +35,12 @@ function EIKDE ({ width, height, data, race }) {
   }, [data, width]);
 
   // Compute kernel density estimation
-  const density = useMemo(() => {
-    const kde = kernelDensityEstimator(kernelEpanechnikov(7), xScale.ticks(40));
-    return kde(data);
-  }, [xScale]);
+  // const density = useMemo(() => {
+  //   const kde = kernelDensityEstimator(kernelEpanechnikov(7), xScale.ticks(40));
+  //   return kde(data);
+  // }, [xScale]);
+  const density = data.data;
+  console.log(density)
 
   const yScale = useMemo(() => {
     const max = Math.max(...density.map((d) => d[1]));

@@ -1,0 +1,10 @@
+/* Target the main figure container */
+.mpld3-figure {
+    background-color: #f9f9f9;
+}
+
+/* Target all text elements in the plot */
+.mpld3-figure text {
+    font-family: sans-serif !important;
+    fill: #333 !important;
+}
