@@ -2,41 +2,12 @@ import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
-import EnsembleSplits from './EnsembleSplits.jsx'
-import BoxandWhiskerChart from './BoxandWhiskerChart.jsx'
 import axios from 'axios';
 
-function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
-  const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
-  const [ensembleSplitData, setEnsembleSplitData] = useState(null);
-  const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
-  const [circleData, setCircleData] = useState([]);
-
-    // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
-  useEffect(() => {
-      axios.get(`http://localhost:8080/proposed?currentState=${activeState}&currentMode=${mode}`)
-      .then(response => {
-        const payload = Array.isArray(response.data) ? response.data : [];
-
-        const districtPayload = payload[0] && typeof payload[0] === "object" ? payload[0] : "";
-        let ensemblePayload = payload[1] && typeof payload[1] === "object" ? payload[1] : null;
-        if (Array.isArray(ensemblePayload) && ensemblePayload.length > 0) {
-          ensemblePayload = ensemblePayload[0];
-        }
-
-        setDistrictGeoJsonData(districtPayload);
-        setEnsembleSplitData(ensemblePayload && !Array.isArray(ensemblePayload) ? ensemblePayload : null);
-        setBoxandWhiskerData(Array.isArray(payload[2]) ? payload[2] : []);
-        setCircleData(Array.isArray(payload[3]) ? payload[3] : []);
-      })
-      .catch(error => console.log(error.response?.data ?? error.message))
-      // If Active State changes, then also reset districtData
-      setDistrictGeoJsonData("")
-  }, [activeState, mode]);
-
+function ProposedVRAMap({ activeState, activeRace, activeMap, latitude, longitude }){
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-      const container = document.getElementById(`/map-container-district-${mode}`)
+      const container = document.getElementById(`/map-container-district-${activeMap}`)
       if (container) {
         resizeObserver.observe(container)
       }
@@ -82,27 +53,18 @@ function ProposedVRAMap({ activeState, activeRace, mode, latitude, longitude }){
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
         <h3>Proposed District Map</h3>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(districtGeoJsonData)}
-        zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${mode}`}
+        <MapContainer center={[latitude, longitude]} key={JSON.stringify(activeMap)}
+        zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${activeMap}`}
         whenReady={() => resizeMap(mapRef)}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <GeoJSON data={districtGeoJsonData} style={districtWindow} key={JSON.stringify(districtGeoJsonData)}/>
+          {/* <GeoJSON data={activeMap} style={districtWindow} key={JSON.stringify(activeMap)}/> */}
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          {/* GUI-16: Display Ensemble Splits in Bar Chart */}
-          {ensembleSplitData && 
-          <EnsembleSplits data={ensembleSplitData} width={width} height={proposedHeight}/>}
-          {/* GUI-17: Display Box & Whisker Data */}
-          <h3 style={{marginBottom: "0.5rem"}}>Box and Whisker Data</h3>
-          {(boxandWhiskerData.length > 0 && circleData.length > 0) && 
-          <BoxandWhiskerChart data={boxandWhiskerData.filter((data) => data.race == activeRace)} circleData={circleData.filter((data) => data.race == activeRace)} width={width} height={proposedHeight}/>}
-          {/* <BoxandWhiskerExtra /> */}
-        </div>
+        {/* Description for each GeoJSON */}
       </div>
     </div>
     </>

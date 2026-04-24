@@ -35,7 +35,7 @@ function MapNavbar({activeState, activeRace, setActiveRace}) {
     <>
     <Navbar expand="lg" className="data-bs-theme-dark">
       <Container fluid className="px-0">
-        <Navbar.Brand className="subnav-brand-fixed">{activeStateName} - Proposed Districts</Navbar.Brand>
+        <Navbar.Brand className="subnav-brand-fixed">{activeStateName} - District Ensembles</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
           <div className="d-lg-flex align-items-lg-center w-100">

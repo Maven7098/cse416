@@ -7,19 +7,27 @@ import VerticalBox from "../Chart/VerticalBox";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
 
-function BoxandWhiskerChart({ width, height, data, circleData }){
+function BoxandWhiskerChart({ width, height, data }){
   // The bounds (= area inside the axis) is calculated by substracting the margins from total width / height
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
-  const numberData = data.sort( function (a, b){ return a.value - b.value });
-  const circleDataEnacted = circleData.filter((d) => d.name === "Enacted").map((d) => d.value);
 
-  // Compute everything derived from the dataset:
+  // Separate the key and values
+  const {NAME, ...popData} = data;
+  const eData = Object.keys(popData).map(key => ({
+      name: key,
+      value: Number(popData[key])
+  })).filter((d) => Number.isFinite(d.value));
+
+  const numberData = eData.sort( function (a, b){ return a.value - b.value });
+  // const circleDataEnacted = circleData.filter((d) => d.name === "Enacted").map((d) => d.value);
+
+  // Compute everything derived from the Dataset:
   const { chartMin, chartMax, groups } = useMemo(() => {
-    const [chartMin, chartMax] = d3.extent(data.map((d) => d.value))
+    const [chartMin, chartMax] = d3.extent(eData.map((d) => d.value))
     const groups = [...new Set(numberData.map((d) => d.name))];
     return { chartMin, chartMax, groups };
-  }, [data]);
+  }, [eData]);
 
   // Compute scales
   const yScale = d3
@@ -32,21 +40,21 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
     .domain(groups)
     .padding(0.25);
 
-  let countEnacted = 0;
-  const allEnactedCircles = circleDataEnacted.map((value, i) => {
-    countEnacted++;
-    return (
-    <circle
-      key={i}
-      // Only keep one per district
-      cx={xScale(countEnacted.toString()) + xScale.bandwidth() / 2}
-      cy={yScale(value)}
-      r={6}
-      fill="#E31A1C"
-      fillOpacity={0.8}
-    />
-    )
-});
+  // let countEnacted = 0;
+//   const allEnactedCircles = circleDataEnacted.map((value, i) => {
+//     countEnacted++;
+//     return (
+//     <circle
+//       key={i}
+//       // Only keep one per district
+//       cx={xScale(countEnacted.toString()) + xScale.bandwidth() / 2}
+//       cy={yScale(value)}
+//       r={6}
+//       fill="#E31A1C"
+//       fillOpacity={0.8}
+//     />
+//     )
+// });
   // Build the box shapes
   const allShapes = groups.map((group, i) => {
     // Do not put "Enacted" and "Proposed" into box charts
@@ -98,7 +106,7 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
             </clipPath>
           </defs>
           {allShapes}
-          {allEnactedCircles}
+          {/* {allEnactedCircles} */}
         {/* Build a Legend */}
         <rect
           key="BOX"
@@ -110,13 +118,13 @@ function BoxandWhiskerChart({ width, height, data, circleData }){
           x={boundsWidth - 260}
           y={-20}
         />
-        <circle
+        {/* <circle
           key="ENACTED"
           r={6}
           cx={boundsWidth - 245}
           cy={-5}
           fill="#E31A1C"
-        />
+        /> */}
         <rect
           key="MINORITY"
           width={12}

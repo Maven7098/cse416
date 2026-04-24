@@ -7,7 +7,7 @@ import MapNavbar from "./CurrentStatePage/MapNavbar.jsx";
 import MapTab from "./CurrentStatePage/MapTab.jsx";
 import GinglesTab from "./CurrentStatePage/GinglesTab.jsx";
 import ProposedNavbar from './ProposedStatePage/ProposedNavbar.jsx'
-import ProposedVRAMap from './ProposedStatePage/ProposedVRAMap.jsx'
+import ProposedMapTab from './ProposedStatePage/ProposedMapTab.jsx'
 import CompareMapTab from "./ProposedStatePage/CompareMapTab.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CSS/index.css';
@@ -40,19 +40,19 @@ export default function App() {
           </>} />
           <Route path="iowa/proposed/vra" element={<>
             <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <ProposedVRAMap activeState="ia" activeRace={activeRace} mode="vra" latitude={41.8780} longitude={-93.0977} />
+            <ProposedMapTab activeState="ia" activeRace={activeRace} mode="vra" latitude={41.8780} longitude={-93.0977} />
           </>} />
           <Route path="georgia/proposed/vra" element={<>
             <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <ProposedVRAMap activeState="ga" activeRace={activeRace} mode="vra" latitude={33.2478} longitude={-83.4411} />
+            <ProposedMapTab activeState="ga" activeRace={activeRace} mode="vra" latitude={33.2478} longitude={-83.4411} />
           </>} />
           <Route path="iowa/proposed/nonvra" element={<>
             <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <ProposedVRAMap activeState="ia" activeRace={activeRace} mode="non-vra" latitude={41.8780} longitude={-93.0977} />
+            <ProposedMapTab activeState="ia" activeRace={activeRace} mode="non-vra" latitude={41.8780} longitude={-93.0977} />
           </>} />
           <Route path="georgia/proposed/nonvra" element={<>
             <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <ProposedVRAMap activeState="ga" activeRace={activeRace} mode="non-vra" latitude={33.2478} longitude={-83.4411} />
+            <ProposedMapTab activeState="ga" activeRace={activeRace} mode="non-vra" latitude={33.2478} longitude={-83.4411} />
           </>} />
           <Route path="iowa/proposed/compare" element={<>
             <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />

@@ -15,7 +15,6 @@ function EnsembleSplits({ width, height, data }){
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
-  // Data is provided in ProposedVRAMap.jsx
   // Democrat / Republican Split
   // KEY: "5/9" (5 Democrat, 9 Republican) / VALUE: Number of proposed maps with this split
   const {NAME, ...popData} = data;
@@ -109,9 +108,7 @@ function EnsembleSplits({ width, height, data }){
 
   return (
     <div>
-        <h3 style={{marginBottom: "0.25rem"}}>Simulated Election: Splits for {data.NAME}</h3>
-        <p style={{marginBottom: "0.5rem"}}>D/R: Democratic Victory/Republican Victory</p>
-      <svg width={width} height={height}>
+      <svg width={width} height={height+40}>
         <g
           width={boundsWidth}
           height={boundsHeight}
