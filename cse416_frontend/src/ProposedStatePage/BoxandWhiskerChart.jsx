@@ -7,27 +7,46 @@ import VerticalBox from "../Chart/VerticalBox";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 50 };
 
-function BoxandWhiskerChart({ width, height, data }){
-  // The bounds (= area inside the axis) is calculated by substracting the margins from total width / height
-  const boundsWidth = width - MARGIN.right - MARGIN.left;
-  const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+function BoxandWhiskerChart({ width, height, activeRace, data }){
+// The bounds (= area inside the axis) is calculated by substracting the margins from total width / height
+const boundsWidth = width - MARGIN.right - MARGIN.left;
+const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
-  // Separate the key and values
-  const {NAME, ...popData} = data;
-  const eData = Object.keys(popData).map(key => ({
-      name: key,
-      value: Number(popData[key])
-  })).filter((d) => Number.isFinite(d.value));
+// Get all values matching specific minority group
+let minority;
+switch(activeRace){
+    case "HISPANIC":
+        minority = data
+        .filter(item => item.HISPANIC !== undefined) // Optional: filter out missing
+        .map(item => item.HISPANIC);
+        break;
+    case "BLACK":
+        minority = data
+        .filter(item => item.BLACK !== undefined) // Optional: filter out missing
+        .map(item => item.BLACK);
+        break;
+    case "ASIAN":
+        minority = data
+        .filter(item => item.ASIAN !== undefined) // Optional: filter out missing
+        .map(item => item.ASIAN);
+        break;
+  }
+  
+  const ungrouped = minority.map(item => {
+    return Object.entries(item).map(([key, value]) => ({
+    name: key, value: value
+  }))}).flat();
+  console.log(ungrouped)
 
-  const numberData = eData.sort( function (a, b){ return a.value - b.value });
+  const numberData = ungrouped.sort( function (a, b){ return a.value - b.value });
   // const circleDataEnacted = circleData.filter((d) => d.name === "Enacted").map((d) => d.value);
 
   // Compute everything derived from the Dataset:
   const { chartMin, chartMax, groups } = useMemo(() => {
-    const [chartMin, chartMax] = d3.extent(eData.map((d) => d.value))
+    const [chartMin, chartMax] = d3.extent(ungrouped.map((d) => d.value))
     const groups = [...new Set(numberData.map((d) => d.name))];
     return { chartMin, chartMax, groups };
-  }, [eData]);
+  }, [ungrouped]);
 
   // Compute scales
   const yScale = d3

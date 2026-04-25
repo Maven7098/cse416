@@ -13,15 +13,12 @@ function ProposedVRAInfo({ activeRace, ensembleSplitData, boxandWhiskerData, cir
     switch (activeRace) {
         case "HISPANIC":
             currentRace = "Hispanic / Latino";
-            boxandWhiskerData = boxandWhiskerTest[0].HISPANIC;
             break;
         case "BLACK":
             currentRace = "Black / African American";
-            boxandWhiskerData = boxandWhiskerTest[0].BLACK;
             break;
         case "ASIAN":
             currentRace = "Asian / Asian American";
-            boxandWhiskerData = boxandWhiskerTest[0].ASIAN;
             break;
     }
     
@@ -52,7 +49,7 @@ function ProposedVRAInfo({ activeRace, ensembleSplitData, boxandWhiskerData, cir
                 <div className='leaflet-container-big'>
                 <h3 style={{marginBottom: "0.5rem"}}>{currentRace} distribution in districts</h3>
                 <h5>Box and Whisker Data</h5>
-                <BoxandWhiskerChart data={boxandWhiskerData}
+                <BoxandWhiskerChart data={boxandWhiskerTest} activeRace={activeRace}
                 width={width} height={height}/>
                 {/* <BoxandWhiskerExtra /> */}
                 </div>
