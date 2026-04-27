@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { useState } from "react";
 import Tooltip from "../Chart/Tooltip";
 import Axis from "../Chart/Axis";
-import { regressionLinear } from "d3-regression";
+import { regressionExp } from "d3-regression";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
@@ -163,7 +163,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
     );
   });
 
-  const linearRegression = regressionLinear()
+  const exponentialRegression = regressionExp()
     .x(d => d.x) // x-accessor
     .y(d => d.y) // y-accessor
   
@@ -185,7 +185,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
       x: 100*activeRace/precinct.TOTAL,
       y: 100*precinct.DEMOCRATIC/precinct.TOTAL}
   })
-  const resultDem = linearRegression(dataDem);
+  const resultDem = exponentialRegression(dataDem);
   const dataRep = data.filter((precinct) => precinct.REPUBLICAN >= precinct.DEMOCRATIC)
   .map((precinct) => {
     let activeRace = precinct.BLACK
@@ -204,7 +204,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
       x: 100*activeRace/precinct.TOTAL,
       y: 100*precinct.REPUBLICAN/precinct.TOTAL}
   })
-  const resultRep = linearRegression(dataRep);
+  const resultRep = exponentialRegression(dataRep);
 
   // 4. Use result to draw line (result.a is slope, result.b is intercept)
   const lineBuilder = d3.line()
