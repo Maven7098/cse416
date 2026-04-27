@@ -11,6 +11,9 @@ function BoxandWhiskerChart({ width, height, activeRace, data }){
 // The bounds (= area inside the axis) is calculated by substracting the margins from total width / height
 const boundsWidth = width - MARGIN.right - MARGIN.left;
 const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+if (!data || data.length === 0) {
+    return <div style={{ padding: "1rem" }}>EI analysis data is not available yet.</div>;
+}
 
 // Get all values matching specific minority group
 let minority;
