@@ -8,7 +8,7 @@ import MapTab from "./CurrentStatePage/MapTab.jsx";
 import GinglesTab from "./CurrentStatePage/GinglesTab.jsx";
 import ProposedNavbar from './ProposedStatePage/ProposedNavbar.jsx'
 import ProposedMapTab from './ProposedStatePage/ProposedMapTab.jsx'
-import CompareMapTab from "./ProposedStatePage/CompareMapTab.jsx";
+import CompareChart from "./ProposedStatePage/CompareChart.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CSS/index.css';
 
@@ -56,11 +56,11 @@ export default function App() {
           </>} />
           <Route path="iowa/proposed/compare" element={<>
             <ProposedNavbar activeState="ia" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <CompareMapTab activeState="ia" activeRace={activeRace} activeStateName="Iowa" mode="nonvra" latitude={41.8780} longitude={-93.0977} />
+            <CompareChart activeState="ia" activeRace={activeRace} activeStateName="Iowa" mode="nonvra" latitude={41.8780} longitude={-93.0977} />
           </>} />
           <Route path="georgia/proposed/compare" element={<>
             <ProposedNavbar activeState="ga" activeRace={activeRace} setActiveRace={setActiveRace} />
-            <CompareMapTab activeState="ga" activeRace={activeRace} activeStateName="Georgia" mode="nonvra" latitude={33.2478} longitude={-83.4411} />
+            <CompareChart activeState="ga" activeRace={activeRace} activeStateName="Georgia" mode="nonvra" latitude={33.2478} longitude={-83.4411} />
           </>} />
           {/* For any undefined pages, throw 404 error */}
           {/* <Route path="*" element={<NoPage />} /> */}

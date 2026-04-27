@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import '../CSS/GinglesTable.css'
 
 function VraImpactThresholdTable ({ data, race, activePrecinct }) {
+  if (!data || data.length === 0) {
+    return <div style={{ padding: "1rem" }}>EI analysis data is not available yet.</div>;
+  }
   return (
     <div>
         <table className='fixed-table'>
