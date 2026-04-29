@@ -21,18 +21,21 @@ public class DataSeedService {
     private final EnsembleDataRepository ensembleDataRepository;
     private final StateInfoRepository stateInfoRepository;
     private final PrecinctsGinglesRepository precinctsGinglesRepository;
+    private final PolarizationDataRepository polarizationDataRepository;
 
     public DataSeedService(
         HomeGeoJsonRepository homeGeoJsonRepository,
         BoxDataRepository boxDataRepository,
         EnsembleDataRepository ensembleDataRepository,
         StateInfoRepository stateInfoRepository,
-        PrecinctsGinglesRepository precinctsGinglesRepository) {
+        PrecinctsGinglesRepository precinctsGinglesRepository,
+        PolarizationDataRepository polarizationDataRepository) {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
         this.boxDataRepository = boxDataRepository;
         this.ensembleDataRepository = ensembleDataRepository;
         this.stateInfoRepository = stateInfoRepository;
         this.precinctsGinglesRepository = precinctsGinglesRepository;
+        this.polarizationDataRepository = polarizationDataRepository;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -45,6 +48,7 @@ public class DataSeedService {
             seedEnsembleData();
             seedStateInfo();
             seedPrecinctsGingles();
+            seedPolarizationData();
         } catch (Exception e) {
             logger.error("Error during database seeding - continuing anyway", e);
         }
@@ -258,6 +262,62 @@ public class DataSeedService {
         } catch (IOException e) {
             logger.error("Error seeding precincts_gingles", e);
         }
+    }
+
+    private void seedPolarizationData() {
+        try {
+            logger.info("Seeding polarization_data collection...");
+            seedPolarizationDataForState("ia");
+            seedPolarizationDataForState("ga");
+            logger.info("polarization_data seeding completed successfully");
+        } catch (IOException e) {
+            logger.error("Error seeding polarization_data", e);
+        }
+    }
+
+    private void seedPolarizationDataForState(String stateCode) throws IOException {
+        if (polarizationDataRepository.findByCurrentState(stateCode).isPresent()) {
+            logger.info("  {} polarization_data document already exists. Skipping.", stateCode.toUpperCase());
+            return;
+        }
+
+        Document mergedPayload = new Document();
+        mergedPayload.put("Asian", buildPolarizationRacePayload(stateCode, "Asian"));
+        mergedPayload.put("Black", buildPolarizationRacePayload(stateCode, "Black"));
+        mergedPayload.put("Hispanic", buildPolarizationRacePayload(stateCode, "Hispanic"));
+
+        PolarizationDataDocument doc = new PolarizationDataDocument(stateCode, mergedPayload);
+        polarizationDataRepository.save(doc);
+        logger.info("  Seeded {} polarization_data document", stateCode.toUpperCase());
+    }
+
+    private Document buildPolarizationRacePayload(String stateCode, String race) throws IOException {
+        String stateCodeUpper = stateCode.toUpperCase();
+
+        String harrisJson = loadJsonStringFromClasspath(
+            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Harris.json");
+        String harrisKdeJson = loadJsonStringFromClasspath(
+            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Harris_KDE.json");
+        String trumpJson = loadJsonStringFromClasspath(
+            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Trump.json");
+        String trumpKdeJson = loadJsonStringFromClasspath(
+            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Trump_KDE.json");
+
+        Document racePayload = new Document();
+        racePayload.put("Harris", buildPolarizationCandidatePayload(harrisJson, harrisKdeJson));
+        racePayload.put("Trump", buildPolarizationCandidatePayload(trumpJson, trumpKdeJson));
+        return racePayload;
+    }
+
+    private Document buildPolarizationCandidatePayload(String chartJson, String kdeJson) throws IOException {
+        Document candidatePayload = new Document();
+        if (chartJson != null && !chartJson.isEmpty()) {
+            candidatePayload.put("chart", Document.parse(chartJson));
+        }
+        if (kdeJson != null && !kdeJson.isEmpty()) {
+            candidatePayload.put("kde", Document.parse(kdeJson));
+        }
+        return candidatePayload;
     }
 
     private void seedPrecinctsGinglesForState(String stateCode) throws IOException {

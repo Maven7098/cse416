@@ -14,10 +14,12 @@ import java.util.Optional;
 public class StatePolarizationService {
 
     private final PrecinctsGinglesRepository precinctsGinglesRepository;
+    private final PolarizationDataRepository polarizationDataRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public StatePolarizationService(PrecinctsGinglesRepository precinctsGinglesRepository) {
+    public StatePolarizationService(PrecinctsGinglesRepository precinctsGinglesRepository, PolarizationDataRepository polarizationDataRepository) {
         this.precinctsGinglesRepository = precinctsGinglesRepository;
+        this.polarizationDataRepository = polarizationDataRepository;
     }
 
     // Calls both getLocalPayload and getMongoPayload
@@ -28,7 +30,15 @@ public class StatePolarizationService {
             response.add(getGinglesPayload(currentState));
             response.add(getLocalPayload(currentState));
             response.add(objectMapper.createArrayNode());
-            response.add(objectMapper.createArrayNode());
+            
+            // Add polarization KDE data as element [3]
+            Optional<PolarizationDataDocument> polarizationData = polarizationDataRepository.findByCurrentState(currentState);
+            if (polarizationData.isPresent() && polarizationData.get().getPayload() != null) {
+                JsonNode kdeNode = objectMapper.readTree(polarizationData.get().getPayload().toJson());
+                response.add(kdeNode);
+            } else {
+                response.add(objectMapper.createObjectNode());
+            }
         }
         return response;
     }
