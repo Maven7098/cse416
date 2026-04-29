@@ -33,7 +33,7 @@ function MapTab({activeState, activeRace, latitude, longitude}) {
         </Col>
         <Col lg={true}>
           <Tab.Content>
-            <Tab.Pane eventKey="info"><StateInfo activeState={activeState} latitude={latitude} longitude={longitude} /></Tab.Pane>
+            <Tab.Pane eventKey="info"><StateInfo activeState={activeState} activeRace={activeRace} latitude={latitude} longitude={longitude} /></Tab.Pane>
             <Tab.Pane eventKey="heatmap"><StateHeatmap activeState={activeState} currentMode={currentMode} activeRace={activeRace} latitude={latitude} longitude={longitude}  /></Tab.Pane>
           </Tab.Content>
         </Col>

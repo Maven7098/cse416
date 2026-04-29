@@ -15,7 +15,7 @@ function MapNavbar({activeState, activeRace, setActiveRace}) {
   // But why do we need to do that? Is the latitude or longitude important?
   switch (activeState) {
     // Since Hispanic/Latino are the only feasible racial category in Iowa, force activeRace to HISPANIC if Iowa is selected
-    case 'ia': activeStateName="Iowa"; destination="iowa"; activeRace = "HISPANIC"; break;
+    case 'ia': activeStateName="Iowa"; destination="iowa"; setActiveRace("HISPANIC"); break;
     case 'ga': activeStateName="Georgia"; destination="georgia"; break;
   }
 

@@ -7,7 +7,7 @@ import District from './District.jsx';
 
 import axios from 'axios';
 
-function StateInfo({ activeState, latitude, longitude }){
+function StateInfo({ activeState, activeRace, latitude, longitude }){
   const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
   const [districtData, setDistrictData] = useState("");
   const [currentState, setCurrentState] = useState("");
@@ -86,7 +86,7 @@ function StateInfo({ activeState, latitude, longitude }){
 
   const width = 820;
   const heightState = 650;
-  const heightDistrict = 627;
+  const heightDistrict = 595;
 
   return (
     // Load the GeoJSON for the districting map
@@ -112,7 +112,7 @@ function StateInfo({ activeState, latitude, longitude }){
           {/* TODO Today: Use State Data if districtData is empty */}
           {districtData ? (<>
           <button className="go-back-btn" onClick={() => setDistrictData("")}>Go Back to State Information</button>
-          <District districtData={districtData} width={width} height={heightDistrict} />
+          <District districtData={districtData} activeRace={activeRace} width={width} height={heightDistrict} />
           </>)
           : (<>
             <State activeState={currentState} width={width} height={heightState} />

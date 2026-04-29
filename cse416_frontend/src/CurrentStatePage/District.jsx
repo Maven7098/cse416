@@ -3,14 +3,42 @@ import * as d3 from 'd3';
 const MARGIN = { top: 10, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
 import titleCase from '../Chart/TitleCase';
+import { useState } from 'react';
 
-function District({ width, height, districtData }){
+function District({ activeRace, width, height, districtData }){
   // bounds = area inside the graph axis = calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
+  let minorityEffective = ""
+  let minorityPercent = ""
+  let currentRace = "Black / African American"
+  switch (activeRace) {
+    case "HISPANIC":
+      currentRace = "Hispanic / Latino"
+      minorityEffective = districtData.HISPANIC_DIST
+      minorityPercent = districtData.HISPANIC_PER
+      break;
+    case "BLACK":
+      currentRace = "Black / African American"
+      minorityEffective = districtData.BLACK_DIST
+      minorityPercent = districtData.BLACK_PER
+      break;
+    case "ASIAN":
+      currentRace = "Asian / Asian American"
+      minorityEffective = districtData.ASIAN_DIST
+      minorityPercent = districtData.ASIAN_PER
+      break;
+  }
+  console.log(currentRace);
+  console.log(minorityEffective);
+  console.log(minorityPercent);
+
   // Process districtData to only leave numerical values
-  const {ID, AREA, DISTRICT, GEOID, WINNER, REPRESENT, RRACE, WMARGIN, TOTAL, ...popData} = districtData;
+  const {ID, AREA, DISTRICT, GEOID, WINNER, REPRESENT, RRACE, WMARGIN, TOTAL,
+     HISPANIC_PER, BLACK_PER, ASIAN_PER, WHITE_PER, OTHER_PER,
+     HISPANIC_EFF, BLACK_EFF, ASIAN_EFF, WHITE_EFF, OTHER_EFF,
+     HISPANIC_DIST, BLACK_DIST, ASIAN_DIST, WHITE_DIST, OTHER_DIST, ...popData} = districtData;
   // popData should be converted to Key/Value pairs of arrays to work w/ D3 
   const data = Object.keys(popData).map(key => ({
       name: titleCase(key),
@@ -99,7 +127,8 @@ function District({ width, height, districtData }){
   return (
     <div>
       <h4>District No.: {districtData.DISTRICT}</h4>
-      <h5>District GeoID: {districtData.GEOID}</h5>
+      <h5>{currentRace} Effective: {minorityEffective == 1 ? "True" : "False"}</h5>
+      <h5>{currentRace} Majority: {minorityPercent > 0.5 ? "True" : "False"}</h5>
     <div style={{marginBottom: "0"}}>
       <p style={{margin: "2px"}}>Representative: {districtData.REPRESENT} | Margin: {districtData.WMARGIN}</p>
       {districtData.WINNER == "D" ? <p style={{margin: "2px"}}>Party of Representative: Democrat</p> : <p style={{margin: "2px"}}>Party of Representative: Republican</p>}

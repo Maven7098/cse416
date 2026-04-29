@@ -39,9 +39,6 @@ function GinglesTable ({ data, race, activePrecinct }) {
             <tr>
                 <th>Precinct ID</th>
                 <th>Total Population</th>
-                <th>Urban Population</th>
-                <th>Suburban Population</th>
-                <th>Rural Population</th>
                 <th>Hispanic Population</th>
                 <th>Black Population</th>
                 <th>Asian Population</th>
@@ -64,15 +61,6 @@ function GinglesTable ({ data, race, activePrecinct }) {
                             {activePrecinct === precinct
                              ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
                                 {precinct.TOTAL}</td> : <td>{precinct.TOTAL}</td>}
-                            {activePrecinct === precinct
-                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
-                                {precinct.URBAN}</td> : <td>{precinct.URBAN}</td>}
-                            {activePrecinct === precinct
-                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
-                                {precinct.SUBURBAN}</td> : <td>{precinct.SUBURBAN}</td>}
-                            {activePrecinct === precinct
-                             ? <td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
-                                {precinct.RURAL}</td> : <td>{precinct.RURAL}</td>}
                             {activePrecinct === precinct
                              ? (<td style={{color: "#ffffff", backgroundColor: "#000000", fontWeight: "bold"}}>
                                 {precinct.HISPANIC}</td>) : ( race == "HISPANIC" ? (<td style={{fontWeight: "bold"}}>{precinct.HISPANIC}</td>)
