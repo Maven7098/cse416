@@ -14,7 +14,8 @@ function MapNavbar({activeState, activeRace, setActiveRace}) {
   // I have initially thought of setting this on the server
   // But why do we need to do that? Is the latitude or longitude important?
   switch (activeState) {
-    case 'ia': activeStateName="Iowa"; destination="iowa"; break;
+    // Since Hispanic/Latino are the only feasible racial category in Iowa, force activeRace to HISPANIC if Iowa is selected
+    case 'ia': activeStateName="Iowa"; destination="iowa"; activeRace = "HISPANIC"; break;
     case 'ga': activeStateName="Georgia"; destination="georgia"; break;
   }
 
@@ -48,9 +49,9 @@ function MapNavbar({activeState, activeRace, setActiveRace}) {
                 Compare Districts</Nav.Link>
             </Nav>
             <NavDropdown className="ms-lg-auto" title={`Selected: ${currentRace}`}>
-              <NavDropdown.Item onClick={() => setActiveRace("BLACK")}>Black / African American</NavDropdown.Item>
+              { activeState == 'ga' && <NavDropdown.Item onClick={() => setActiveRace("BLACK")}>Black / African American</NavDropdown.Item> }
               <NavDropdown.Item onClick={() => setActiveRace("HISPANIC")}>Hispanic / Latino</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => setActiveRace("ASIAN")}>Asian / Asian American</NavDropdown.Item>
+              { activeState == 'ga' && <NavDropdown.Item onClick={() => setActiveRace("ASIAN")}>Asian / Asian American</NavDropdown.Item> }
             </NavDropdown>
           </div>
         </Navbar.Collapse>
