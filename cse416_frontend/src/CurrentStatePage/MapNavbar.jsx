@@ -6,7 +6,7 @@ import {NavLink, Outlet} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../CSS/Navbar.css';
 
-function MapNavbar({activeState, activeRace, setActiveRace}) {
+function MapNavbar({activeState, activeRace, currentRace, setActiveRace}) {
   let activeStateName = ""
   let destination = ""
 
@@ -17,19 +17,6 @@ function MapNavbar({activeState, activeRace, setActiveRace}) {
     // Since Hispanic/Latino are the only feasible racial category in Iowa, force activeRace to HISPANIC if Iowa is selected
     case 'ia': activeStateName="Iowa"; destination="iowa"; setActiveRace("HISPANIC"); break;
     case 'ga': activeStateName="Georgia"; destination="georgia"; break;
-  }
-
-  let currentRace = "Black / African American"
-  switch (activeRace) {
-    case "HISPANIC":
-      currentRace = "Hispanic / Latino"
-      break;
-    case "BLACK":
-      currentRace = "Black / African American"
-      break;
-    case "ASIAN":
-      currentRace = "Asian / Asian American"
-      break;
   }
 
   return (

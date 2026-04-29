@@ -11,7 +11,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Legend from './MapLegend.jsx';
 import axios from 'axios';
 
-function StateHeatmap({ activeState, currentMode, activeRace, latitude, longitude }){
+function StateHeatmap({ activeState, currentMode, activeRace, currentRace, latitude, longitude }){
   const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
   const [censusBlockGeoJsonData, setCensusBlockGeoJsonData] = useState("");
 
@@ -38,11 +38,11 @@ function StateHeatmap({ activeState, currentMode, activeRace, latitude, longitud
   const mapRef = useRef(null)
 
   function getColor(d) {
-    return d > 1000 ? '#800026' :
-           d > 800  ? '#BD0026' :
-           d > 600  ? '#E31A1C' :
-           d > 400  ? '#FC4E2A' :
-           d > 200  ? '#FD8D3C' :
+    return d > 0.9 ? '#800026' :
+           d > 0.6  ? '#BD0026' :
+           d > 0.4  ? '#E31A1C' :
+           d > 0.2  ? '#FC4E2A' :
+           d > 0.1  ? '#FD8D3C' :
                       '#FFEDA0';
   }
 
@@ -53,13 +53,13 @@ function StateHeatmap({ activeState, currentMode, activeRace, latitude, longitud
 
     switch (activeRace) {
       case "HISPANIC":
-        mapRace = feature.properties.HISPANIC;
+        mapRace = feature.properties.HISPANIC / feature.properties.TOTAL;
         break;
       case "BLACK":
-        mapRace = feature.properties.BLACK;
+        mapRace = feature.properties.BLACK / feature.properties.TOTAL;
         break;
       case "ASIAN":
-        mapRace = feature.properties.ASIAN;
+        mapRace = feature.properties.ASIAN / feature.properties.TOTAL;
         break;
     }
     
@@ -71,7 +71,7 @@ function StateHeatmap({ activeState, currentMode, activeRace, latitude, longitud
     };
   }
 
-  const grades = [0, 200, 400, 600, 800, 1000];
+  const grades = ["0%", "10%", "20%", "40%", "60%", "90%"];
   const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
   const currentRace =
     activeRace === "HISPANIC"

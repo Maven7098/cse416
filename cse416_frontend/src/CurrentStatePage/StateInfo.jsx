@@ -7,7 +7,7 @@ import District from './District.jsx';
 
 import axios from 'axios';
 
-function StateInfo({ activeState, activeRace, latitude, longitude }){
+function StateInfo({ activeState, activeRace, currentRace, latitude, longitude }){
   const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
   const [districtData, setDistrictData] = useState("");
   const [currentState, setCurrentState] = useState("");
@@ -112,10 +112,10 @@ function StateInfo({ activeState, activeRace, latitude, longitude }){
           {/* TODO Today: Use State Data if districtData is empty */}
           {districtData ? (<>
           <button className="go-back-btn" onClick={() => setDistrictData("")}>Go Back to State Information</button>
-          <District districtData={districtData} activeRace={activeRace} width={width} height={heightDistrict} />
+          <District districtData={districtData} activeRace={activeRace} currentRace={currentRace} width={width} height={heightDistrict} />
           </>)
           : (<>
-            <State activeState={currentState} width={width} height={heightState} />
+            <State activeState={currentState} currentRace={currentRace} width={width} height={heightState} />
           </>)
           }
           

@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
 import axios from 'axios';
 
-function ProposedVRAMap({ activeState, activeRace, activeMap, latitude, longitude }){
+function ProposedVRAMap({ activeState, activeRace, currentRace, activeMap, latitude, longitude }){
     const resizeMap = (mapRef) => {
       const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
       const container = document.getElementById(`/map-container-district-${activeMap}`)
@@ -13,21 +13,6 @@ function ProposedVRAMap({ activeState, activeRace, activeMap, latitude, longitud
       }
     }
     const mapRef = useRef(null)
-
-
-  // "Softening" the interface - No longer using all caps
-  let currentRace = "Black / African American"
-  switch (activeRace) {
-      case "HISPANIC":
-        currentRace = "Hispanic / Latino<br /> Population"
-        break;
-      case "BLACK":
-        currentRace = "Black / African American<br /> Population"
-        break;
-      case "ASIAN":
-        currentRace = "Asian / Asian American<br /> Population"
-        break;
-    }
 
     function districtWindow(){
     return {

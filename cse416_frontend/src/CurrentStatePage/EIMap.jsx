@@ -4,14 +4,12 @@ import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
 import '../CSS/mpld3.css';
 import Legend from './MapLegend.jsx';
-import EIAnalysis from './EIAnalysis.jsx'
-import EIKDE from './EIKDE.jsx'
 
 import testEiData from './TestEi.json'
 import testEiKdeData from './TestEiKde.json'
 import Mpld3Chart from './Mpld3Chart.jsx';
 
-function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace, latitude, longitude }){
+function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace, currentRace, latitude, longitude }){
 
     // What type of data will we need for GinglesMap.jsx?
     // Left: Choropleth Map (GUI-14)
@@ -27,19 +25,6 @@ function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace
     }
     const mapRef = useRef(null)
 
-    let currentRace = "Black / African American"
-    switch (activeRace) {
-        case "HISPANIC":
-            currentRace = "Hispanic / Latino";
-            break;
-        case "BLACK":
-            currentRace = "Black / African American";
-            break;
-        case "ASIAN":
-            currentRace = "Asian / Asian American";
-            break;
-    }
-    
     // GUI-14 (TODO Next)
     const grades = [0, 20, 40, 60, 80, 100];
     let colors = [];

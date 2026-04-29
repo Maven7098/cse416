@@ -8,13 +8,13 @@ import { regressionExp } from "d3-regression";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
-function GinglesData ({ width, height, data, race, setActivePrecinct }) {
+function GinglesData ({ width, height, data, activeRace, currentRace, setActivePrecinct }) {
   if (!data || data.length === 0) {
     return <div style={{ padding: "1rem" }}>No polarization data is available for this state.</div>;
   }
 
-  // Force re-render and animation trigger when race changes
-  const key = `${race}-${data.length}`;
+  // Force re-render and animation trigger when activeRace changes
+  const key = `${activeRace}-${data.length}`;
 
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -23,23 +23,10 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
 
   // X Axis: Minority Percent
   // Y Axis: Vote Share (Democratic)
-  let currentRace = "Black / African American"
-  switch (race) {
-      case "HISPANIC":
-        currentRace = "Hispanic / Latino";
-        break;
-      case "BLACK":
-        currentRace = "Black / African American";
-        break;
-      case "ASIAN":
-        currentRace = "Asian / Asian American";
-        break;
-    }
-
   // Calculate data extents for dynamic scaling
   const xValues = data.map((d) => {
     let activeRace = d.BLACK;
-    switch (race) {
+    switch (activeRace) {
       case "HISPANIC":
         activeRace = d.HISPANIC;
         break;
@@ -68,7 +55,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   const sortedData = [...data].sort((a, b) => {
     let activeRaceA = a.BLACK;
     let activeRaceB = b.BLACK;
-    switch (race) {
+    switch (activeRace) {
       case "HISPANIC":
         activeRaceA = a.HISPANIC;
         activeRaceB = b.HISPANIC;
@@ -97,7 +84,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   const allShapes = sortedData.map((d, i) => {
     let activeRace = d.BLACK;
 
-    switch (race) {
+    switch (activeRace) {
       case "HISPANIC":
         activeRace = d.HISPANIC;
         break;
@@ -170,7 +157,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   const dataDem = data.filter((precinct) => precinct.DEMOCRATIC > precinct.REPUBLICAN)
   .map((precinct) => {
     let activeRace = precinct.BLACK
-    switch (race) {
+    switch (activeRace) {
       case "HISPANIC":
         activeRace = precinct.HISPANIC;
         break;
@@ -189,7 +176,7 @@ function GinglesData ({ width, height, data, race, setActivePrecinct }) {
   const dataRep = data.filter((precinct) => precinct.REPUBLICAN >= precinct.DEMOCRATIC)
   .map((precinct) => {
     let activeRace = precinct.BLACK
-    switch (race) {
+    switch (activeRace) {
       case "HISPANIC":
         activeRace = precinct.HISPANIC;
         break;

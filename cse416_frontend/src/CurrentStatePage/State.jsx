@@ -7,7 +7,7 @@ import titleCase from '../Chart/TitleCase.js'
   const MARGIN = { top: 0, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
 
-function State({ width, height, activeState }){
+function State({ width, height, activeState, activeRace, currentRace }){
   // bounds = area inside the graph axis = calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -110,12 +110,12 @@ function State({ width, height, activeState }){
             <div style={{flexDirection: "column"}}>
                 <h4>Democrats</h4>
                 <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.DSEAT}</p>
-                <p style={{marginBottom: "2px"}}>Voter %: {activeState.DVOTE}%</p>
+                <p style={{marginBottom: "2px"}}>2024 Presidential Voter %: {activeState.DVOTE}%</p>
             </div>
             <div style={{flexDirection: "column"}}>
                 <h4>Republicans</h4>
                 <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.RSEAT}</p>
-                <p style={{marginBottom: "2px"}}>Voter %: {activeState.RVOTE}%</p>
+                <p style={{marginBottom: "2px"}}>2024 Presidential Voter %: {activeState.RVOTE}%</p>
             </div>
         </div>
         <p style={{margin: "1em"}}>Current Districting Party: {activeState.PARTY}</p>
