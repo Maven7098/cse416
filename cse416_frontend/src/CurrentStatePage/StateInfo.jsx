@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
 import State from './State.jsx';
-import Population from './Population.jsx';
+import District from './District.jsx';
 
 import axios from 'axios';
 
@@ -85,8 +85,8 @@ function StateInfo({ activeState, latitude, longitude }){
   }
 
   const width = 820;
-  const heightPop = 480;
-  const heightState = 430;
+  const heightState = 650;
+  const heightDistrict = 627;
 
   return (
     // Load the GeoJSON for the districting map
@@ -112,7 +112,7 @@ function StateInfo({ activeState, latitude, longitude }){
           {/* TODO Today: Use State Data if districtData is empty */}
           {districtData ? (<>
           <button className="go-back-btn" onClick={() => setDistrictData("")}>Go Back to State Information</button>
-          <Population districtData={districtData} width={width} height={heightPop} />
+          <District districtData={districtData} width={width} height={heightDistrict} />
           </>)
           : (<>
             <State activeState={currentState} width={width} height={heightState} />

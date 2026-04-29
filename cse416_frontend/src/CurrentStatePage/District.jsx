@@ -4,7 +4,7 @@ const MARGIN = { top: 10, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
 import titleCase from '../Chart/TitleCase';
 
-function Population({ width, height, districtData }){
+function District({ width, height, districtData }){
   // bounds = area inside the graph axis = calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -102,6 +102,7 @@ function Population({ width, height, districtData }){
       <h5>District GeoID: {districtData.GEOID}</h5>
     <div style={{marginBottom: "0"}}>
       <p style={{margin: "2px"}}>Representative: {districtData.REPRESENT} | Margin: {districtData.WMARGIN}</p>
+      {districtData.WINNER == "D" ? <p style={{margin: "2px"}}>Party of Representative: Democrat</p> : <p style={{margin: "2px"}}>Party of Representative: Republican</p>}
       <p style={{margin: "2px"}}>Race/Ethnicity of Representative: {districtData.RRACE}</p>
     </div>
       <svg width={width} height={height}>
@@ -117,4 +118,4 @@ function Population({ width, height, districtData }){
     </div>
   );
 };
-export default Population;
+export default District;

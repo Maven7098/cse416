@@ -33,7 +33,7 @@ function AxisBottomCategoric({ xScale }){
               transform: "translateY(20px)",
             }}
           >
-            District
+            Bin
           </text>
           <text
             key={value}

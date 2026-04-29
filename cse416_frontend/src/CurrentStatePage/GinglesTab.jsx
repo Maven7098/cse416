@@ -7,6 +7,8 @@ import Dropdown from 'react-bootstrap/Dropdown'
 
 import GinglesMap from './GinglesMap';
 import EIMap from './EIMap';
+import GinglesAbout from './GinglesAbout.jsx'
+import EIAbout from './EIAbout.jsx'
 import '../CSS/CustomTab.css'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -45,6 +47,12 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
             <Nav.Item>
               <Nav.Link eventKey="ei">EI</Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="gingles-about">About Gingles</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="ei-about">About EI</Nav.Link>
+            </Nav.Item>
             <NavDropdown title={`Select Party`}>
               <Dropdown.Item onClick={() => setCurrentMode('D')}>Democratic</Dropdown.Item>
               <Dropdown.Item onClick={() => setCurrentMode('R')}>Republican</Dropdown.Item>
@@ -55,6 +63,8 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
           <Tab.Content>
             <Tab.Pane eventKey="gingles"><GinglesMap ginglesData={ginglesData} activeRace={activeRace} /></Tab.Pane>
             <Tab.Pane eventKey="ei"><EIMap precinctGeoJsonData={precinctGeoJsonData} currentMode={currentMode} eiData={eiData} eiKdeData={eiKdeData} activeRace={activeRace} latitude={latitude} longitude={longitude} activeStateName={activeState.NAME} /></Tab.Pane>
+            <Tab.Pane eventKey="gingles-about"><GinglesAbout /></Tab.Pane>
+            <Tab.Pane eventKey="ei-about"><EIAbout /></Tab.Pane>
           </Tab.Content>
         </Col>
       </Row>
