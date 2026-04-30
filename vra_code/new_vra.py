@@ -29,6 +29,7 @@ ASSIGN_COL = "CONG_DIST"
 DEM_COL = "DEMOCRATIC"
 REP_COL = "REPUBLICAN"
 
+# White Population is required as it is needed to print in box and whisker comparison
 GROUPS = {
     "Black": {
         "pop_col": "POP_BLACK",
@@ -48,12 +49,18 @@ GROUPS = {
         "reg_dem_col": "REG_ASIAN_DEM",
         "reg_rep_col": "REG_ASIAN_REP",
     },
+    "White": {
+        "pop_col": "POP_WHITE",
+        "reg_total_col": "REG_WHITE",
+        "reg_dem_col": "REG_WHITE_DEM",
+        "reg_rep_col": "REG_WHITE_REP",
+    },
 }
 
 EFFECTIVENESS_THRESHOLD = 0.60
 
 STEPS = 1000000
-TARGET_PLANS = 100
+TARGET_PLANS = 256
 POP_TOL = 0.08
 
 OUTPUT_FILE = sys.argv[2]
@@ -257,21 +264,22 @@ def is_fair(partition):
 # ============================================================
 
 # 1. DEM/REP split per passed plan
-passed_dem_seats = []
+vra_dem_seats = []
 
 # 2. Effective district counts per group per passed plan
-passed_effectiveness = {
+vra_effectiveness = {
     group: [] for group in GROUPS.keys()
 }
 
 # 3. Per-district minority % per plan
-passed_district_shares = []
+vra_district_shares = []
 
-# 4. Store at most 5 interesting plans
-interesting_plans = []
+# 4. Store at most 10 interesting plans
+vra_interesting_plans = []
 MAX_INTERESTING = 10
 
-plans = []
+vra_plans = []
+
 # ============================================================
 # RUN ENSEMBLE
 # ============================================================
@@ -288,13 +296,13 @@ for step, partition in enumerate(chain):
             district = partition.assignment[node]
             plan[geoid] = int(district)
 
-        plans.append(plan)
+        vra_plans.append(plan)
 
         # =========================
         # 2. DEM / REP SPLIT
         # =========================
         dem_seats = count_dem_seats(partition)
-        passed_dem_seats.append(dem_seats)
+        vra_dem_seats.append(dem_seats)
 
         # =========================
         # 3. EFFECTIVE DISTRICTS
@@ -305,7 +313,7 @@ for step, partition in enumerate(chain):
             eff = effective_districts(partition, group_info)
             count = len(eff)
 
-            passed_effectiveness[group_name].append(count)
+            vra_effectiveness[group_name].append(count)
             eff_counts[group_name] = count
 
         # =========================
@@ -320,7 +328,7 @@ for step, partition in enumerate(chain):
                 int(d): pops[d]["share"] for d in pops
             }
 
-        passed_district_shares.append(plan_shares)
+        vra_district_shares.append(plan_shares)
 
         # =========================
         # 5. EFFECTIVENESS SCORES
@@ -333,7 +341,6 @@ for step, partition in enumerate(chain):
             plan_effectiveness_scores[group_name] = {
                 int(d): (float(score["score"]) if score["winner"] > 0 else 0) for d, score in scores.items()
             }
-
 
         # =========================
         # 6. STORE "INTERESTING" PLANS
@@ -360,26 +367,148 @@ for step, partition in enumerate(chain):
             "total_effective": total_effective
         }
 
-        interesting_plans.append(candidate_plan)
+        vra_interesting_plans.append(candidate_plan)
 
         # keep only best ones
-        interesting_plans.sort(
+        vra_interesting_plans.sort(
             key=lambda x: (x["extreme_score"], x["total_effective"]),
             reverse=True
         )
 
-        interesting_plans = interesting_plans[:MAX_INTERESTING]
+        vra_interesting_plans = vra_interesting_plans[:MAX_INTERESTING]
 
     if step % 100 == 0:
-        print(f"Step {step}, collected {len(plans)} valid plans", flush=True)
+        print(f"Step {step}, collected {len(vra_plans)} valid plans", flush=True)
     
-    if len(plans) >= TARGET_PLANS:
+    if len(vra_plans) >= TARGET_PLANS:
         print("Reached target number of valid plans")
         break
 
 # ============================================================
+# DATA COLLECTION (FOR NON-VRA PLANS ONLY)
+# ============================================================
+
+# 1. DEM/REP split per passed plan
+nonvra_dem_seats = []
+
+# 2. Effective district counts per group per passed plan
+nonvra_effectiveness = {
+    group: [] for group in GROUPS.keys()
+}
+
+# 3. Per-district minority % per plan
+nonvra_district_shares = []
+
+# 4. Store at most 10 interesting plans
+nonvra_interesting_plans = []
+MAX_INTERESTING = 10
+
+nonvra_plans = []
+# For the non-VRA version
+for step, partition in enumerate(chain):
+    if(True):
+        # =========================
+        # 1. BUILD PLAN (ASSIGNMENT)
+        # =========================
+        plan = {}
+        for node in graph.nodes:
+            geoid = graph.nodes[node]["ID"]
+            district = partition.assignment[node]
+            plan[geoid] = int(district)
+
+        nonvra_plans.append(plan)
+
+        # =========================
+        # 2. DEM / REP SPLIT
+        # =========================
+        dem_seats = count_dem_seats(partition)
+        nonvra_dem_seats.append(dem_seats)
+
+        # =========================
+        # 3. EFFECTIVE DISTRICTS
+        # =========================
+        eff_counts = {}
+
+        for group_name, group_info in GROUPS.items():
+            eff = effective_districts(partition, group_info)
+            count = len(eff)
+
+            nonvra_effectiveness[group_name].append(count)
+            eff_counts[group_name] = count
+
+        # =========================
+        # 4. PER-DISTRICT SHARES
+        # =========================
+        plan_shares = {}
+
+        for group_name, group_info in GROUPS.items():
+            pops = district_group_pop(partition, group_info["pop_col"])
+
+            plan_shares[group_name] = {
+                int(d): pops[d]["share"] for d in pops
+            }
+
+        nonvra_district_shares.append(plan_shares)
+
+        # =========================
+        # 5. EFFECTIVENESS SCORES
+        # =========================
+        plan_effectiveness_scores = {}
+
+        for group_name, group_info in GROUPS.items():
+            scores = district_effectiveness_scores(partition, group_info)
+
+            plan_effectiveness_scores[group_name] = {
+                int(d): (float(score["score"]) if score["winner"] > 0 else 0) for d, score in scores.items()
+            }
+
+        # =========================
+        # 6. STORE "INTERESTING" PLANS
+        # =========================
+        # Requirements:
+        # - extreme dem or rep seats
+        # - high effectiveness
+
+        total_districts = len(partition.parts)
+
+        # how extreme is the split (distance from 50/50)
+        extreme_score = abs(dem_seats - total_districts/2)
+
+        # total effectiveness across groups
+        total_effective = sum(eff_counts.values())
+
+        candidate_plan = {
+            "plan": plan,
+            "dem_seats": dem_seats,
+            "effectiveness": eff_counts,
+            "shares": plan_shares,
+            "effectiveness_scores": plan_effectiveness_scores,
+            "extreme_score": extreme_score,
+            "total_effective": total_effective
+        }
+
+        nonvra_interesting_plans.append(candidate_plan)
+
+        # keep only best ones
+        nonvra_interesting_plans.sort(
+            key=lambda x: (x["extreme_score"], x["total_effective"]),
+            reverse=True
+        )
+
+        nonvra_interesting_plans = nonvra_interesting_plans[:MAX_INTERESTING]
+
+    if step % 100 == 0:
+        print(f"Step {step}, collected {len(nonvra_plans)} valid plans", flush=True)
+
+    if len(nonvra_plans) >= TARGET_PLANS:
+        print("Reached target number of valid plans")
+        break
+
+
+# ============================================================
 # Box and Whisker Data aggregation
 # ============================================================
+
 def box_stats(values):
     """
     Given a list of numbers, return the 5-number summary
@@ -411,7 +540,7 @@ def box_stats(values):
         "max": float(np.max(values))
     }
 
-def district_share_box_stats(passed_district_shares):
+def district_share_box_stats(vra_district_shares):
     """
     Builds box-and-whisker stats for each racial group.
 
@@ -442,7 +571,7 @@ def district_share_box_stats(passed_district_shares):
         for group_name in GROUPS.keys()
     }
 
-    for plan_shares in passed_district_shares:
+    for plan_shares in vra_district_shares:
         for group_name in GROUPS.keys():
 
             # Example:
@@ -513,7 +642,7 @@ def enacted_district_share_dots(enacted_partition):
 
     return enacted_dots
 
-def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group_name):
+def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group_name, suffix):
     """
     Renders the minority percentage box-and-whisker chart for one racial group.
 
@@ -584,32 +713,125 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
 
     fig.tight_layout()
 
-    mpld3.save_html(fig, f"{sys.argv[2]}-{group_name}-Box.html")
-    mpld3.save_json(fig, f"{sys.argv[2]}-{group_name}-Box.json")
-    plt.savefig(f"{sys.argv[2]}-{group_name}-Box.png", dpi=200)
+    mpld3.save_html(fig, f"{sys.argv[2]}-{suffix}-{group_name}-Box.html")
+    mpld3.save_json(fig, f"{sys.argv[2]}-{suffix}-{group_name}-Box.json")
+    plt.savefig(f"{sys.argv[2]}-{suffix}-{group_name}-Box.png", dpi=200)
 
     plt.close(fig)
 
-district_share_boxes = district_share_box_stats(passed_district_shares)
+vra_district_share_boxes = district_share_box_stats(vra_district_shares)
+nonvra_district_share_boxes = district_share_box_stats(nonvra_district_shares)
 # print(district_share_boxes)
+
 enacted_dots = enacted_district_share_dots(initial)
+
+# ============================================================
+# Box and Whisker Data aggregation
+# ============================================================
+
+def render_minority_effectiveness_boxplot(group_name):
+    """
+    Renders the minority effectiveness box-and-whisker chart for one racial group.
+    Compare with effectiveness box-and-whisker chart for Whites.
+
+    Box plots = ensemble distribution
+    Dots = enacted plan districts
+    """
+
+    vra_boxes = vra_effectiveness[group_name]
+    nonvra_boxes = nonvra_effectiveness[group_name]
+    vra_boxes_white = vra_effectiveness["White"]
+    nonvra_boxes_white = nonvra_effectiveness["White"]
+    dots = baseline_counts[group_name]
+
+    fig, ax = plt.subplots(figsize=(8.2, 7.2))
+
+    # Set positions for the groups
+    pos_group = [1, 1.4]  # Positions for the first group
+    pos_white = [2.6, 3]  # Positions for the second group
+
+    # Create Boxplots
+    bp1 = ax.boxplot([vra_boxes, nonvra_boxes], label=["VRA-Constrained Ensemble", "Race-Blind Ensemble"], showfliers=False, positions=pos_group, widths=0.3)
+    bp2 = ax.boxplot([vra_boxes_white, nonvra_boxes_white], showfliers=False, positions=pos_white, widths=0.3)
+
+    scatter = ax.scatter(
+        [1.2, 2.8],
+        [baseline_counts[group_name], baseline_counts["White"]],
+        marker="o",
+        label="Enacted Plan"
+    )
+
+    tooltip = mpld3.plugins.PointLabelTooltip(scatter)
+    mpld3.plugins.connect(fig, tooltip)
+
+    ax.set_title(f"{group_name} Effectiveness Distribution by Ensemble Type")
+    ax.set_xticks([1.2, 2.8],
+    [f"{group_name} Voters","White Voters"])
+    ax.legend()
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+
+    mpld3.save_html(fig, f"{sys.argv[2]}-{group_name}-Compare-Box.html")
+    mpld3.save_json(fig, f"{sys.argv[2]}-{group_name}-Compare-Box.json")
+    plt.savefig(f"{sys.argv[2]}-{group_name}-Compare-Box.png", dpi=200)
+
+    plt.close(fig)
+
+# ============================================================
+# Display minority effectiveness ensemble histogram
+# ============================================================
+
+def render_minority_effectiveness_histogram(group_name):
+    fig, ax = plt.subplots(figsize=(8.2, 7.2))
+
+    bins = np.arange(min(nonvra_effectiveness[group_name]), max(vra_effectiveness[group_name]) + 2) - 0.5
+    ax.hist(vra_effectiveness[group_name], label="VRA-Constrained Ensemble", alpha=0.5, bins=bins)
+    ax.hist(nonvra_effectiveness[group_name], label="Race-Blind Ensemble", alpha=0.5, bins=bins)
+    # arguments are passed to np.histogram
+    ax.set_title(f"{group_name} Effectiveness")
+    ax.set_xlabel(f"Number of districts with {group_name} effectiveness > 60%")
+    ax.legend()
+    gen_ticks = []
+    counter = 0
+    while counter <= int(sys.argv[3]):
+        gen_ticks.append(f"{counter}/{int(sys.argv[3])-counter}")
+        counter = counter + 1
+    ax.set_xticks(range(int(sys.argv[3]) + 1), gen_ticks)
+
+    mpld3.save_html(fig, f"{sys.argv[2]}-{group_name}-Compare-Histogram.html")
+    mpld3.save_json(fig, f"{sys.argv[2]}-{group_name}-Compare-Histogram.json")
+    plt.savefig(f"{sys.argv[2]}-{group_name}-Compare-Histogram.png", dpi=200)
+    plt.close(fig)
 
 for group_name in GROUPS.keys():
     render_minority_percentage_boxplot(
-        district_share_boxes=district_share_boxes,
+        district_share_boxes=vra_district_share_boxes,
         enacted_dots=enacted_dots,
+        group_name=group_name,
+        suffix="VRA"
+    )
+    render_minority_percentage_boxplot(
+        district_share_boxes=nonvra_district_share_boxes,
+        enacted_dots=enacted_dots,
+        group_name=group_name,
+        suffix="NonVRA"
+    )
+    render_minority_effectiveness_boxplot(
+        group_name=group_name
+    )
+    render_minority_effectiveness_histogram(
         group_name=group_name
     )
 
 # ============================================================
 # Save Histogram
 # ============================================================
-
-print(passed_dem_seats)
+# VRA Version
 fig, ax = plt.subplots(figsize=(8.2, 7.2))
 
-bins = np.arange(min(passed_dem_seats), max(passed_dem_seats) + 2) - 0.5
-ax.hist(passed_dem_seats, bins=bins)
+bins = np.arange(min(vra_dem_seats), max(vra_dem_seats) + 2) - 0.5
+ax.hist(vra_dem_seats, bins=bins)
 # arguments are passed to np.histogram
 ax.set_title('Democratic/Republican Splits')
 ax.set_xlabel('Democratic Seats')
@@ -620,28 +842,59 @@ while counter <= int(sys.argv[3]):
     counter = counter + 1
 ax.set_xticks(range(int(sys.argv[3]) + 1), gen_ticks)
 
-mpld3.save_html(fig, f"{sys.argv[2]}-Splits.html")
-mpld3.save_json(fig, f"{sys.argv[2]}-Splits.json")
-plt.savefig(f"{sys.argv[2]}-Splits.png", dpi=200)
+mpld3.save_html(fig, f"{sys.argv[2]}-VRA-Splits.html")
+mpld3.save_json(fig, f"{sys.argv[2]}-VRA-Splits.json")
+plt.savefig(f"{sys.argv[2]}-VRA-Splits.png", dpi=200)
+plt.close(fig)
+
+# NonVRA Version
+fig, ax = plt.subplots(figsize=(8.2, 7.2))
+
+bins = np.arange(min(nonvra_dem_seats), max(nonvra_dem_seats) + 2) - 0.5
+ax.hist(nonvra_dem_seats, bins=bins)
+# arguments are passed to np.histogram
+ax.set_title('Democratic/Republican Splits')
+ax.set_xlabel('Democratic Seats')
+gen_ticks = []
+counter = 0
+while counter <= int(sys.argv[3]):
+    gen_ticks.append(f"{counter}/{int(sys.argv[3])-counter}")
+    counter = counter + 1
+ax.set_xticks(range(int(sys.argv[3]) + 1), gen_ticks)
+
+mpld3.save_html(fig, f"{sys.argv[2]}-NonVRA-Splits.html")
+mpld3.save_json(fig, f"{sys.argv[2]}-NonVRA-Splits.json")
+plt.savefig(f"{sys.argv[2]}-NonVRA-Splits.png", dpi=200)
 plt.close(fig)
 
 # ============================================================
 # SAVE OUTPUT
 # ============================================================
 
-output = {
-    #"plans": plans,
-    "dem_seats": passed_dem_seats,
-    "effectiveness": passed_effectiveness,
-    "district_shares": passed_district_shares,
-    "interesting_plans": interesting_plans,
+vra_output = {
+    #"plans": vra_plans,
+    "dem_seats": vra_dem_seats,
+    "effectiveness": vra_effectiveness,
+    "district_shares": vra_district_shares,
+    "interesting_plans": vra_interesting_plans,
     "minority_percentage_boxplot": {
-        "boxes": district_share_boxes,
+        "boxes": vra_district_share_boxes,
+        "dots": enacted_dots
+    }
+}
+nonvra_output = {
+    #"plans": nonvra_plans,
+    "dem_seats": nonvra_dem_seats,
+    "effectiveness": nonvra_effectiveness,
+    "district_shares": nonvra_district_shares,
+    "interesting_plans": nonvra_interesting_plans,
+    "minority_percentage_boxplot": {
+        "boxes": nonvra_district_share_boxes,
         "dots": enacted_dots
     }
 }
 
-with open(OUTPUT_FILE, "w") as f:
-    json.dump(output, f)
+with open(f"{OUTPUT_FILE}-VRA.json", "w") as f:
+    json.dump(vra_output, f)
 
-print(f"Saved {len(plans)} valid plans")
+print(f"Saved {len(vra_plans)} valid plans")
