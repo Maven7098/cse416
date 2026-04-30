@@ -18,7 +18,7 @@ function State({ width, height, activeState, activeRace, currentRace }){
   // Ideally we should implement a go back button as well
 
   // Process activeState to only leave numerical values
-  const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL,
+  const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, DIST,
     HISPANIC_PER, BLACK_PER, ASIAN_PER, WHITE_PER, OTHER_PER,
     HISPANIC_EFF, BLACK_EFF, ASIAN_EFF, WHITE_EFF, OTHER_EFF,
     HISPANIC_DIST, BLACK_DIST, ASIAN_DIST, WHITE_DIST, OTHER_DIST,
@@ -145,7 +145,7 @@ function State({ width, height, activeState, activeRace, currentRace }){
         </div>
         <h5>{currentRace} Effective Districts: {minorityEffective}</h5>
         <h5>{currentRace} Majority Districts: {minorityMajority}</h5>
-        <h5>{currentRace} Proportionality: {minorityPercent/minorityEffective}</h5>
+        <h5>{currentRace} Proportionality: {(minorityEffective/activeState.DIST)/(minorityPercent/activeState.TOTAL)}</h5>
         <h4>Total Population: {activeState.TOTAL}</h4>
         <p style={{margin: "1em"}}>Current Districting Party: {activeState.PARTY}</p>
       <svg width={width} height={height}>

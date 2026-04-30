@@ -542,7 +542,7 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
 
         positions.append(bucket)
 
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(8.2, 7.2))
 
     ax.bxp(
         boxplot_stats,
@@ -606,7 +606,7 @@ for group_name in GROUPS.keys():
 # ============================================================
 
 print(passed_dem_seats)
-fig, ax = plt.subplots(figsize=(12, 6))
+fig, ax = plt.subplots(figsize=(8.2, 7.2))
 
 bins = np.arange(min(passed_dem_seats), max(passed_dem_seats) + 2) - 0.5
 ax.hist(passed_dem_seats, bins=bins)

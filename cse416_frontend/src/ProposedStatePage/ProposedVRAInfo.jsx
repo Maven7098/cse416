@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import '../CSS/StateInfo.css';
-import EnsembleSplits from './EnsembleSplits.jsx'
-import BoxandWhiskerChart from './BoxandWhiskerChart.jsx'
+import Mpld3Chart from '../Chart/Mpld3Chart.jsx';
 
 // Prototype data
 import ensembleSplitTestNonVRA from '../../../cse416_backend_java/src/main/resources/assets/ga/GA-Precinct-NonVRA-Splits.json'

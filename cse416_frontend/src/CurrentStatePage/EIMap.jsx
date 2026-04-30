@@ -5,7 +5,7 @@ import '../CSS/StateInfo.css';
 import '../CSS/mpld3.css';
 import Legend from './MapLegend.jsx';
 
-import Mpld3Chart from './Mpld3Chart.jsx';
+import Mpld3Chart from '../Chart/Mpld3Chart.jsx';
 
 function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace, currentRace, latitude, longitude }){
 
