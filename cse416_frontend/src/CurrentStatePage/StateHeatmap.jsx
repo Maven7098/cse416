@@ -73,12 +73,6 @@ function StateHeatmap({ activeState, currentMode, activeRace, currentRace, latit
 
   const grades = ["0%", "10%", "20%", "40%", "60%", "90%"];
   const colors = ['#FFEDA0', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
-  const currentRace =
-    activeRace === "HISPANIC"
-      ? "Hispanic / Latino Population"
-      : activeRace === "ASIAN"
-      ? "Asian / Asian American Population"
-      : "Black / African American Population";
 
   return (
       <div className="leaflet-containerset">

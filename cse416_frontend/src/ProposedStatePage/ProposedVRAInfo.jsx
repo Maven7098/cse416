@@ -4,8 +4,8 @@ import EnsembleSplits from './EnsembleSplits.jsx'
 import BoxandWhiskerChart from './BoxandWhiskerChart.jsx'
 
 // Prototype data
-import ensembleSplitTest from './ga_dem_seats.json'
-import boxandWhiskerTest from './district_shares.json'
+import ensembleSplitTestNonVRA from '../../../cse416_backend_java/src/main/resources/assets/ga/GA-Precinct-NonVRA-Splits.json'
+import boxandWhiskerTestNonVRA from '../../../cse416_backend_java/src/main/resources/assets/ga/GA-Precinct-NonVRA-Asian-Box.json'
 
 function ProposedVRAInfo({ activeRace, ensembleSplitData, boxandWhiskerData, circleData }){
 
@@ -21,9 +21,6 @@ function ProposedVRAInfo({ activeRace, ensembleSplitData, boxandWhiskerData, cir
             currentRace = "Asian / Asian American";
             break;
     }
-    
-    const width = 800;
-    const height = 640;
 
     const MyChart = () => {
         const svgRef = useRef();
@@ -44,13 +41,12 @@ function ProposedVRAInfo({ activeRace, ensembleSplitData, boxandWhiskerData, cir
                 <div className='leaflet-container-big'>
                 <h3 style={{marginBottom: "0.5rem"}}>Simulated Elections</h3>
                 <h5>D/R: Democratic Victory/Republican Victory</h5>
-                <EnsembleSplits data={ensembleSplitTest} width={width} height={height}/>
+                <Mpld3Chart data={ensembleSplitTestNonVRA} figId="ensemble-splits" />
                 </div>
                 <div className='leaflet-container-big'>
                 <h3 style={{marginBottom: "0.5rem"}}>{currentRace} distribution in districts</h3>
                 <h5>Box and Whisker Data</h5>
-                <BoxandWhiskerChart data={boxandWhiskerTest} activeRace={activeRace}
-                width={width} height={height}/>
+                <Mpld3Chart data={boxandWhiskerTestNonVRA} figId="box-whisker" />
                 {/* <BoxandWhiskerExtra /> */}
                 </div>
             </div>

@@ -5,16 +5,9 @@ import '../CSS/StateInfo.css';
 import '../CSS/mpld3.css';
 import Legend from './MapLegend.jsx';
 
-import testEiData from './TestEi.json'
-import testEiKdeData from './TestEiKde.json'
 import Mpld3Chart from './Mpld3Chart.jsx';
 
 function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace, currentRace, latitude, longitude }){
-
-    // What type of data will we need for GinglesMap.jsx?
-    // Left: Choropleth Map (GUI-14)
-    // Top Right: EI Analysis (GUI-12)
-    // Bottom Right: EI KDE Results (GUI-15)
 
     const resizeMap = (mapRef) => {
         const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
@@ -24,6 +17,23 @@ function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace
         }
     }
     const mapRef = useRef(null)
+
+    let currentEiData = ""
+    let currentEiKdeData = ""
+    switch (activeRace) {
+        case "HISPANIC":
+            currentEiData = eiData[0]
+            currentEiKdeData = eiData[0]
+        break;
+        case "BLACK":
+            currentEiData = eiData[1]
+            currentEiKdeData = eiData[1]
+        break;
+        case "ASIAN":
+            currentEiData = eiData[2]
+            currentEiKdeData = eiData[2]
+        break;
+    }
 
     // GUI-14 (TODO Next)
     const grades = [0, 20, 40, 60, 80, 100];
@@ -109,9 +119,6 @@ function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace
             fillOpacity: 0.7
         };
     }
-    
-    const width = 680;
-    const eiHeight = 330;
 
     const MyChart = () => {
         const svgRef = useRef();
@@ -150,20 +157,16 @@ function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     <h3>Support for Candidate</h3>
                     {/* EI Analysis */}
-                    {/* <EIAnalysis data={testEiData} width={width} height={eiHeight} race={activeRace} /> */}
-                    
-                    {/* EI KDE Results */}
                     <section>
                         <h5>EI Analysis</h5>
-                        <Mpld3Chart data={testEiData} figId="ei-data" />
+                        <Mpld3Chart data={currentEiData} figId="ei-data" />
                     </section>
 
-                    {/* Second Chart */}
+                    {/* Kernel Data Results */}
                     <section>
                         <h5>EI KDE (Kernel Data) Results</h5>
-                        <Mpld3Chart data={testEiKdeData} figId="ei-kde" />
+                        <Mpld3Chart data={currentEiKdeData} figId="ei-kde" />
                     </section>
-                    {/* <EIKDE data={testEiKdeData} width={width} height={eiHeight} race={activeRace}/> */}
                 </div>
             </div>
         </div>

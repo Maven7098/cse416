@@ -1,6 +1,0 @@
-https://drive.google.com/drive/u/1/folders/15kRG18Uh1E72jC9pNKBkbymUT1s087vH
-download NEW_GA_precinct_ei_fat_with_dist.geojson
-
-Make sure to change the configurations to match your local workspace.
-
-By default the code generates 100 plans and it generates the box and whisker plots as a html, json, and png.

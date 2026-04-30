@@ -10,18 +10,22 @@ function District({ activeRace, currentRace, width, height, districtData }){
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
+  let minorityCalibrated = ""
   let minorityEffective = ""
   let minorityMajority = ""
   switch (activeRace) {
     case "HISPANIC":
+      minorityCalibrated = districtData.HISPANIC_EFF
       minorityEffective = districtData.HISPANIC_DIST
       minorityMajority = districtData.HISPANIC_MAJ
       break;
     case "BLACK":
+      minorityCalibrated = districtData.BLACK_EFF
       minorityEffective = districtData.BLACK_DIST
       minorityMajority = districtData.BLACK_MAJ
       break;
     case "ASIAN":
+      minorityCalibrated = districtData.ASIAN_EFF
       minorityEffective = districtData.ASIAN_DIST
       minorityMajority = districtData.ASIAN_MAJ
       break;
@@ -81,7 +85,7 @@ function District({ activeRace, currentRace, width, height, districtData }){
           textAnchor="middle"
           alignmentBaseline="central"
         >
-          {d.value}
+          {d.value.toLocaleString()}
         </text>
         <text
           x={x + xScale.bandwidth() / 2}
@@ -113,7 +117,7 @@ function District({ activeRace, currentRace, width, height, districtData }){
         stroke="#808080"
         opacity={0.8}
       >
-        {value}
+        {value.toLocaleString()}
       </text>
     </g>
   ));
@@ -121,8 +125,9 @@ function District({ activeRace, currentRace, width, height, districtData }){
   return (
     <div>
       <h4>District No.: {districtData.DISTRICT}</h4>
-      <h5>{currentRace} Effective: {minorityEffective == 1 ? "True" : "False"}</h5>
-      <h5>{currentRace} Majority: {minorityMajority == 1 ? "True" : "False"}</h5>
+      <h5>{currentRace} Calibrated Score: {minorityCalibrated}</h5>
+      <h5>{currentRace} Effective District: {minorityEffective == 1 ? "True" : "False"}</h5>
+      <h5>{currentRace} Majority District: {minorityMajority == 1 ? "True" : "False"}</h5>
     <div style={{marginBottom: "0"}}>
       <p style={{margin: "2px"}}>Representative: {districtData.REPRESENT} | Margin: {districtData.WMARGIN}</p>
       {districtData.WINNER == "D" ? <p style={{margin: "2px"}}>Party of Representative: Democrat</p> : <p style={{margin: "2px"}}>Party of Representative: Republican</p>}

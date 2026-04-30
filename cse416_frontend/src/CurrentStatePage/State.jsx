@@ -18,12 +18,37 @@ function State({ width, height, activeState, activeRace, currentRace }){
   // Ideally we should implement a go back button as well
 
   // Process activeState to only leave numerical values
-  const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, ...popData} = activeState;
+  const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL,
+    HISPANIC_PER, BLACK_PER, ASIAN_PER, WHITE_PER, OTHER_PER,
+    HISPANIC_EFF, BLACK_EFF, ASIAN_EFF, WHITE_EFF, OTHER_EFF,
+    HISPANIC_DIST, BLACK_DIST, ASIAN_DIST, WHITE_DIST, OTHER_DIST,
+    HISPANIC_MAJ, BLACK_MAJ, ASIAN_MAJ, WHITE_MAJ, OTHER_MAJ, ...popData} = activeState;
   // popData should be converted to Key/Value pairs of arrays to work w/ D3 
   const data = Object.keys(popData).map(key => ({
       name: titleCase(key),
       value: popData[key]
   }));
+
+  let minorityPercent = ""
+  let minorityEffective = ""
+  let minorityMajority = ""
+  switch (activeRace) {
+    case "HISPANIC":
+      minorityPercent = districtData.HISPANIC_PER
+      minorityEffective = districtData.HISPANIC_DIST
+      minorityMajority = districtData.HISPANIC_MAJ
+      break;
+    case "BLACK":
+      minorityPercent = districtData.BLACK_PER
+      minorityEffective = districtData.BLACK_DIST
+      minorityMajority = districtData.BLACK_MAJ
+      break;
+    case "ASIAN":
+      minorityPercent = districtData.ASIAN_PER
+      minorityEffective = districtData.ASIAN_DIST
+      minorityMajority = districtData.ASIAN_MAJ
+      break;
+  }
 
   // X axis is for groups since the barplot is vertical
   const groups = data.map((d) => d.name);
@@ -67,7 +92,7 @@ function State({ width, height, activeState, activeRace, currentRace }){
           textAnchor="middle"
           alignmentBaseline="central"
         >
-          {d.value}
+          {d.value.toLocaleString()}
         </text>
         <text
           x={x + xScale.bandwidth() / 2}
@@ -99,7 +124,7 @@ function State({ width, height, activeState, activeRace, currentRace }){
         stroke="#808080"
         opacity={0.8}
       >
-        {value}
+        {value.toLocaleString()}
       </text>
     </g>
   ));
@@ -118,8 +143,11 @@ function State({ width, height, activeState, activeRace, currentRace }){
                 <p style={{marginBottom: "2px"}}>2024 Presidential Voter %: {activeState.RVOTE}%</p>
             </div>
         </div>
-        <p style={{margin: "1em"}}>Current Districting Party: {activeState.PARTY}</p>
+        <h5>{currentRace} Effective Districts: {minorityEffective}</h5>
+        <h5>{currentRace} Majority Districts: {minorityMajority}</h5>
+        <h5>{currentRace} Proportionality: {minorityPercent/minorityEffective}</h5>
         <h4>Total Population: {activeState.TOTAL}</h4>
+        <p style={{margin: "1em"}}>Current Districting Party: {activeState.PARTY}</p>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}

@@ -64,8 +64,8 @@ function MapTab({activeState, activeRace, currentMode, latitude, longitude}) {
         </Col>
         <Col lg={true}>
           <Tab.Content>
-            <Tab.Pane eventKey="map"><ProposedVRAMap activeState={activeState} activeMap={activeMap} activeRace={activeRace} latitude={latitude} longitude={longitude}  /></Tab.Pane>
             <Tab.Pane eventKey="info"><ProposedVRAInfo activeRace={activeRace} ensembleSplitData={ensembleSplitData} boxandWhiskerData={boxandWhiskerData} circleData={circleData} /></Tab.Pane>
+            <Tab.Pane eventKey="map"><ProposedVRAMap activeState={activeState} activeMap={activeMap} activeRace={activeRace} latitude={latitude} longitude={longitude}  /></Tab.Pane>
           </Tab.Content>
         </Col>
       </Row>

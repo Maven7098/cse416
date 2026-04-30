@@ -85,8 +85,8 @@ function StateInfo({ activeState, activeRace, currentRace, latitude, longitude }
   }
 
   const width = 820;
-  const heightState = 650;
-  const heightDistrict = 595;
+  const heightState = 560;
+  const heightDistrict = 560;
 
   return (
     // Load the GeoJSON for the districting map

@@ -15,11 +15,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import mpld3
 
+import sys
+
 
 # ============================================================
 # CONFIG
 # ============================================================
-INPUT_FILE = "data/NEW_GA_precinct_ei_fat_with_dist.geojson"
+INPUT_FILE = sys.argv[1]
 
 POP_COL = "POP_TOTAL"
 ASSIGN_COL = "CONG_DIST"
@@ -54,7 +56,7 @@ STEPS = 1000000
 TARGET_PLANS = 100
 POP_TOL = 0.08
 
-OUTPUT_FILE = "data/ensemble_test_on_seawulf_10.json"
+OUTPUT_FILE = sys.argv[2]
 
 
 # ============================================================
@@ -579,11 +581,12 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
         plt.FuncFormatter(lambda y, _: f"{y:.0%}")
     )
 
+
     fig.tight_layout()
 
-    mpld3.save_html(fig, f"GA_vra_{group_name}_BOX.html")
-    mpld3.save_json(fig, f"GA_vra_{group_name}_BOX.json")
-    plt.savefig(f"GA_vra_{group_name}_BOX.png", dpi=200)
+    mpld3.save_html(fig, f"{sys.argv[2]}-{group_name}-Box.html")
+    mpld3.save_json(fig, f"{sys.argv[2]}-{group_name}-Box.json")
+    plt.savefig(f"{sys.argv[2]}-{group_name}-Box.png", dpi=200)
 
     plt.close(fig)
 
@@ -599,8 +602,33 @@ for group_name in GROUPS.keys():
     )
 
 # ============================================================
+# Save Histogram
+# ============================================================
+
+print(passed_dem_seats)
+fig, ax = plt.subplots(figsize=(12, 6))
+
+bins = np.arange(min(passed_dem_seats), max(passed_dem_seats) + 2) - 0.5
+ax.hist(passed_dem_seats, bins=bins)
+# arguments are passed to np.histogram
+ax.set_title('Democratic/Republican Splits')
+ax.set_xlabel('Democratic Seats')
+gen_ticks = []
+counter = 0
+while counter <= int(sys.argv[3]):
+    gen_ticks.append(f"{counter}/{int(sys.argv[3])-counter}")
+    counter = counter + 1
+ax.set_xticks(range(int(sys.argv[3]) + 1), gen_ticks)
+
+mpld3.save_html(fig, f"{sys.argv[2]}-Splits.html")
+mpld3.save_json(fig, f"{sys.argv[2]}-Splits.json")
+plt.savefig(f"{sys.argv[2]}-Splits.png", dpi=200)
+plt.close(fig)
+
+# ============================================================
 # SAVE OUTPUT
 # ============================================================
+
 output = {
     #"plans": plans,
     "dem_seats": passed_dem_seats,
