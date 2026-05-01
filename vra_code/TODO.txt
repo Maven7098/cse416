@@ -3,7 +3,11 @@ download NEW_GA_precinct_ei_fat_with_dist.geojson
 
 Make sure to change the configurations to match your local workspace.
 
-By default the code generates 100 plans and it generates the box and whisker plots as a html, json, and png.
+By default the code generates 256 plans and it generates the following:
+    District-level box and whisker plots for each racial category
+    Ensemble Charts
+    
+    The files are generated as html, json, and png.
 
 source new-vra/bin/activate
 python3 new_vra.py NEW_GA_precinct_ei_fat_with_dist.geojson (GeoJSON file to be used) \
@@ -12,8 +16,7 @@ python3 new_vra.py NEW_GA_precinct_ei_fat_with_dist.geojson (GeoJSON file to be 
 
 TODO Next:
 * Ask Dai to get District Numbers for Precincts (both IA and GA)
-* Generate Box and Whisker for Effective Districts numbers
-    * Need dots for number of current Effective Districts
-* Generate Histogram for Effective Districts numbers
-    * Is there a way to get the two data together? <- DONE
-    * Graphs need to overlap <- DONE
+* Fix the client side code
+* Add Prototype for server side action for loading mpld3 charts
+    * This affects ALL but Gingles and State charts
+* Does this code have parallelization?
