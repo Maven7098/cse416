@@ -16,6 +16,9 @@ import java.nio.charset.StandardCharsets;
 public class DataSeedService {
 
     private static final Logger logger = LoggerFactory.getLogger(DataSeedService.class);
+    private static final String[] COUNTS = {"256", "4096"};
+    private static final String[] THRESHOLDS = {"Low", "Medium", "High"};
+    private static final String[] RACES = {"Asian", "Black", "Hispanic"};
     private final HomeGeoJsonRepository homeGeoJsonRepository;
     private final BoxDataRepository boxDataRepository;
     private final EnsembleDataRepository ensembleDataRepository;
@@ -117,75 +120,34 @@ public class DataSeedService {
     }
 
     private void seedBoxDataForState(String stateCode) throws IOException {
-        String stateCodeUpper = stateCode.toUpperCase();
-        
-        // Seed Current data (merged from three race-specific files)
-        if (boxDataRepository.findByCurrentStateAndMode(stateCode, "Current").isEmpty()) {
-            String currentAsianJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-Current-Asian.json");
-            String currentBlackJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-Current-Black.json");
-            String currentHispanicJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-Current-Hispanic.json");
-            
-            if (currentAsianJson != null && currentBlackJson != null && currentHispanicJson != null) {
-                Document mergedDoc = new Document();
-                mergedDoc.put("Asian", parseJsonAsArray(currentAsianJson));
-                mergedDoc.put("Black", parseJsonAsArray(currentBlackJson));
-                mergedDoc.put("Hispanic", parseJsonAsArray(currentHispanicJson));
-                
-                BoxDataDocument doc = new BoxDataDocument(stateCode, "Current", mergedDoc);
-                boxDataRepository.save(doc);
-                logger.info("  Seeded " + stateCodeUpper + " box_data Current document");
+        String stateUpper = stateCode.toUpperCase();
+
+        for (String mode : new String[]{"VRA", "NonVRA"}) {
+            if (!boxDataRepository.findByCurrentStateAndMode(stateCode, mode).isEmpty()) {
+                logger.info("  {} box_data {} document already exists. Skipping.", stateUpper, mode);
+                continue;
             }
-        }
-        
-        // Seed NonVRA data (merged from four race-specific files)
-        if (boxDataRepository.findByCurrentStateAndMode(stateCode, "NonVRA").isEmpty()) {
-            String nonvraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Box-NonVRA.json");
-            String nonvraAsianJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-NonVRA-Asian.json");
-            String nonvraBlackJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-NonVRA-Black.json");
-            String nonvraHispanicJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-NonVRA-Hispanic.json");
-            
-            if (nonvraJson != null && nonvraAsianJson != null && nonvraBlackJson != null && nonvraHispanicJson != null) {
-                Document mergedDoc = new Document();
-                mergedDoc.put("Base", parseJsonAsArray(nonvraJson));
-                mergedDoc.put("Asian", parseJsonAsArray(nonvraAsianJson));
-                mergedDoc.put("Black", parseJsonAsArray(nonvraBlackJson));
-                mergedDoc.put("Hispanic", parseJsonAsArray(nonvraHispanicJson));
-                
-                BoxDataDocument doc = new BoxDataDocument(stateCode, "NonVRA", mergedDoc);
-                boxDataRepository.save(doc);
-                logger.info("  Seeded " + stateCodeUpper + " box_data NonVRA document");
+
+            Document payloadDoc = new Document();
+            for (String count : COUNTS) {
+                for (String threshold : THRESHOLDS) {
+                    String folder = "Complete_" + count + "_" + threshold;
+                    String variantKey = count + "_" + threshold;
+                    String base = "assets/" + stateCode + "/" + folder
+                                + "/NEW-" + stateUpper + "-Precinct-";
+
+                    Document variantDoc = new Document();
+                    for (String race : RACES) {
+                        String path = base + race + "-" + mode + "-Box.json";
+                        String json = loadJsonStringFromClasspath(path);
+                        variantDoc.put(race, parseJsonAsArray(json));
+                    }
+                    payloadDoc.put(variantKey, variantDoc);
+                }
             }
-        }
-        
-        // Seed VRA data (merged from four race-specific files)
-        if (boxDataRepository.findByCurrentStateAndMode(stateCode, "VRA").isEmpty()) {
-            String vraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Box-VRA.json");
-            String vraAsianJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-VRA-Asian.json");
-            String vraBlackJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-VRA-Black.json");
-            String vraHispanicJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Box-Data-VRA-Hispanic.json");
-            
-            if (vraJson != null && vraAsianJson != null && vraBlackJson != null && vraHispanicJson != null) {
-                Document mergedDoc = new Document();
-                mergedDoc.put("Base", parseJsonAsArray(vraJson));
-                mergedDoc.put("Asian", parseJsonAsArray(vraAsianJson));
-                mergedDoc.put("Black", parseJsonAsArray(vraBlackJson));
-                mergedDoc.put("Hispanic", parseJsonAsArray(vraHispanicJson));
-                
-                BoxDataDocument doc = new BoxDataDocument(stateCode, "VRA", mergedDoc);
-                boxDataRepository.save(doc);
-                logger.info("  Seeded " + stateCodeUpper + " box_data VRA document");
-            }
+
+            boxDataRepository.save(new BoxDataDocument(stateCode, mode, payloadDoc));
+            logger.info("  Seeded {} box_data {} document", stateUpper, mode);
         }
     }
 
@@ -201,30 +163,28 @@ public class DataSeedService {
     }
 
     private void seedEnsembleDataForState(String stateCode) throws IOException {
-        String stateCodeUpper = stateCode.toUpperCase();
-        
-        // Seed NonVRA data
-        if (ensembleDataRepository.findByCurrentStateAndMode(stateCode, "NonVRA").isEmpty()) {
-            String nonvraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Ensemble-NonVRA.json");
-            if (nonvraJson != null && !nonvraJson.isEmpty()) {
-                EnsembleDataDocument doc = new EnsembleDataDocument(
-                    stateCode, "NonVRA", Document.parse(nonvraJson));
-                ensembleDataRepository.save(doc);
-                logger.info("  Seeded " + stateCodeUpper + " ensemble_data NonVRA document");
+        String stateUpper = stateCode.toUpperCase();
+
+        for (String mode : new String[]{"VRA", "NonVRA"}) {
+            if (!ensembleDataRepository.findByCurrentStateAndMode(stateCode, mode).isEmpty()) {
+                logger.info("  {} ensemble_data {} document already exists. Skipping.", stateUpper, mode);
+                continue;
             }
-        }
-        
-        // Seed VRA data
-        if (ensembleDataRepository.findByCurrentStateAndMode(stateCode, "VRA").isEmpty()) {
-            String vraJson = loadJsonStringFromClasspath(
-                "assets/" + stateCode + "/" + stateCodeUpper + "-Proposed-Ensemble-VRA.json");
-            if (vraJson != null && !vraJson.isEmpty()) {
-                EnsembleDataDocument doc = new EnsembleDataDocument(
-                    stateCode, "VRA", Document.parse(vraJson));
-                ensembleDataRepository.save(doc);
-                logger.info("  Seeded " + stateCodeUpper + " ensemble_data VRA document");
+
+            Document payloadDoc = new Document();
+            for (String count : COUNTS) {
+                for (String threshold : THRESHOLDS) {
+                    String folder = "Complete_" + count + "_" + threshold;
+                    String variantKey = count + "_" + threshold;
+                    String path = "assets/" + stateCode + "/" + folder
+                                + "/NEW-" + stateUpper + "-Precinct-" + mode + "-Splits.json";
+                    String json = loadJsonStringFromClasspath(path);
+                    payloadDoc.put(variantKey, Document.parse(json));
+                }
             }
+
+            ensembleDataRepository.save(new EnsembleDataDocument(stateCode, mode, payloadDoc));
+            logger.info("  Seeded {} ensemble_data {} document", stateUpper, mode);
         }
     }
 
@@ -246,7 +206,9 @@ public class DataSeedService {
             String stateInfoJson = loadJsonStringFromClasspath(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-State-Info.json");
             if (stateInfoJson != null && !stateInfoJson.isEmpty()) {
-                StateInfoDocument doc = new StateInfoDocument(stateCode, Document.parse(stateInfoJson));
+                Document payloadDoc = new Document();
+                payloadDoc.put("data", parseJsonAsArray(stateInfoJson));
+                StateInfoDocument doc = new StateInfoDocument(stateCode, payloadDoc);
                 stateInfoRepository.save(doc);
                 logger.info("  Seeded " + stateCodeUpper + " state_info document");
             }
@@ -293,15 +255,12 @@ public class DataSeedService {
 
     private Document buildPolarizationRacePayload(String stateCode, String race) throws IOException {
         String stateCodeUpper = stateCode.toUpperCase();
+        String base = "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-" + race + "-";
 
-        String harrisJson = loadJsonStringFromClasspath(
-            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Harris.json");
-        String harrisKdeJson = loadJsonStringFromClasspath(
-            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Harris_KDE.json");
-        String trumpJson = loadJsonStringFromClasspath(
-            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Trump.json");
-        String trumpKdeJson = loadJsonStringFromClasspath(
-            "assets/" + stateCode + "/" + stateCodeUpper + "_Polarization_" + race + "_Trump_KDE.json");
+        String harrisJson    = loadJsonStringFromClasspath(base + "Harris-EI.json");
+        String harrisKdeJson = loadJsonStringFromClasspath(base + "Harris-KDE.json");
+        String trumpJson     = loadJsonStringFromClasspath(base + "Trump-EI.json");
+        String trumpKdeJson  = loadJsonStringFromClasspath(base + "Trump-KDE.json");
 
         Document racePayload = new Document();
         racePayload.put("Harris", buildPolarizationCandidatePayload(harrisJson, harrisKdeJson));

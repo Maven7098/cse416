@@ -73,15 +73,22 @@ public class Cse416Controller {
     // Consists of 1 GeoJSON object (District for proposed map)
     // And 2 Chart JSON Data (BarChart, Box&Whisker)
     @GetMapping(value = "/proposed", produces = "application/json")
-    public ResponseEntity<ArrayNode> getProposedPack(@RequestParam String currentState, @RequestParam String currentMode) throws IOException {
-        return ResponseEntity.ok(proposedDataService.getHomePayload(currentState, currentMode));
+    public ResponseEntity<ArrayNode> getProposedPack(
+            @RequestParam String currentState,
+            @RequestParam String currentMode,
+            @RequestParam(defaultValue = "4096") String count,
+            @RequestParam(defaultValue = "High") String threshold) throws IOException {
+        return ResponseEntity.ok(proposedDataService.getHomePayload(currentState, currentMode, count, threshold));
     }
 
     // DTO for comparison
     // Satisfies GUI-20, GUI-21, GUI-22
     // Consists of Chart JSON Data (VRA Impact Threshold Table, Box and Whisker, Minority Effectiveness Histogram)
     @GetMapping(value = "/compare", produces = "application/json")
-    public ResponseEntity<ArrayNode> getComparePack(@RequestParam String currentState) throws IOException {
-        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState));
+    public ResponseEntity<ArrayNode> getComparePack(
+            @RequestParam String currentState,
+            @RequestParam(defaultValue = "4096") String count,
+            @RequestParam(defaultValue = "High") String threshold) throws IOException {
+        return ResponseEntity.ok(proposedCompareService.getHomePayload(currentState, count, threshold));
     }
 }

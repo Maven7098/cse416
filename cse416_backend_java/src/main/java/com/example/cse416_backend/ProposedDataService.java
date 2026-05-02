@@ -5,95 +5,91 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 
+import org.bson.Document;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class ProposedDataService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final BoxDataRepository boxDataRepository;
+    private final EnsembleDataRepository ensembleDataRepository;
 
-    public ProposedDataService() {
+    public ProposedDataService(BoxDataRepository boxDataRepository,
+                                EnsembleDataRepository ensembleDataRepository) {
+        this.boxDataRepository = boxDataRepository;
+        this.ensembleDataRepository = ensembleDataRepository;
     }
 
-    // Calls both getLocalPayload and getMongoPayload
-    // And appends them as a JsonNode (or ArrayNode)
-    public ArrayNode getHomePayload(String currentState, String currentMode) throws IOException {
+    public ArrayNode getHomePayload(String currentState, String currentMode,
+                                     String count, String threshold) throws IOException {
         ArrayNode response = objectMapper.createArrayNode();
-        if (currentState.equals("ia") || currentState.equals("ga")){
-            String modeToken;
-            if (currentMode.equals("vra")) {
-                modeToken = "VRA";
-            } else if (currentMode.equals("non-vra")) {
-                modeToken = "NonVRA";
-            } else {
-                return response;
-            }
+        if (!currentState.equals("ia") && !currentState.equals("ga")) return response;
 
-            String stateCodeUpper = currentState.toUpperCase();
-            response.add(getLocalPayload(currentState, modeToken));
-            response.add(loadJsonObjectFromClasspath("assets/" + currentState + "/" + stateCodeUpper + "-Proposed-Ensemble-" + modeToken + ".json"));
-            response.add(loadRaceTaggedSeries(currentState, "Box-Data-" + modeToken));
-            response.add(loadRaceTaggedSeries(currentState, "Box-Data-Current"));
+        String modeToken;
+        if (currentMode.equals("vra")) {
+            modeToken = "VRA";
+        } else if (currentMode.equals("non-vra")) {
+            modeToken = "NonVRA";
+        } else {
+            return response;
         }
+
+        String variantKey = count + "_" + threshold;
+
+        // [0] District GeoJSON from classpath
+        response.add(getLocalPayload(currentState));
+
+        // [1] Ensemble histogram from MongoDB ensemble_data
+        Optional<EnsembleDataDocument> ensDoc =
+            ensembleDataRepository.findByCurrentStateAndMode(currentState, modeToken);
+        if (ensDoc.isEmpty()) throw new IOException(
+            "Missing ensemble_data for " + currentState + "/" + modeToken);
+        Document ensVariant = (Document) ensDoc.get().getPayload().get(variantKey);
+        response.add(objectMapper.readTree(ensVariant.toJson()));
+
+        // [2] Box & whisker from MongoDB box_data, race-tagged
+        Optional<BoxDataDocument> boxDoc =
+            boxDataRepository.findByCurrentStateAndMode(currentState, modeToken);
+        if (boxDoc.isEmpty()) throw new IOException(
+            "Missing box_data for " + currentState + "/" + modeToken);
+        Document boxVariant = (Document) boxDoc.get().getPayload().get(variantKey);
+        response.add(buildRaceTaggedArrayFromDocument(boxVariant));
+
+        // [3] Current-plan box placeholder (no current-variant files in new structure)
+        response.add(objectMapper.createArrayNode());
+
         return response;
     }
 
-    // Return the State (IA or GA) District GeoJSON file from local storage
-    // Satisfies GUI-19 (display 'a' interesting district) - can it be multiple district plans though?
-    // vra or non-vra: Should it be a string or a C-style boolean (1 or 0)?
-    private JsonNode getLocalPayload(String currentState, String currentMode) throws IOException {
-        String stateCodeUpper = currentState.toUpperCase();
-        String resourceName;
-
-        if (currentMode.equals("NonVRA")) {
-            resourceName = stateCodeUpper + "-Proposed-District-NonVRA-GeoJSON.json";
-        } else {
-            // The VRA-specific proposed district file was renamed away; fall back to the current district GeoJSON.
-            resourceName = stateCodeUpper + "-District-Current-GeoJSON.json";
-        }
-
+    private JsonNode getLocalPayload(String currentState) throws IOException {
+        String resourceName = currentState.toUpperCase() + "-District-Current-GeoJSON.json";
         return objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + resourceName).getInputStream()
-        );
+            new ClassPathResource("assets/" + currentState + "/" + resourceName).getInputStream());
     }
 
-    private ObjectNode loadJsonObjectFromClasspath(String resourcePath) throws IOException {
-        JsonNode node = objectMapper.readTree(new ClassPathResource(resourcePath).getInputStream());
-        if (node == null || !node.isObject()) {
-            throw new IOException("Invalid JSON object payload: " + resourcePath);
-        }
-        return (ObjectNode) node;
-    }
-
-    private ArrayNode loadRaceTaggedSeries(String currentState, String fileSuffix) throws IOException {
-        String stateCodeUpper = currentState.toUpperCase();
+    private ArrayNode buildRaceTaggedArrayFromDocument(Document variantDoc) throws IOException {
         ArrayNode output = objectMapper.createArrayNode();
-
-        appendRaceSeries(output, currentState, stateCodeUpper + "-" + fileSuffix + "-Asian.json", "ASIAN");
-        appendRaceSeries(output, currentState, stateCodeUpper + "-" + fileSuffix + "-Black.json", "BLACK");
-        appendRaceSeries(output, currentState, stateCodeUpper + "-" + fileSuffix + "-Hispanic.json", "HISPANIC");
-
-        return output;
-    }
-
-    private void appendRaceSeries(ArrayNode output, String currentState, String filename, String race) throws IOException {
-        JsonNode node = objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + filename).getInputStream()
-        );
-
-        if (node == null || !node.isArray()) {
-            return;
-        }
-
-        for (JsonNode item : node) {
-            if (item != null && item.isObject()) {
-                ObjectNode withRace = ((ObjectNode) item).deepCopy();
-                withRace.put("race", race);
-                output.add(withRace);
+        for (String race : new String[]{"Asian", "Black", "Hispanic"}) {
+            Object raceData = variantDoc.get(race);
+            if (raceData == null) continue;
+            // parseJsonAsArray stores JSON arrays as List<Document> inside BSON.
+            // Wrap in a temporary document to safely serialize back to JSON.
+            String raceJson = new Document("data", raceData).toJson();
+            JsonNode raceArray = objectMapper.readTree(raceJson).get("data");
+            if (raceArray == null || !raceArray.isArray()) continue;
+            for (JsonNode item : raceArray) {
+                if (item.isObject()) {
+                    ObjectNode tagged = ((ObjectNode) item).deepCopy();
+                    tagged.put("race", race.toUpperCase());
+                    output.add(tagged);
+                }
             }
         }
+        return output;
     }
 }
