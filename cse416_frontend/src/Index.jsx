@@ -1,81 +1,249 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
-import MainNavbar from './CurrentStatePage/Navbar.jsx'
+import MainNavbar from "./CurrentStatePage/Navbar.jsx";
 import Home from "./Home.jsx";
 import MapNavbar from "./CurrentStatePage/MapNavbar.jsx";
 import MapTab from "./CurrentStatePage/MapTab.jsx";
 import GinglesTab from "./CurrentStatePage/GinglesTab.jsx";
-import ProposedNavbar from './ProposedStatePage/ProposedNavbar.jsx'
-import ProposedMapTab from './ProposedStatePage/ProposedMapTab.jsx'
+import ProposedNavbar from "./ProposedStatePage/ProposedNavbar.jsx";
+import ProposedMapTab from "./ProposedStatePage/ProposedMapTab.jsx";
 import CompareChart from "./ProposedStatePage/CompareChart.jsx";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './CSS/index.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./CSS/index.css";
 
 // import NoPage from "./pages/NoPage";
 
 export default function App() {
-  const [activeRace, setActiveRace] = useState("BLACK")
-  const [currentRace, setCurrentRace] = useState("Black / African American")
+  const [activeRace, setActiveRace] = useState("BLACK");
+  const [currentRace, setCurrentRace] = useState("Black / African American");
   useEffect(() => {
     switch (activeRace) {
       case "HISPANIC":
-        setCurrentRace("Hispanic / Latino")
+        setCurrentRace("Hispanic / Latino");
         break;
       case "BLACK":
-        setCurrentRace("Black / African American")
+        setCurrentRace("Black / African American");
         break;
       case "ASIAN":
-        setCurrentRace("Asian / Asian American")
+        setCurrentRace("Asian / Asian American");
         break;
     }
-  },[activeRace])
+  }, [activeRace]);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainNavbar />}>
           <Route index element={<Home />} />
-          <Route path="iowa" element={<>
-            <MapNavbar activeState="ia" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <MapTab activeState="ia" activeRace={activeRace} currentRace={currentRace} latitude={41.8780} longitude={-93.0977} />
-            </>} />
-          <Route path="georgia" element={<>
-            <MapNavbar activeState="ga" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <MapTab activeState="ga" activeRace={activeRace} currentRace={currentRace} latitude={33.2478} longitude={-83.4411} />
-            </>} />
-          <Route path="iowa/polarization" element={<>
-            <MapNavbar activeState="ia" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <GinglesTab activeState="ia" activeRace={activeRace} currentRace={currentRace} latitude={41.8780} longitude={-93.0977} />
-          </>} />
-          <Route path="georgia/polarization" element={<>
-            <MapNavbar activeState="ga" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <GinglesTab activeState="ga" activeRace={activeRace} currentRace={currentRace} latitude={33.2478} longitude={-83.4411} />
-          </>} />
-          <Route path="iowa/proposed/vra" element={<>
-            <ProposedNavbar activeState="ia" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <ProposedMapTab activeState="ia" activeRace={activeRace} currentRace={currentRace} mode="vra" latitude={41.8780} longitude={-93.0977} />
-          </>} />
-          <Route path="georgia/proposed/vra" element={<>
-            <ProposedNavbar activeState="ga" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <ProposedMapTab activeState="ga" activeRace={activeRace} currentRace={currentRace} mode="vra" latitude={33.2478} longitude={-83.4411} />
-          </>} />
-          <Route path="iowa/proposed/nonvra" element={<>
-            <ProposedNavbar activeState="ia" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <ProposedMapTab activeState="ia" activeRace={activeRace} currentRace={currentRace} mode="non-vra" latitude={41.8780} longitude={-93.0977} />
-          </>} />
-          <Route path="georgia/proposed/nonvra" element={<>
-            <ProposedNavbar activeState="ga" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <ProposedMapTab activeState="ga" activeRace={activeRace} currentRace={currentRace} mode="non-vra" latitude={33.2478} longitude={-83.4411} />
-          </>} />
-          <Route path="iowa/proposed/compare" element={<>
-            <ProposedNavbar activeState="ia" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <CompareChart activeState="ia" activeRace={activeRace} currentRace={currentRace} activeStateName="Iowa" mode="nonvra" latitude={41.8780} longitude={-93.0977} />
-          </>} />
-          <Route path="georgia/proposed/compare" element={<>
-            <ProposedNavbar activeState="ga" activeRace={activeRace} currentRace={currentRace} setActiveRace={setActiveRace} />
-            <CompareChart activeState="ga" activeRace={activeRace} currentRace={currentRace} activeStateName="Georgia" mode="nonvra" latitude={33.2478} longitude={-83.4411} />
-          </>} />
+          <Route
+            path="iowa"
+            element={
+              <>
+                <MapNavbar
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <MapTab
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  latitude={41.878}
+                  longitude={-93.0977}
+                />
+              </>
+            }
+          />
+          <Route
+            path="georgia"
+            element={
+              <>
+                <MapNavbar
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <MapTab
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  latitude={33.2478}
+                  longitude={-83.4411}
+                />
+              </>
+            }
+          />
+          <Route
+            path="iowa/polarization"
+            element={
+              <>
+                <MapNavbar
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <GinglesTab
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  latitude={41.878}
+                  longitude={-93.0977}
+                />
+              </>
+            }
+          />
+          <Route
+            path="georgia/polarization"
+            element={
+              <>
+                <MapNavbar
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <GinglesTab
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  latitude={33.2478}
+                  longitude={-83.4411}
+                />
+              </>
+            }
+          />
+          <Route
+            path="iowa/proposed/vra"
+            element={
+              <>
+                <ProposedNavbar
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <ProposedMapTab
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  mode="vra"
+                  latitude={41.878}
+                  longitude={-93.0977}
+                />
+              </>
+            }
+          />
+          <Route
+            path="georgia/proposed/vra"
+            element={
+              <>
+                <ProposedNavbar
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <ProposedMapTab
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  mode="vra"
+                  latitude={33.2478}
+                  longitude={-83.4411}
+                />
+              </>
+            }
+          />
+          <Route
+            path="iowa/proposed/nonvra"
+            element={
+              <>
+                <ProposedNavbar
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <ProposedMapTab
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  mode="non-vra"
+                  latitude={41.878}
+                  longitude={-93.0977}
+                />
+              </>
+            }
+          />
+          <Route
+            path="georgia/proposed/nonvra"
+            element={
+              <>
+                <ProposedNavbar
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <ProposedMapTab
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  mode="non-vra"
+                  latitude={33.2478}
+                  longitude={-83.4411}
+                />
+              </>
+            }
+          />
+          <Route
+            path="iowa/proposed/compare"
+            element={
+              <>
+                <ProposedNavbar
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <CompareChart
+                  activeState="ia"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  activeStateName="Iowa"
+                  mode="nonvra"
+                  latitude={41.878}
+                  longitude={-93.0977}
+                />
+              </>
+            }
+          />
+          <Route
+            path="georgia/proposed/compare"
+            element={
+              <>
+                <ProposedNavbar
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  setActiveRace={setActiveRace}
+                />
+                <CompareChart
+                  activeState="ga"
+                  activeRace={activeRace}
+                  currentRace={currentRace}
+                  activeStateName="Georgia"
+                  mode="nonvra"
+                  latitude={33.2478}
+                  longitude={-83.4411}
+                />
+              </>
+            }
+          />
           {/* For any undefined pages, throw 404 error */}
           {/* <Route path="*" element={<NoPage />} /> */}
         </Route>
@@ -84,5 +252,5 @@ export default function App() {
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);

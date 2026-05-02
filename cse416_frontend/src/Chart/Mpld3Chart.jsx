@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import mpld3 from 'mpld3'
+import React, { useEffect } from "react";
+import mpld3 from "mpld3";
 
 const Mpld3Chart = ({ data, figId }) => {
   useEffect(() => {
@@ -9,7 +9,7 @@ const Mpld3Chart = ({ data, figId }) => {
     mpld3.draw_figure(figId, data);
   }, [data, figId]); // Re-run if data or ID changes
 
-  return <div id={figId} style={{ marginBottom: '10px' }}></div>;
+  return <div id={figId} style={{ marginBottom: "10px" }}></div>;
 };
 
 export default Mpld3Chart;

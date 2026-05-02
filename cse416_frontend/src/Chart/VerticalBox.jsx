@@ -14,8 +14,8 @@ function VerticalBox({
   width,
   stroke,
   fill,
-  clipPath
-}){
+  clipPath,
+}) {
   return (
     <>
       <line
@@ -47,6 +47,6 @@ function VerticalBox({
       />
     </>
   );
-};
+}
 
 export default VerticalBox;

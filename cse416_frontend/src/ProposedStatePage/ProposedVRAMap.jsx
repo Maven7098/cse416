@@ -1,26 +1,37 @@
-import { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import '../CSS/StateInfo.css';
-import axios from 'axios';
+import { useEffect, useState, useRef } from "react";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import "../CSS/StateInfo.css";
+import axios from "axios";
 
-function ProposedVRAMap({ activeState, activeRace, currentRace, activeMap, latitude, longitude }){
-    const resizeMap = (mapRef) => {
-      const resizeObserver = new ResizeObserver(() => mapRef.current?.invalidateSize())
-      const container = document.getElementById(`/map-container-district-${activeMap}`)
-      if (container) {
-        resizeObserver.observe(container)
-      }
+function ProposedVRAMap({
+  activeState,
+  activeRace,
+  currentRace,
+  activeMap,
+  latitude,
+  longitude,
+}) {
+  const resizeMap = (mapRef) => {
+    const resizeObserver = new ResizeObserver(() =>
+      mapRef.current?.invalidateSize(),
+    );
+    const container = document.getElementById(
+      `/map-container-district-${activeMap}`,
+    );
+    if (container) {
+      resizeObserver.observe(container);
     }
-    const mapRef = useRef(null)
+  };
+  const mapRef = useRef(null);
 
-    function districtWindow(){
+  function districtWindow() {
     return {
-        fillColor: '#FFEDA0',
-        color: '#800026',
-        weight: 2,
-        opacity: 0.5,
-        fillOpacity: 0.5
+      fillColor: "#FFEDA0",
+      color: "#800026",
+      weight: 2,
+      opacity: 0.5,
+      fillOpacity: 0.5,
     };
   }
 
@@ -31,26 +42,36 @@ function ProposedVRAMap({ activeState, activeRace, currentRace, activeMap, latit
     // Take note on the "key" in both the MapContainer and GeoJSON objects; they are used to force updates
     // in accordance with the Navbar
     <>
-    <div className="leaflet-containerset">
+      <div className="leaflet-containerset">
         {/* GUI-19 - Display an interesting district plan */}
-      <div className='leaflet-container-big'>
-        <h3>Ensemble District Map</h3>
-        <MapContainer center={[latitude, longitude]} key={JSON.stringify(activeMap)}
-        zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${activeMap}`}
-        whenReady={() => resizeMap(mapRef)}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <GeoJSON data={activeMap} style={districtWindow} key={JSON.stringify(activeMap)}/>
-        </MapContainer>
+        <div className="leaflet-container-big">
+          <h3>Ensemble District Map</h3>
+          <MapContainer
+            center={[latitude, longitude]}
+            key={JSON.stringify(activeMap)}
+            zoom={7}
+            className="leaflet-container"
+            ref={mapRef}
+            id={`map-container-district-${activeMap}`}
+            whenReady={() => resizeMap(mapRef)}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <GeoJSON
+              data={activeMap}
+              style={districtWindow}
+              key={JSON.stringify(activeMap)}
+            />
+          </MapContainer>
+        </div>
+        <div className="leaflet-container-big">
+          {/* Description for each GeoJSON */}
+        </div>
       </div>
-      <div className='leaflet-container-big'>
-        {/* Description for each GeoJSON */}
-      </div>
-    </div>
     </>
   );
-};
+}
 
 export default ProposedVRAMap;

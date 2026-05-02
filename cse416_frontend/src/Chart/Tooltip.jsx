@@ -18,6 +18,6 @@ function Tooltip({ interactionData }) {
       {interactionData.name}
     </div>
   );
-};
+}
 
 export default Tooltip;

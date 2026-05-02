@@ -3,7 +3,7 @@ import { useMemo } from "react";
 // tick length
 const TICK_LENGTH = 6;
 
-function AxisBottomCategoric({ xScale }){
+function AxisBottomCategoric({ xScale }) {
   const [min, max] = xScale.range();
 
   const ticks = useMemo(() => {
@@ -48,6 +48,6 @@ function AxisBottomCategoric({ xScale }){
       ))}
     </>
   );
-};
+}
 
 export default AxisBottomCategoric;

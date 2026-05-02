@@ -1,33 +1,35 @@
-import React, { useEffect } from 'react';
-import L from 'leaflet';
-import { useMap } from 'react-leaflet';
-import '../CSS/MapLegend.css'
+import React, { useEffect } from "react";
+import L from "leaflet";
+import { useMap } from "react-leaflet";
+import "../CSS/MapLegend.css";
 
 const Legend = ({ grades, colors, title }) => {
   const map = useMap();
 
   useEffect(() => {
     if (map) {
-      const legend = L.control({ position: 'bottomright' });
+      const legend = L.control({ position: "bottomright" });
 
       legend.onAdd = () => {
-        const div = L.DomUtil.create('div', 'info legend');
+        const div = L.DomUtil.create("div", "info legend");
         let labels = [``]; // Start with an empty array or initial title
 
         // Add title if provided
         if (title) {
-            labels.push(`<strong>${title}</strong>`);
+          labels.push(`<strong>${title}</strong>`);
         }
 
         // Loop through our density intervals and generate a label with a colored square for each interval
         for (let i = 0; i < grades.length; i++) {
           labels.push(
-            "<br />" + `<i style="background:${colors[i]}"></i>` +
-            grades[i] + (grades[i + 1] ? ` &ndash; ${grades[i + 1]}` : '+')
+            "<br />" +
+              `<i style="background:${colors[i]}"></i>` +
+              grades[i] +
+              (grades[i + 1] ? ` &ndash; ${grades[i + 1]}` : "+"),
           );
         }
 
-        div.innerHTML = labels.join('');
+        div.innerHTML = labels.join("");
         return div;
       };
 

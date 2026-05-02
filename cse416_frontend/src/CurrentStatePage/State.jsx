@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo } from "react";
 import * as d3 from "d3";
-import titleCase from '../Chart/TitleCase.js'
+import titleCase from "../Chart/TitleCase.js";
 
-  const MARGIN = { top: 0, right: 50, bottom: 44, left: 50 };
+const MARGIN = { top: 0, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
 
-function State({ width, height, activeState, activeRace, currentRace }){
+function State({ width, height, activeState, activeRace, currentRace }) {
   // bounds = area inside the graph axis = calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -18,35 +18,61 @@ function State({ width, height, activeState, activeRace, currentRace }){
   // Ideally we should implement a go back button as well
 
   // Process activeState to only leave numerical values
-  const {NAME, DSEAT, RSEAT, DVOTE, RVOTE, PARTY, TOTAL, DIST,
-    HISPANIC_PER, BLACK_PER, ASIAN_PER, WHITE_PER, OTHER_PER,
-    HISPANIC_EFF, BLACK_EFF, ASIAN_EFF, WHITE_EFF, OTHER_EFF,
-    HISPANIC_DIST, BLACK_DIST, ASIAN_DIST, WHITE_DIST, OTHER_DIST,
-    HISPANIC_MAJ, BLACK_MAJ, ASIAN_MAJ, WHITE_MAJ, OTHER_MAJ, ...popData} = activeState;
-  // popData should be converted to Key/Value pairs of arrays to work w/ D3 
-  const data = Object.keys(popData).map(key => ({
-      name: titleCase(key),
-      value: popData[key]
+  const {
+    NAME,
+    DSEAT,
+    RSEAT,
+    DVOTE,
+    RVOTE,
+    PARTY,
+    TOTAL,
+    DIST,
+    HISPANIC_PER,
+    BLACK_PER,
+    ASIAN_PER,
+    WHITE_PER,
+    OTHER_PER,
+    HISPANIC_EFF,
+    BLACK_EFF,
+    ASIAN_EFF,
+    WHITE_EFF,
+    OTHER_EFF,
+    HISPANIC_DIST,
+    BLACK_DIST,
+    ASIAN_DIST,
+    WHITE_DIST,
+    OTHER_DIST,
+    HISPANIC_MAJ,
+    BLACK_MAJ,
+    ASIAN_MAJ,
+    WHITE_MAJ,
+    OTHER_MAJ,
+    ...popData
+  } = activeState;
+  // popData should be converted to Key/Value pairs of arrays to work w/ D3
+  const data = Object.keys(popData).map((key) => ({
+    name: titleCase(key),
+    value: popData[key],
   }));
 
-  let minorityPercent = ""
-  let minorityEffective = ""
-  let minorityMajority = ""
+  let minorityPercent = "";
+  let minorityEffective = "";
+  let minorityMajority = "";
   switch (activeRace) {
     case "HISPANIC":
-      minorityPercent = districtData.HISPANIC_PER
-      minorityEffective = districtData.HISPANIC_DIST
-      minorityMajority = districtData.HISPANIC_MAJ
+      minorityPercent = districtData.HISPANIC_PER;
+      minorityEffective = districtData.HISPANIC_DIST;
+      minorityMajority = districtData.HISPANIC_MAJ;
       break;
     case "BLACK":
-      minorityPercent = districtData.BLACK_PER
-      minorityEffective = districtData.BLACK_DIST
-      minorityMajority = districtData.BLACK_MAJ
+      minorityPercent = districtData.BLACK_PER;
+      minorityEffective = districtData.BLACK_DIST;
+      minorityMajority = districtData.BLACK_MAJ;
       break;
     case "ASIAN":
-      minorityPercent = districtData.ASIAN_PER
-      minorityEffective = districtData.ASIAN_DIST
-      minorityMajority = districtData.ASIAN_MAJ
+      minorityPercent = districtData.ASIAN_PER;
+      minorityEffective = districtData.ASIAN_DIST;
+      minorityMajority = districtData.ASIAN_MAJ;
       break;
   }
 
@@ -131,23 +157,50 @@ function State({ width, height, activeState, activeRace, currentRace }){
 
   return (
     <div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent:"space-evenly", flexDirection: "row", textAlign: "center"}}>
-            <div style={{flexDirection: "column"}}>
-                <h4>Democrats</h4>
-                <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.DSEAT}</p>
-                <p style={{marginBottom: "2px"}}>2024 Presidential Voter %: {activeState.DVOTE}%</p>
-            </div>
-            <div style={{flexDirection: "column"}}>
-                <h4>Republicans</h4>
-                <p style={{marginBottom: "2px"}}>Number of Seats: {activeState.RSEAT}</p>
-                <p style={{marginBottom: "2px"}}>2024 Presidential Voter %: {activeState.RVOTE}%</p>
-            </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-evenly",
+          flexDirection: "row",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ flexDirection: "column" }}>
+          <h4>Democrats</h4>
+          <p style={{ marginBottom: "2px" }}>
+            Number of Seats: {activeState.DSEAT}
+          </p>
+          <p style={{ marginBottom: "2px" }}>
+            2024 Presidential Voter %: {activeState.DVOTE}%
+          </p>
         </div>
-        <h5>{currentRace} Effective Districts: {minorityEffective}</h5>
-        <h5>{currentRace} Majority Districts: {minorityMajority}</h5>
-        <h5>{currentRace} Proportionality: {(minorityEffective/activeState.DIST)/(minorityPercent/activeState.TOTAL)}</h5>
-        <h4>Total Population: {activeState.TOTAL}</h4>
-        <p style={{margin: "1em"}}>Current Districting Party: {activeState.PARTY}</p>
+        <div style={{ flexDirection: "column" }}>
+          <h4>Republicans</h4>
+          <p style={{ marginBottom: "2px" }}>
+            Number of Seats: {activeState.RSEAT}
+          </p>
+          <p style={{ marginBottom: "2px" }}>
+            2024 Presidential Voter %: {activeState.RVOTE}%
+          </p>
+        </div>
+      </div>
+      <h5>
+        {currentRace} Effective Districts: {minorityEffective}
+      </h5>
+      <h5>
+        {currentRace} Majority Districts: {minorityMajority}
+      </h5>
+      <h5>
+        {currentRace} Proportionality:{" "}
+        {minorityEffective /
+          activeState.DIST /
+          (minorityPercent / activeState.TOTAL)}
+      </h5>
+      <h4>Total Population: {activeState.TOTAL}</h4>
+      <p style={{ margin: "1em" }}>
+        Current Districting Party: {activeState.PARTY}
+      </p>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}
@@ -160,6 +213,6 @@ function State({ width, height, activeState, activeRace, currentRace }){
       </svg>
     </div>
   );
-};
+}
 
 export default State;

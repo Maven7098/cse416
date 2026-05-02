@@ -3,7 +3,7 @@ import * as d3 from "d3";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
 
-function Axis({ width, height, xScale, yScale, labelX="", labelY="" }){
+function Axis({ width, height, xScale, yScale, labelX = "", labelY = "" }) {
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
   const axesRef = useRef(null);
@@ -37,8 +37,7 @@ function Axis({ width, height, xScale, yScale, labelX="", labelY="" }){
       .text(labelX);
 
     const yAxisGenerator = d3.axisLeft(yScale);
-    svgElement.append("g")
-        .call(yAxisGenerator);
+    svgElement.append("g").call(yAxisGenerator);
     svgElement
       .append("text")
       .attr("text-anchor", "middle")
@@ -49,12 +48,12 @@ function Axis({ width, height, xScale, yScale, labelX="", labelY="" }){
 
   return (
     <g
-    width={boundsWidth}
-    height={boundsHeight}
-    ref={axesRef}
-    transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
+      width={boundsWidth}
+      height={boundsHeight}
+      ref={axesRef}
+      transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
     />
   );
-};
+}
 
 export default Axis;

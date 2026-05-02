@@ -1,46 +1,73 @@
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 const MARGIN = { top: 10, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
-import titleCase from '../Chart/TitleCase';
-import { useState } from 'react';
+import titleCase from "../Chart/TitleCase";
+import { useState } from "react";
 
-function District({ activeRace, currentRace, width, height, districtData }){
+function District({ activeRace, currentRace, width, height, districtData }) {
   // bounds = area inside the graph axis = calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
-  let minorityCalibrated = ""
-  let minorityEffective = ""
-  let minorityMajority = ""
+  let minorityCalibrated = "";
+  let minorityEffective = "";
+  let minorityMajority = "";
   switch (activeRace) {
     case "HISPANIC":
-      minorityCalibrated = districtData.HISPANIC_EFF
-      minorityEffective = districtData.HISPANIC_DIST
-      minorityMajority = districtData.HISPANIC_MAJ
+      minorityCalibrated = districtData.HISPANIC_EFF;
+      minorityEffective = districtData.HISPANIC_DIST;
+      minorityMajority = districtData.HISPANIC_MAJ;
       break;
     case "BLACK":
-      minorityCalibrated = districtData.BLACK_EFF
-      minorityEffective = districtData.BLACK_DIST
-      minorityMajority = districtData.BLACK_MAJ
+      minorityCalibrated = districtData.BLACK_EFF;
+      minorityEffective = districtData.BLACK_DIST;
+      minorityMajority = districtData.BLACK_MAJ;
       break;
     case "ASIAN":
-      minorityCalibrated = districtData.ASIAN_EFF
-      minorityEffective = districtData.ASIAN_DIST
-      minorityMajority = districtData.ASIAN_MAJ
+      minorityCalibrated = districtData.ASIAN_EFF;
+      minorityEffective = districtData.ASIAN_DIST;
+      minorityMajority = districtData.ASIAN_MAJ;
       break;
   }
 
   // Process districtData to only leave numerical values
-  const {ID, AREA, DISTRICT, GEOID, WINNER, REPRESENT, RRACE, WMARGIN, TOTAL,
-     HISPANIC_PER, BLACK_PER, ASIAN_PER, WHITE_PER, OTHER_PER,
-     HISPANIC_EFF, BLACK_EFF, ASIAN_EFF, WHITE_EFF, OTHER_EFF,
-     HISPANIC_DIST, BLACK_DIST, ASIAN_DIST, WHITE_DIST, OTHER_DIST,
-     HISPANIC_MAJ, BLACK_MAJ, ASIAN_MAJ, WHITE_MAJ, OTHER_MAJ, ...popData} = districtData;
-  // popData should be converted to Key/Value pairs of arrays to work w/ D3 
-  const data = Object.keys(popData).map(key => ({
-      name: titleCase(key),
-      value: popData[key]
+  const {
+    ID,
+    AREA,
+    DISTRICT,
+    GEOID,
+    WINNER,
+    REPRESENT,
+    RRACE,
+    WMARGIN,
+    TOTAL,
+    HISPANIC_PER,
+    BLACK_PER,
+    ASIAN_PER,
+    WHITE_PER,
+    OTHER_PER,
+    HISPANIC_EFF,
+    BLACK_EFF,
+    ASIAN_EFF,
+    WHITE_EFF,
+    OTHER_EFF,
+    HISPANIC_DIST,
+    BLACK_DIST,
+    ASIAN_DIST,
+    WHITE_DIST,
+    OTHER_DIST,
+    HISPANIC_MAJ,
+    BLACK_MAJ,
+    ASIAN_MAJ,
+    WHITE_MAJ,
+    OTHER_MAJ,
+    ...popData
+  } = districtData;
+  // popData should be converted to Key/Value pairs of arrays to work w/ D3
+  const data = Object.keys(popData).map((key) => ({
+    name: titleCase(key),
+    value: popData[key],
   }));
 
   // X axis is for groups since the barplot is vertical
@@ -125,19 +152,36 @@ function District({ activeRace, currentRace, width, height, districtData }){
   return (
     <div>
       <h4>District No.: {districtData.DISTRICT}</h4>
-      <h5>{currentRace} Calibrated Score: {minorityCalibrated}</h5>
-      <h5>{currentRace} Effective District: {minorityEffective == 1 ? "True" : "False"}</h5>
-      <h5>{currentRace} Majority District: {minorityMajority == 1 ? "True" : "False"}</h5>
-    <div style={{marginBottom: "0"}}>
-      <p style={{margin: "2px"}}>Representative: {districtData.REPRESENT} | Margin: {districtData.WMARGIN}</p>
-      {districtData.WINNER == "D" ? <p style={{margin: "2px"}}>Party of Representative: Democrat</p> : <p style={{margin: "2px"}}>Party of Representative: Republican</p>}
-      <p style={{margin: "2px"}}>Race/Ethnicity of Representative: {districtData.RRACE}</p>
-    </div>
+      <h5>
+        {currentRace} Calibrated Score: {minorityCalibrated}
+      </h5>
+      <h5>
+        {currentRace} Effective District:{" "}
+        {minorityEffective == 1 ? "True" : "False"}
+      </h5>
+      <h5>
+        {currentRace} Majority District:{" "}
+        {minorityMajority == 1 ? "True" : "False"}
+      </h5>
+      <div style={{ marginBottom: "0" }}>
+        <p style={{ margin: "2px" }}>
+          Representative: {districtData.REPRESENT} | Margin:{" "}
+          {districtData.WMARGIN}
+        </p>
+        {districtData.WINNER == "D" ? (
+          <p style={{ margin: "2px" }}>Party of Representative: Democrat</p>
+        ) : (
+          <p style={{ margin: "2px" }}>Party of Representative: Republican</p>
+        )}
+        <p style={{ margin: "2px" }}>
+          Race/Ethnicity of Representative: {districtData.RRACE}
+        </p>
+      </div>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}
           height={boundsHeight}
-          transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
+          transform={`translate(${[MARGIN.left, MARGIN.top].join(",")})`}
         >
           {grid}
           {allShapes}
@@ -145,5 +189,5 @@ function District({ activeRace, currentRace, width, height, districtData }){
       </svg>
     </div>
   );
-};
+}
 export default District;
