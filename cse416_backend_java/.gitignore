@@ -46,5 +46,3 @@ build/
 # Large files in assets
 src/main/resources/assets/ga/*
 src/main/resources/assets/ia/*
-# Helper scripts to help preprocessing - not used in actual code
-src/main/resources/assets/*
