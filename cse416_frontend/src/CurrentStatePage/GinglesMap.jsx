@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "leaflet/dist/leaflet.css";
 import "../CSS/StateInfo.css";
 import GinglesData from "./GinglesData.jsx";
@@ -14,7 +14,7 @@ function GinglesMap({ ginglesData, activeRace }) {
   // And Render them on GinglesChart (Rename it to GinglesTable?)
   const [activePrecinct, setActivePrecinct] = useState("");
 
-  const width = 740;
+  const width = 840;
   const height = 680;
 
   return (

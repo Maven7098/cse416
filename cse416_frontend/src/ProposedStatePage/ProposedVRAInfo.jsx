@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import "../CSS/StateInfo.css";
 import Mpld3Chart from "../Chart/Mpld3Chart.jsx";
 

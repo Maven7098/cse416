@@ -7,9 +7,7 @@ import axios from "axios";
 function CompareChart({
   activeState,
   activeRace,
-  currentRace,
-  boxandWhiskerData,
-  minorityEffectivenessData,
+  currentRace
 }) {
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   const [vraImpactThresholdTable, setVraImpactThresholdTable] = useState([]);

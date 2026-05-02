@@ -24,7 +24,6 @@ function GinglesTab({
   const [ginglesData, setGinglesData] = useState("");
   const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
   const [eiData, setEiData] = useState("");
-  const [eiKdeData, setEiKdeData] = useState("");
   const [currentMode, setCurrentMode] = useState("D");
 
   // TODO Next: Get a Gingles Formula (pre-calculated) for each state from Mongo
@@ -32,13 +31,12 @@ function GinglesTab({
     axios
       .get(`http://localhost:8080/polarization?currentState=${activeState}`)
       .then((response) => {
+        console.log(response.data)
         setGinglesData(response.data[0]);
-        // setGinglesForumla(response.data[1]);
         setPrecinctGeoJsonData(response.data[1]);
         // EiData and EiKdeData is 3 racial groups combined
         // Call them through response.data[2].BLACK
-        setEiData(response.data[2]);
-        setEiKdeData(response.data[3]);
+        setEiData(response.data[3]);
       })
       .catch((error) => console.log(error.response?.data ?? error.message));
   }, [activeState]);
@@ -81,7 +79,6 @@ function GinglesTab({
                   precinctGeoJsonData={precinctGeoJsonData}
                   currentMode={currentMode}
                   eiData={eiData}
-                  eiKdeData={eiKdeData}
                   activeRace={activeRace}
                   currentRace={currentRace}
                   latitude={latitude}

@@ -51,15 +51,29 @@ data.head()
 ei_2by2 = TwoByTwoEI(model_name="king99_pareto_modification", pareto_scale=8, pareto_shape=2)
 ei_2by2.fit(X, T, N, demographic_group_name=demographic_group_name, candidate_name=candidate_name, precinct_names=precinct_names)
 posterior_mean_voting_prefs = ei_2by2.posterior_mean_voting_prefs
-with open(f"{sys.argv[4]}.txt", "a") as f:
+precinct_posterior_means, precinct_credible_intervals = ei_2by2.precinct_level_estimates()
+
+with open(f"{sys.argv[4]}.txt", "w") as f:
     f.write(demographic_group_name + " support for " + candidate_name + ": " + str(posterior_mean_voting_prefs[0]) + "\n")
     f.write("Non-" + demographic_group_name + " support for " + candidate_name + ": " + str(posterior_mean_voting_prefs[1]) + "\n")
     f.write("Confidence Score for " + demographic_group_name + ": " + str(1/(1 + math.exp(18 - 26*posterior_mean_voting_prefs[0]))))
+    for index, item in enumerate(precinct_posterior_means):
+        f.write("Estimated (posterior mean) support for the candidate from the group in precinct {index}: " + str(precinct_posterior_means[index][0][0]) + "\n")
+
 fig = ei_2by2.plot_kde().figure
+fig.set_size_inches(6.8,3.3)
 mpld3.save_json(fig, f"{sys.argv[4]}-EI.json")
 mpld3.save_html(fig, f"{sys.argv[4]}-EI.html")
 plt.savefig(f"{sys.argv[4]}-EI.png", dpi=200)
+
 fig = ei_2by2.plot_polarization_kde(percentile=95, show_threshold=False).figure
+fig.set_size_inches(6.8,3.3)
 mpld3.save_html(fig, f"{sys.argv[4]}-KDE.html")
 mpld3.save_json(fig, f"{sys.argv[4]}-KDE.json")
 plt.savefig(f"{sys.argv[4]}-KDE.png", dpi=200)
+
+fig = ei_2by2.precinct_level_plot().figure
+fig.set_size_inches(6.8,3.3)
+mpld3.save_json(fig, f"{sys.argv[4]}-EI-Precinct.json")
+mpld3.save_html(fig, f"{sys.argv[4]}-EI-Precinct.html")
+plt.savefig(f"{sys.argv[4]}-EI-Precinct.png", dpi=200)

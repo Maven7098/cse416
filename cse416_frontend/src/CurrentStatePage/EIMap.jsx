@@ -11,12 +11,15 @@ function EIMap({
   precinctGeoJsonData,
   currentMode,
   eiData,
-  eiKdeData,
   activeRace,
   currentRace,
   latitude,
   longitude,
 }) {
+  if(eiData == []){
+    return <p>Nothing to see here...</p>
+  }
+
   const resizeMap = (mapRef) => {
     const resizeObserver = new ResizeObserver(() =>
       mapRef.current?.invalidateSize(),
@@ -28,22 +31,50 @@ function EIMap({
   };
   const mapRef = useRef(null);
 
-  let currentEiData = eiData.BLACK;
-  let currentEiKdeData = eiKdeData.BLACK;
-  switch (activeRace) {
+  const [currentEiData, setCurrentEiData] = useState("");
+  const [currentEiKdeData, setCurrentEiKdeData] = useState("");
+  
+  useEffect(() => {
+    switch (activeRace) {
     case "HISPANIC":
-      currentEiData = eiData.HISPANIC;
-      currentEiKdeData = eiKdeData.HISPANIC;
+      switch(currentMode){
+        case "D":
+          setCurrentEiData(eiData.Hispanic.Harris.chart)
+          setCurrentEiKdeData(eiData.Hispanic.Harris.kde)
+          break;
+        case "R":
+          setCurrentEiData(eiData.Hispanic.Trump.chart)
+          setCurrentEiKdeData(eiData.Hispanic.Trump.kde)
+          break;
+      }
       break;
     case "BLACK":
-      currentEiData = eiData.BLACK;
-      currentEiKdeData = eiKdeData.BLACK;
+      switch(currentMode){
+        case "D":
+          setCurrentEiData(eiData.Black.Harris.chart)
+          setCurrentEiKdeData(eiData.Black.Harris.kde)
+          break;
+        case "R":
+          setCurrentEiData(eiData.Black.Trump.chart)
+          setCurrentEiKdeData(eiData.Black.Trump.kde)
+          break;
+      }
       break;
     case "ASIAN":
-      currentEiData = eiData.ASIAN;
-      currentEiKdeData = eiKdeData.ASIAN;
+      switch(currentMode){
+        case "D":
+          setCurrentEiData(eiData.Asian.Harris.chart)
+          setCurrentEiKdeData(eiData.Asian.Harris.kde)
+          break;
+        case "R":
+          setCurrentEiData(eiData.Asian.Trump.chart)
+          setCurrentEiKdeData(eiData.Asian.Trump.kde)
+          break;
+      }
       break;
-  }
+    }
+  }, [activeRace, currentMode]);
+  
 
   // GUI-14 (TODO Next)
   const grades = [0, 20, 40, 60, 80, 100];
@@ -177,7 +208,6 @@ function EIMap({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               />
-              {/* Afraid of rendering a precinct file too large (I ran out of memory) */}
               <GeoJSON
                 data={precinctGeoJsonData}
                 style={style}

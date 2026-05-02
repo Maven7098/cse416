@@ -346,6 +346,33 @@ def render_ensemble_charts_histogram(dem_seats, suffix):
     plt.savefig(f"{OUTPUT_FILE}-{suffix}-Splits.png", dpi=200)
     plt.close(fig)
 
+def render_ensemble_threshold(group_name, vra_eff, nonvra_eff, baseline_counts, pop_group, pop_total):
+    vra_count_baseline = 0
+    nonvra_count_baseline = 0
+    vra_count_proportionality = 0
+    nonvra_count_proportionality = 0
+    vra_count_both = 0
+    nonvra_count_both = 0
+    print(pop_group)
+    print(POP_COL)
+    for d in vra_eff[group_name]:
+        if d > baseline_counts:
+            vra_count_baseline = vra_count_baseline + 1
+        if d > int(pop_group / pop_total * NUM_DISTRICTS):
+            vra_count_proportionality = vra_count_proportionality + 1
+        if d > baseline_counts and d > int(pop_group / pop_total * NUM_DISTRICTS):
+            vra_count_both = vra_count_both + 1
+    for d in nonvra_eff[group_name]:
+        if d > baseline_counts:
+            nonvra_count_baseline = nonvra_count_baseline + 1
+        if d > int(pop_group / pop_total * NUM_DISTRICTS):
+            nonvra_count_proportionality = nonvra_count_proportionality + 1
+        if d > baseline_counts and d > int(pop_group / pop_total * NUM_DISTRICTS):
+            nonvra_count_both = nonvra_count_both + 1
+    return [vra_count_baseline, vra_count_proportionality, vra_count_both,
+            nonvra_count_baseline, nonvra_count_proportionality, nonvra_count_both]
+    
+
 # ============================================================
 # MAIN EXECUTION
 # ============================================================
@@ -362,6 +389,12 @@ if __name__ == "__main__":
     # Baseline
     baseline_counts = {name: len(effective_districts(initial, info)) for name, info in GROUPS.items()}
     print(f"Baseline counts: {baseline_counts}")
+
+    # Baseline total population (used for proportionality calculation)
+    population = {}
+    population["Total"] = gdf[POP_COL].sum()
+    for group_name, group_info in GROUPS.items():
+        population[group_name] = gdf[group_info["pop_col"]].sum()
 
     num_procs = mp.cpu_count()
     plans_per_proc = [TARGET_PLANS // num_procs] * num_procs
@@ -398,6 +431,8 @@ if __name__ == "__main__":
     vra_boxes = district_share_box_stats(vra_res["district_shares"])
     nonvra_boxes = district_share_box_stats(nonvra_res["district_shares"])
     enacted_dots = enacted_district_share_dots(initial)
+    
+    threshold = {}
 
     for group_name in GROUPS.keys():
         # We do not need White files, so skip this
@@ -410,8 +445,11 @@ if __name__ == "__main__":
         render_minority_effectiveness_histogram(group_name, vra_res["effectiveness"], nonvra_res["effectiveness"])
         render_minority_effectiveness_majority_histogram(group_name, vra_res["effectiveness"], vra_res["majority"], "VRA")
         render_minority_effectiveness_majority_histogram(group_name, nonvra_res["effectiveness"], nonvra_res["majority"], "NonVRA")
+        threshold[group_name] = render_ensemble_threshold(group_name, vra_res["effectiveness"], nonvra_res["effectiveness"], baseline_counts[group_name], population[group_name], population["Total"])
     render_ensemble_charts_histogram(vra_res["dem_seats"], "VRA")
     render_ensemble_charts_histogram(nonvra_res["dem_seats"], "NonVRA")
+    with open(f"{OUTPUT_FILE}-Compare-Threshold.json", "w") as f:
+        json.dump(threshold, f)
 
     # Final Save
     with open(f"{OUTPUT_FILE}-VRA.json", "w") as f:

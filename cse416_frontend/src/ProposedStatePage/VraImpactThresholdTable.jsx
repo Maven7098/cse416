@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../CSS/GinglesTable.css";
 
 function VraImpactThresholdTable({ data, race, activePrecinct }) {

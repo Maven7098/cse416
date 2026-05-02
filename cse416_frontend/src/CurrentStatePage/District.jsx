@@ -170,9 +170,9 @@ function District({ activeRace, currentRace, width, height, districtData }) {
         </p>
         {districtData.WINNER == "D" ? (
           <p style={{ margin: "2px" }}>Party of Representative: Democrat</p>
-        ) : (
+        ) : ( districtData.WINNER == "R" ? (
           <p style={{ margin: "2px" }}>Party of Representative: Republican</p>
-        )}
+        ) : ( <p style={{ margin: "2px" }}>Party of Representative: None</p> ))}
         <p style={{ margin: "2px" }}>
           Race/Ethnicity of Representative: {districtData.RRACE}
         </p>

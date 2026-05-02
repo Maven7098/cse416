@@ -111,7 +111,7 @@ function GinglesData({
     return (
       <>
         <circle
-          key={i}
+          key={`${i}-dem`}
           r={4}
           cx={xScale(100 * (activeRace / d.TOTAL))}
           cy={yScale(100 * (d.DEMOCRATIC / d.TOTAL))}
@@ -135,7 +135,7 @@ function GinglesData({
           }}
         />
         <circle
-          key={i}
+          key={`${i}-rep`}
           r={4}
           cx={xScale(100 * (activeRace / d.TOTAL))}
           cy={yScale(100 * (d.REPUBLICAN / d.TOTAL))}

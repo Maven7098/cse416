@@ -1,6 +1,6 @@
 // From https://www.react-graph-gallery.com/barplot
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import * as d3 from "d3";
 import titleCase from "../Chart/TitleCase.js";
 
@@ -8,6 +8,9 @@ const MARGIN = { top: 0, right: 50, bottom: 44, left: 50 };
 const BAR_PADDING = 0.3;
 
 function State({ width, height, activeState, activeRace, currentRace }) {
+  if(activeState == []){
+    return <p>Nothing to see here...</p>
+  }
   // bounds = area inside the graph axis = calculated by substracting the margins
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -52,27 +55,27 @@ function State({ width, height, activeState, activeRace, currentRace }) {
   // popData should be converted to Key/Value pairs of arrays to work w/ D3
   const data = Object.keys(popData).map((key) => ({
     name: titleCase(key),
-    value: popData[key],
+    value: popData[key]
   }));
 
-  let minorityPercent = "";
-  let minorityEffective = "";
-  let minorityMajority = "";
+  let minorityPercent = 0;
+  let minorityEffective = 0;
+  let minorityMajority = 0;
   switch (activeRace) {
     case "HISPANIC":
-      minorityPercent = districtData.HISPANIC_PER;
-      minorityEffective = districtData.HISPANIC_DIST;
-      minorityMajority = districtData.HISPANIC_MAJ;
+      minorityPercent = activeState.HISPANIC_PER;
+      minorityEffective = activeState.HISPANIC_DIST;
+      minorityMajority = activeState.HISPANIC_MAJ;
       break;
     case "BLACK":
-      minorityPercent = districtData.BLACK_PER;
-      minorityEffective = districtData.BLACK_DIST;
-      minorityMajority = districtData.BLACK_MAJ;
+      minorityPercent = activeState.BLACK_PER;
+      minorityEffective = activeState.BLACK_DIST;
+      minorityMajority = activeState.BLACK_MAJ;
       break;
     case "ASIAN":
-      minorityPercent = districtData.ASIAN_PER;
-      minorityEffective = districtData.ASIAN_DIST;
-      minorityMajority = districtData.ASIAN_MAJ;
+      minorityPercent = activeState.ASIAN_PER;
+      minorityEffective = activeState.ASIAN_DIST;
+      minorityMajority = activeState.ASIAN_MAJ;
       break;
   }
 
@@ -85,7 +88,9 @@ function State({ width, height, activeState, activeRace, currentRace }) {
     .padding(BAR_PADDING);
 
   // Y axis
-  const max = d3.max(data.map((d) => d.value)) ?? 10;
+  console.log(data)
+  const max = Math.max(...data.map((d) => d.value)) ?? 10;
+  console.log(max)
   const yScale = d3
     .scaleLinear()
     .domain([max * 1.2, 0])
@@ -118,7 +123,7 @@ function State({ width, height, activeState, activeRace, currentRace }) {
           textAnchor="middle"
           alignmentBaseline="central"
         >
-          {d.value.toLocaleString()}
+          {Number(d.value).toLocaleString()}
         </text>
         <text
           x={x + xScale.bandwidth() / 2}
@@ -193,13 +198,11 @@ function State({ width, height, activeState, activeRace, currentRace }) {
       </h5>
       <h5>
         {currentRace} Proportionality:{" "}
-        {minorityEffective /
-          activeState.DIST /
-          (minorityPercent / activeState.TOTAL)}
+      {(minorityEffective / (activeState.DSEAT + activeState.RSEAT)) / (minorityPercent)}
       </h5>
       <h4>Total Population: {activeState.TOTAL}</h4>
       <p style={{ margin: "1em" }}>
-        Current Districting Party: {activeState.PARTY}
+        Current Districting Party: {activeState.PARTY == "D" ? "Democratic" : "Republican"}
       </p>
       <svg width={width} height={height}>
         <g

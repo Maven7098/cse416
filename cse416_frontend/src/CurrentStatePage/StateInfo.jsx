@@ -23,7 +23,7 @@ function StateInfo({
       .get(`http://localhost:8080/district?currentState=${activeState}`)
       .then((response) => {
         setDistrictGeoJsonData(response.data[0]);
-        setCurrentState(response.data[1]);
+        setCurrentState(response.data[1].data[0]);
       })
       .catch((error) => console.log(error.response?.data ?? error.message));
     // If Active State changes, then also reset districtData
@@ -157,6 +157,7 @@ function StateInfo({
             <>
               <State
                 activeState={currentState}
+                activeRace={activeRace}
                 currentRace={currentRace}
                 width={width}
                 height={heightState}
