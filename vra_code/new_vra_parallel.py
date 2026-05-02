@@ -25,48 +25,48 @@ import sys
 # ============================================================
 INPUT_FILE = sys.argv[1]
 
-POP_COL = "POP_TOTAL"
-ASSIGN_COL = "CONG_DIST"
+POP_COL = "TOTAL"
+ASSIGN_COL = "DISTRICT"
 
-DEM_COL = "DEMOCRATIC"
-REP_COL = "REPUBLICAN"
+DEM_COL = "TOTAL_DEM"
+REP_COL = "TOTAL_REP"
 
 # White Population is required as it is needed to print in box and whisker comparison
 GROUPS = {
     "Black": {
-        "pop_col": "POP_BLACK",
-        "reg_total_col": "REG_BLACK",
-        "reg_dem_col": "REG_BLACK_DEM",
-        "reg_rep_col": "REG_BLACK_REP",
+        "pop_col": "BLACK",
+        "reg_total_col": "BLACK_REG",
+        "reg_dem_col": "BLACK_DEM",
+        "reg_rep_col": "BLACK_REP",
     },
     "Hispanic": {
-        "pop_col": "POP_HISPANIC",
-        "reg_total_col": "REG_HISPANIC",
-        "reg_dem_col": "REG_HISPANIC_DEM",
-        "reg_rep_col": "REG_HISPANIC_REP",
+        "pop_col": "WHITE",
+        "reg_total_col": "HISPANIC_REG",
+        "reg_dem_col": "HISPANIC_DEM",
+        "reg_rep_col": "HISPANIC_REP",
     },
     "Asian": {
-        "pop_col": "POP_ASIAN",
-        "reg_total_col": "REG_ASIAN",
-        "reg_dem_col": "REG_ASIAN_DEM",
-        "reg_rep_col": "REG_ASIAN_REP",
+        "pop_col": "ASIAN",
+        "reg_total_col": "ASIAN_REG",
+        "reg_dem_col": "ASIAN_DEM",
+        "reg_rep_col": "ASIAN_REP",
     },
     "White": {
-        "pop_col": "POP_WHITE",
-        "reg_total_col": "REG_WHITE",
-        "reg_dem_col": "REG_WHITE_DEM",
-        "reg_rep_col": "REG_WHITE_REP",
+        "pop_col": "WHITE",
+        "reg_total_col": "WHITE_REG",
+        "reg_dem_col": "WHITE_DEM",
+        "reg_rep_col": "WHITE_REP",
     },
 }
 
-EFFECTIVENESS_THRESHOLD = 0.60
+EFFECTIVENESS_THRESHOLD = float(sys.argv[5]) if len(sys.argv) > 5 else 0
 
 STEPS = 1000000
-TARGET_PLANS = int(sys.argv[3]) if len(sys.argv) > 3 else 0
+TARGET_PLANS = int(sys.argv[4]) if len(sys.argv) > 4 else 0
 POP_TOL = 0.08
 
 OUTPUT_FILE = sys.argv[2]
-NUM_DISTRICTS = int(sys.argv[4]) if len(sys.argv) > 4 else 0
+NUM_DISTRICTS = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
 # ============================================================
 # HELPERS
@@ -118,6 +118,10 @@ def effective_districts(partition, group_info, threshold=EFFECTIVENESS_THRESHOLD
     scores = district_effectiveness_scores(partition, group_info)
     return [d for d, v in scores.items() if v["score"] >= threshold and v["winner"] > 0]
 
+def majority_districts(partition, group_col):
+    pop = district_group_pop(partition, group_col)
+    return [d for d, v in pop.items() if v["share"] >= 0.5]
+
 def count_dem_seats(partition):
     votes = district_votes(partition)
     return sum(1 for d in votes if votes[d]["DEM"] > votes[d]["REP"])
@@ -152,6 +156,7 @@ def run_chain_worker(is_vra, target_to_collect, steps, graph_data, initial_assig
     local_plans = []
     local_dem_seats = []
     local_effectiveness = {group: [] for group in GROUPS.keys()}
+    local_majority = {group: [] for group in GROUPS.keys()}
     local_district_shares = []
     local_interesting_plans = []
     MAX_INTERESTING = 10
@@ -173,6 +178,13 @@ def run_chain_worker(is_vra, target_to_collect, steps, graph_data, initial_assig
                 local_effectiveness[group_name].append(count)
                 eff_counts[group_name] = count
 
+            # 3.1. Minority-Majority
+            majority_counts = {}
+            for group_name, group_info in GROUPS.items():
+                count = len(majority_districts(part, group_info["pop_col"]))
+                local_majority[group_name].append(count)
+                majority_counts[group_name] = count
+
             # 4. Shares
             plan_shares = {}
             for group_name, group_info in GROUPS.items():
@@ -184,6 +196,7 @@ def run_chain_worker(is_vra, target_to_collect, steps, graph_data, initial_assig
             total_districts = len(part.parts)
             extreme_score = abs(dem_seats - total_districts/2)
             total_effective = sum(eff_counts.values())
+            total_majority = sum(majority_counts.values())
             
             # Scores for tooltips
             scores_map = {}
@@ -206,6 +219,7 @@ def run_chain_worker(is_vra, target_to_collect, steps, graph_data, initial_assig
         "plans": local_plans,
         "dem_seats": local_dem_seats,
         "effectiveness": local_effectiveness,
+        "majority": local_majority,
         "district_shares": local_district_shares,
         "interesting_plans": local_interesting_plans
     }
@@ -253,7 +267,7 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
         stats = boxes[bucket]
         boxplot_stats.append({"label": str(bucket), "whislo": stats["min"], "q1": stats["q1"], "med": stats["median"], "q3": stats["q3"], "whishi": stats["max"], "fliers": []})
         positions.append(bucket)
-    fig, ax = plt.subplots(figsize=(8.2, 7.2))
+    fig, ax = plt.subplots(figsize=(5.46, 7.2))
     ax.bxp(boxplot_stats, positions=positions, showfliers=False)
     x_vals, y_vals, labels = [], [], []
     for bucket in sorted(dots.keys()):
@@ -266,14 +280,14 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     ax.legend(); ax.grid(True, axis="y", alpha=0.3)
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y:.0%}"))
     fig.tight_layout()
-    mpld3.save_html(fig, f"{OUTPUT_FILE}-{suffix}-{group_name}-Box.html")
-    mpld3.save_json(fig, f"{OUTPUT_FILE}-{suffix}-{group_name}-Box.json")
-    plt.savefig(f"{OUTPUT_FILE}-{suffix}-{group_name}-Box.png", dpi=200)
+    mpld3.save_html(fig, f"{OUTPUT_FILE}-{group_name}-{suffix}-Box.html")
+    mpld3.save_json(fig, f"{OUTPUT_FILE}-{group_name}-{suffix}-Box.json")
+    plt.savefig(f"{OUTPUT_FILE}-{group_name}-{suffix}-Box.png", dpi=200)
     plt.close(fig)
 
 def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, baseline_counts):
     fig, ax = plt.subplots(figsize=(8.2, 7.2))
-    ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], positions=[1, 1.4], widths=0.3, showfliers=False)
+    ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
     ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
     ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan")
     ax.set_title(f"{group_name} Effectiveness Distribution")
@@ -292,15 +306,29 @@ def render_minority_effectiveness_histogram(group_name, vra_eff, nonvra_eff):
     ax.hist(vra_eff[group_name], label="VRA-Constrained", alpha=0.5, bins=bins)
     ax.hist(nonvra_eff[group_name], label="Race-Blind", alpha=0.5, bins=bins)
     ax.set_title(f"{group_name} Effectiveness Histogram")
-    ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}/{NUM_DISTRICTS-c}" for c in range(NUM_DISTRICTS + 1)])
+    ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
     ax.legend(); fig.tight_layout();
     mpld3.save_html(fig, f"{OUTPUT_FILE}-{group_name}-Compare-Histogram.html")
     mpld3.save_json(fig, f"{OUTPUT_FILE}-{group_name}-Compare-Histogram.json")
     plt.savefig(f"{OUTPUT_FILE}-{group_name}-Compare-Histogram.png", dpi=200)
     plt.close(fig)
+
+def render_minority_effectiveness_majority_histogram(group_name, vra_eff, vra_majority, suffix):
+    fig, ax = plt.subplots(figsize=(5.46, 7.2))
+    all_vals = vra_eff[group_name] + vra_majority[group_name]
+    bins = np.arange(min(all_vals), max(all_vals) + 2) - 0.5
+    ax.hist(vra_eff[group_name], label=f"{group_name} Effective", alpha=0.5, bins=bins)
+    ax.hist(vra_majority[group_name], label=f"{group_name} Majority", alpha=0.5, bins=bins)
+    ax.set_title(f"{group_name} Effectiveness vs Majority Histogram")
+    ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
+    ax.legend(); fig.tight_layout();
+    mpld3.save_html(fig, f"{OUTPUT_FILE}-{group_name}-{suffix}-Majority-Histogram.html")
+    mpld3.save_json(fig, f"{OUTPUT_FILE}-{group_name}-{suffix}-Majority-Histogram.json")
+    plt.savefig(f"{OUTPUT_FILE}-{group_name}-{suffix}-Majority-Histogram.png", dpi=200)
+    plt.close(fig)
     
 def render_ensemble_charts_histogram(dem_seats, suffix):
-    fig, ax = plt.subplots(figsize=(8.2, 7.2))
+    fig, ax = plt.subplots(figsize=(5.46, 7.2))
 
     bins = np.arange(min(dem_seats), max(dem_seats) + 2) - 0.5
     ax.hist(dem_seats, bins=bins)
@@ -309,11 +337,10 @@ def render_ensemble_charts_histogram(dem_seats, suffix):
     ax.set_xlabel('Democratic Seats')
     gen_ticks = []
     counter = 0
-    while counter <= int(sys.argv[3]):
-        gen_ticks.append(f"{counter}/{int(sys.argv[3])-counter}")
+    while counter <= NUM_DISTRICTS:
+        gen_ticks.append(f"{counter}/{NUM_DISTRICTS-counter}")
         counter = counter + 1
-    ax.set_xticks(range(int(sys.argv[3]) + 1), gen_ticks)
-
+    ax.set_xticks(range(NUM_DISTRICTS + 1), gen_ticks)
     mpld3.save_html(fig, f"{OUTPUT_FILE}-{suffix}-Splits.html")
     mpld3.save_json(fig, f"{OUTPUT_FILE}-{suffix}-Splits.json")
     plt.savefig(f"{OUTPUT_FILE}-{suffix}-Splits.png", dpi=200)
@@ -350,7 +377,7 @@ if __name__ == "__main__":
             ])
         
         # Aggregate
-        agg = {"plans": [], "dem_seats": [], "effectiveness": {g: [] for g in GROUPS.keys()}, "district_shares": [], "interesting_plans": []}
+        agg = {"plans": [], "dem_seats": [], "effectiveness": {g: [] for g in GROUPS.keys()}, "majority": {g: [] for g in GROUPS.keys()}, "district_shares": [], "interesting_plans": []}
         for r in results:
             agg["plans"].extend(r["plans"])
             agg["dem_seats"].extend(r["dem_seats"])
@@ -358,6 +385,7 @@ if __name__ == "__main__":
             agg["interesting_plans"].extend(r["interesting_plans"])
             for g in GROUPS.keys():
                 agg["effectiveness"][g].extend(r["effectiveness"][g])
+                agg["majority"][g].extend(r["majority"][g])
         
         agg["interesting_plans"].sort(key=lambda x: (x["extreme_score"], x["total_effective"]), reverse=True)
         agg["interesting_plans"] = agg["interesting_plans"][:10]
@@ -380,13 +408,15 @@ if __name__ == "__main__":
         render_minority_percentage_boxplot(nonvra_boxes, enacted_dots, group_name, "NonVRA")
         render_minority_effectiveness_boxplot(group_name, vra_res["effectiveness"], nonvra_res["effectiveness"], baseline_counts)
         render_minority_effectiveness_histogram(group_name, vra_res["effectiveness"], nonvra_res["effectiveness"])
+        render_minority_effectiveness_majority_histogram(group_name, vra_res["effectiveness"], vra_res["majority"], "VRA")
+        render_minority_effectiveness_majority_histogram(group_name, nonvra_res["effectiveness"], nonvra_res["majority"], "NonVRA")
     render_ensemble_charts_histogram(vra_res["dem_seats"], "VRA")
     render_ensemble_charts_histogram(nonvra_res["dem_seats"], "NonVRA")
 
     # Final Save
     with open(f"{OUTPUT_FILE}-VRA.json", "w") as f:
-        json.dump({k: vra_res[k] for k in ["dem_seats", "effectiveness", "district_shares", "interesting_plans"]}, f)
+        json.dump({k: vra_res[k] for k in ["dem_seats", "effectiveness", "majority", "district_shares", "interesting_plans"]}, f)
     with open(f"{OUTPUT_FILE}-NonVRA.json", "w") as f:
-        json.dump({k: nonvra_res[k] for k in ["dem_seats", "effectiveness", "district_shares", "interesting_plans"]}, f)
+        json.dump({k: nonvra_res[k] for k in ["dem_seats", "effectiveness", "majority", "district_shares", "interesting_plans"]}, f)
 
     print(f"Successfully collected {len(vra_res['plans'])} VRA and {len(nonvra_res['plans'])} Non-VRA plans.")
