@@ -1,22 +1,35 @@
-https://drive.google.com/drive/u/1/folders/15kRG18Uh1E72jC9pNKBkbymUT1s087vH
-download NEW_GA_precinct_ei_fat_with_dist.geojson
-
-Make sure to change the configurations to match your local workspace.
-
-By default the code generates 256 plans and it generates the following:
+By default the code does not generate plans - the argument for number of plans should be input separately.
+The code generates the following:
     District-level box and whisker plots for each racial category
-    Ensemble Charts
+    Ensemble Charts for Democratic/Republican victories
+    Minority-Effectiveness vs Minority-Majority Charts
+    Box and Whisker for VRA and Non-VRA districts for Minority and White groups
+    Minority-Effectiveness Comparison for VRA and Non-VRA districts
     
     The files are generated as html, json, and png.
 
 source new-vra/bin/activate
-python3 new_vra.py NEW_GA_precinct_ei_fat_with_dist.geojson (GeoJSON file to be used) \
-                   GA-Precinct-EI (file name without suffix)
-                   14 (number of districts)
+python3 new_vra_parallel.py IA-Precinct-EI-GeoJSON.json
+                            Complete_256_High/NEW-IA-Precinct (Directory / Filename of the output files)
+                            4 (Number of Districts of State - IA has 4, GA has 14)
+                            256 (Number of Districts to generate)
+                            0.75 (Target Effectiveness)
 
 TODO Next:
-* Ask Dai to get District Numbers for Precincts (both IA and GA)
-* Fix the client side code
 * Add Prototype for server side action for loading mpld3 charts
     * This affects ALL but Gingles and State charts
-* Does this code have parallelization?
+* Generate interesting GeoJSON for districts (from 1 to 14 - with justifications)
+    * 1 - Max. Dem seats
+    * 2 - Max. Rep seats
+    * 3 - Max. Hispanic Majority
+    * 4 - Max. Black Majority
+    * 5 - Max. Asian Majority
+    * 6 - Max. Hispanic Effective
+    * 7 - Max. Black Effective
+    * 8 - Max. Hispanic Effective
+    * 9 - Min. Hispanic Majority
+    * 10 - Min. Black Majority
+    * 11 - Min. Asian Majority
+    * 12 - Min. Hispanic Effective
+    * 13 - Min. Black Effective
+    * 14 - Min. Hispanic Effective
