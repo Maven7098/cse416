@@ -7,6 +7,8 @@ import axios from 'axios';
 function CompareChart({ activeState, activeRace, currentRace, boxandWhiskerData, minorityEffectivenessData }){
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   const [vraImpactThresholdTable, setVraImpactThresholdTable] = useState([]);
+  const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
+  const [minorityEffectivenessData, setMinorityEffectivenessData] = useState([]);
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   // There are racial versions of all of those data
@@ -21,15 +23,23 @@ function CompareChart({ activeState, activeRace, currentRace, boxandWhiskerData,
   }, [activeState]);
 
   let vraImpactThresholdData = vraImpactThresholdTable.BLACK;
+  let currentBoxandWhiskerData = "";
+  let currentMinorityEffectivenessData = "";
   switch (activeRace) {
         case "HISPANIC":
             vraImpactThresholdData = vraImpactThresholdTable.HISPANIC;
+            currentBoxandWhiskerData = boxandWhiskerData.HISPANIC
+            currentMinorityEffectivenessData = minorityEffectivenessData.HISPANIC
             break;
         case "BLACK":
             vraImpactThresholdData = vraImpactThresholdTable.BLACK;
+            currentBoxandWhiskerData = boxandWhiskerData.BLACK
+            currentMinorityEffectivenessData = minorityEffectivenessData.BLACK
             break;
         case "ASIAN":
             vraImpactThresholdData = vraImpactThresholdTable.ASIAN;
+            currentBoxandWhiskerData = boxandWhiskerData.ASIAN
+            currentMinorityEffectivenessData = minorityEffectivenessData.ASIAN
             break;
     }
 

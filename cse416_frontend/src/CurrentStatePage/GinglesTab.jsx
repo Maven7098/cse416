@@ -30,7 +30,7 @@ function GinglesTab({activeState, activeRace, currentRace, latitude, longitude})
           // setGinglesForumla(response.data[1]);
           setPrecinctGeoJsonData(response.data[1]);
           // EiData and EiKdeData is 3 racial groups combined
-          // Call them through response.data[2]["BLACK"]
+          // Call them through response.data[2].BLACK
           setEiData(response.data[2]);
           setEiKdeData(response.data[3]);
         })

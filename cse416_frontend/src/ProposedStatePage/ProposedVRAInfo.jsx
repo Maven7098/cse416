@@ -8,16 +8,16 @@ function ProposedVRAInfo({ activeRace, currentRace, ensembleSplitData, boxandWhi
     let currentMinorityEffectivenessData = ""
     switch (activeRace) {
         case "HISPANIC":
-            currentBoxandWhiskerData = boxandWhiskerData["HISPANIC"]
-            currentMinorityEffectivenessData = minorityEffectivenessData["HISPANIC"]
+            currentBoxandWhiskerData = boxandWhiskerData.HISPANIC
+            currentMinorityEffectivenessData = minorityEffectivenessData.HISPANIC
         break;
         case "BLACK":
-            currentBoxandWhiskerData = boxandWhiskerData["BLACK"]
-            currentMinorityEffectivenessData = minorityEffectivenessData["BLACK"]
+            currentBoxandWhiskerData = boxandWhiskerData.BLACK
+            currentMinorityEffectivenessData = minorityEffectivenessData.BLACK
         break;
         case "ASIAN":
-            currentBoxandWhiskerData = boxandWhiskerData["ASIAN"]
-            currentMinorityEffectivenessData = minorityEffectivenessData["ASIAN"]
+            currentBoxandWhiskerData = boxandWhiskerData.ASIAN
+            currentMinorityEffectivenessData = minorityEffectivenessData.ASIAN
         break;
     }
 

@@ -18,7 +18,7 @@ function MapTab({activeState, activeRace, currentRace, currentMode, latitude, lo
     const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
     const [ensembleSplitData, setEnsembleSplitData] = useState(null);
     const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
-    const [minorityEffectivenessData, setMniorityEffectivenessData] = useState([]);
+    const [minorityEffectivenessData, setMinorityEffectivenessData] = useState([]);
 
     // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
     useEffect(() => {
@@ -35,7 +35,7 @@ function MapTab({activeState, activeRace, currentRace, currentMode, latitude, lo
           setDistrictGeoJsonData(districtPayload);
           setEnsembleSplitData(ensemblePayload && !Array.isArray(ensemblePayload) ? ensemblePayload : null);
           setBoxandWhiskerData(Array.isArray(payload[2]) ? payload[2] : []);
-          setMniorityEffectivenessData(Array.isArray(payload[3]) ? payload[3] : []);
+          setMinorityEffectivenessData(Array.isArray(payload[3]) ? payload[3] : []);
         })
         .catch(error => console.log(error.response?.data ?? error.message))
         // If Active State changes, then also reset districtData

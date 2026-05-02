@@ -18,20 +18,20 @@ function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace
     }
     const mapRef = useRef(null)
 
-    let currentEiData = ""
-    let currentEiKdeData = ""
+    let currentEiData = eiData.BLACK
+    let currentEiKdeData = eiKdeData.BLACK
     switch (activeRace) {
         case "HISPANIC":
-            currentEiData = eiData["HISPANIC"]
-            currentEiKdeData = eiKdeData["HISPANIC"]
+            currentEiData = eiData.HISPANIC
+            currentEiKdeData = eiKdeData.HISPANIC
         break;
         case "BLACK":
-            currentEiData = eiData["BLACK"]
-            currentEiKdeData = eiKdeData["BLACK"]
+            currentEiData = eiData.BLACK
+            currentEiKdeData = eiKdeData.BLACK
         break;
         case "ASIAN":
-            currentEiData = eiData["ASIAN"]
-            currentEiKdeData = eiKdeData["ASIAN"]
+            currentEiData = eiData.ASIAN
+            currentEiKdeData = eiKdeData.ASIAN
         break;
     }
 
