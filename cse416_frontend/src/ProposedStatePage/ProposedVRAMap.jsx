@@ -24,9 +24,6 @@ function ProposedVRAMap({ activeState, activeRace, currentRace, activeMap, latit
     };
   }
 
-    const width = 900;
-    const proposedHeight = 320;
-
   return (
     // Load the GeoJSON for the districting map
     // For Map 1 only: Map 2 does not have districting map
@@ -37,7 +34,7 @@ function ProposedVRAMap({ activeState, activeRace, currentRace, activeMap, latit
     <div className="leaflet-containerset">
         {/* GUI-19 - Display an interesting district plan */}
       <div className='leaflet-container-big'>
-        <h3>Proposed District Map</h3>
+        <h3>Ensemble District Map</h3>
         <MapContainer center={[latitude, longitude]} key={JSON.stringify(activeMap)}
         zoom={7} className="leaflet-container" ref={mapRef} id={`map-container-district-${activeMap}`}
         whenReady={() => resizeMap(mapRef)}>
@@ -45,7 +42,7 @@ function ProposedVRAMap({ activeState, activeRace, currentRace, activeMap, latit
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {/* <GeoJSON data={activeMap} style={districtWindow} key={JSON.stringify(activeMap)}/> */}
+          <GeoJSON data={activeMap} style={districtWindow} key={JSON.stringify(activeMap)}/>
         </MapContainer>
       </div>
       <div className='leaflet-container-big'>

@@ -31,7 +31,7 @@ function MapTab({activeState, activeRace, currentRace, currentMode, latitude, lo
           if (Array.isArray(ensemblePayload) && ensemblePayload.length > 0) {
             ensemblePayload = ensemblePayload[0];
           }
-
+          // boxandWhiskerData and minorityEffectivenessData are 3 racial groups combined
           setDistrictGeoJsonData(districtPayload);
           setEnsembleSplitData(ensemblePayload && !Array.isArray(ensemblePayload) ? ensemblePayload : null);
           setBoxandWhiskerData(Array.isArray(payload[2]) ? payload[2] : []);
