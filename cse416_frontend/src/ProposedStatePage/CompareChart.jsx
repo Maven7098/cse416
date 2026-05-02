@@ -1,20 +1,12 @@
 import { useEffect, useState } from 'react';
 import VraImpactThresholdTable from './VraImpactThresholdTable.jsx'
-import BoxandWhiskerChart from './BoxandWhiskerChart';
-import MinorityEffectivenessHistogram from './MinorityEffectivenessHistogram.jsx'
 import 'leaflet/dist/leaflet.css';
 import '../CSS/StateInfo.css';
 import axios from 'axios';
 
-function CompareChart({ activeState, activeRace }){
+function CompareChart({ activeState, activeRace, currentRace, boxandWhiskerData, minorityEffectivenessData }){
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   const [vraImpactThresholdTable, setVraImpactThresholdTable] = useState([]);
-  const [compareBoxandWhiskerData, setCompareBoxandWhiskerData] = useState([]);
-  const [vraHistogram, setVraHistogram] = useState([]);
-  const [nonVraHistogram, setNonVraHistogram] = useState([]);
-
-  const width = 600;
-  const height = 320;
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   // There are racial versions of all of those data
@@ -48,8 +40,12 @@ function CompareChart({ activeState, activeRace }){
         <VraImpactThresholdTable data={vraImpactThresholdData} />
       </div>
       <div className='leaflet-container-big'>
-        <BoxandWhiskerChart width={width} height={height} data={compareBoxandWhiskerData} />
-        <MinorityEffectivenessHistogram vraData={vraHistogram} nonVraData={nonVraHistogram} width={width} height={height} />
+        <h3 style={{marginBottom: "0.5rem"}}>{currentRace} distribution in districts</h3>
+        <h5>Box and Whisker Data</h5>
+        {boxandWhiskerData && <Mpld3Chart data={boxandWhiskerData} figId="box-whisker" />}
+        <h3 style={{marginBottom: "0.5rem"}}>{currentRace} distribution in districts</h3>
+        <h5>{currentRace} Effectiveness vs Majority Districts</h5>
+        {minorityEffectivenessData && <Mpld3Chart data={minorityEffectivenessData} figId="minority-effectiveness" />}
       </div>
     </div>
   );

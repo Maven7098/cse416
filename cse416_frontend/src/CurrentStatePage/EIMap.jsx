@@ -22,16 +22,16 @@ function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace
     let currentEiKdeData = ""
     switch (activeRace) {
         case "HISPANIC":
-            currentEiData = eiData[0]
-            currentEiKdeData = eiData[0]
+            currentEiData = eiData["HISPANIC"]
+            currentEiKdeData = eiKdeData["HISPANIC"]
         break;
         case "BLACK":
-            currentEiData = eiData[1]
-            currentEiKdeData = eiData[1]
+            currentEiData = eiData["BLACK"]
+            currentEiKdeData = eiKdeData["BLACK"]
         break;
         case "ASIAN":
-            currentEiData = eiData[2]
-            currentEiKdeData = eiData[2]
+            currentEiData = eiData["ASIAN"]
+            currentEiKdeData = eiKdeData["ASIAN"]
         break;
     }
 
@@ -159,13 +159,14 @@ function EIMap({ precinctGeoJsonData, currentMode, eiData, eiKdeData, activeRace
                     {/* EI Analysis */}
                     <section>
                         <h5>EI Analysis</h5>
-                        <Mpld3Chart data={currentEiData} figId="ei-data" />
+
+                        {currentEiData ? <Mpld3Chart data={currentEiData} figId="ei-data" /> : <p>EI Analysis Data not available yet.</p>}
                     </section>
 
                     {/* Kernel Data Results */}
                     <section>
                         <h5>EI KDE (Kernel Data) Results</h5>
-                        <Mpld3Chart data={currentEiKdeData} figId="ei-kde" />
+                        {currentEiKdeData ? <Mpld3Chart data={currentEiKdeData} figId="ei-kde-data" /> : <p>EI KDE Data not available yet.</p>}
                     </section>
                 </div>
             </div>

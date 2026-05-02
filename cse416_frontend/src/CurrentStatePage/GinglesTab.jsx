@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-function GinglesTab({activeState, activeRace, latitude, longitude}) {
+function GinglesTab({activeState, activeRace, currentRace, latitude, longitude}) {
   // Set Current State - Name, Latitude, Longitude
   const [ginglesData, setGinglesData] = useState("");
   const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
@@ -29,6 +29,8 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
           setGinglesData(response.data[0]);
           // setGinglesForumla(response.data[1]);
           setPrecinctGeoJsonData(response.data[1]);
+          // EiData and EiKdeData is 3 racial groups combined
+          // Call them through response.data[2]["BLACK"]
           setEiData(response.data[2]);
           setEiKdeData(response.data[3]);
         })
@@ -62,7 +64,7 @@ function GinglesTab({activeState, activeRace, latitude, longitude}) {
         <Col lg={true}>
           <Tab.Content>
             <Tab.Pane eventKey="gingles"><GinglesMap ginglesData={ginglesData} activeRace={activeRace} /></Tab.Pane>
-            <Tab.Pane eventKey="ei"><EIMap precinctGeoJsonData={precinctGeoJsonData} currentMode={currentMode} eiData={eiData} eiKdeData={eiKdeData} activeRace={activeRace} latitude={latitude} longitude={longitude} activeStateName={activeState.NAME} /></Tab.Pane>
+            <Tab.Pane eventKey="ei"><EIMap precinctGeoJsonData={precinctGeoJsonData} currentMode={currentMode} eiData={eiData} eiKdeData={eiKdeData} activeRace={activeRace} currentRace={currentRace} latitude={latitude} longitude={longitude} activeStateName={activeState.NAME} /></Tab.Pane>
             <Tab.Pane eventKey="gingles-about"><GinglesAbout /></Tab.Pane>
             <Tab.Pane eventKey="ei-about"><EIAbout /></Tab.Pane>
           </Tab.Content>

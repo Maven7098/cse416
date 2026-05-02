@@ -12,13 +12,13 @@ import '../CSS/CustomTab.css'
 import axios from 'axios';
 
 
-function MapTab({activeState, activeRace, currentMode, latitude, longitude}) {
+function MapTab({activeState, activeRace, currentRace, currentMode, latitude, longitude}) {
     const [activeMap, setactiveMap] = useState("Precinct");
 
     const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
     const [ensembleSplitData, setEnsembleSplitData] = useState(null);
     const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
-    const [circleData, setCircleData] = useState([]);
+    const [minorityEffectivenessData, setMniorityEffectivenessData] = useState([]);
 
     // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
     useEffect(() => {
@@ -35,7 +35,7 @@ function MapTab({activeState, activeRace, currentMode, latitude, longitude}) {
           setDistrictGeoJsonData(districtPayload);
           setEnsembleSplitData(ensemblePayload && !Array.isArray(ensemblePayload) ? ensemblePayload : null);
           setBoxandWhiskerData(Array.isArray(payload[2]) ? payload[2] : []);
-          setCircleData(Array.isArray(payload[3]) ? payload[3] : []);
+          setMniorityEffectivenessData(Array.isArray(payload[3]) ? payload[3] : []);
         })
         .catch(error => console.log(error.response?.data ?? error.message))
         // If Active State changes, then also reset districtData
@@ -64,8 +64,8 @@ function MapTab({activeState, activeRace, currentMode, latitude, longitude}) {
         </Col>
         <Col lg={true}>
           <Tab.Content>
-            <Tab.Pane eventKey="info"><ProposedVRAInfo activeRace={activeRace} ensembleSplitData={ensembleSplitData} boxandWhiskerData={boxandWhiskerData} circleData={circleData} /></Tab.Pane>
-            <Tab.Pane eventKey="map"><ProposedVRAMap activeState={activeState} activeMap={activeMap} activeRace={activeRace} latitude={latitude} longitude={longitude}  /></Tab.Pane>
+            <Tab.Pane eventKey="info"><ProposedVRAInfo activeRace={activeRace} currentRace={currentRace} ensembleSplitData={ensembleSplitData} boxandWhiskerData={boxandWhiskerData} minorityEffectivenessData={minorityEffectivenessData} /></Tab.Pane>
+            <Tab.Pane eventKey="map"><ProposedVRAMap activeState={activeState} activeMap={activeMap} activeRace={activeRace} latitude={latitude} longitude={longitude} /></Tab.Pane>
           </Tab.Content>
         </Col>
       </Row>

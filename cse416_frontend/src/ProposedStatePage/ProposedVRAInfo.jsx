@@ -2,37 +2,24 @@ import { useState, useEffect, useRef } from 'react';
 import '../CSS/StateInfo.css';
 import Mpld3Chart from '../Chart/Mpld3Chart.jsx';
 
-// Prototype data
-import ensembleSplitTestNonVRA from '../../../cse416_backend_java/src/main/resources/assets/ga/GA-Precinct-NonVRA-Splits.json'
-import boxandWhiskerTestNonVRA from '../../../cse416_backend_java/src/main/resources/assets/ga/GA-Precinct-NonVRA-Asian-Box.json'
+function ProposedVRAInfo({ activeRace, currentRace, ensembleSplitData, boxandWhiskerData, minorityEffectivenessData }){
 
-function ProposedVRAInfo({ activeRace, ensembleSplitData, boxandWhiskerData, circleData }){
-
-    let currentRace = "Black / African American"
+    let currentBoxandWhiskerData = ""
+    let currentMinorityEffectivenessData = ""
     switch (activeRace) {
         case "HISPANIC":
-            currentRace = "Hispanic / Latino";
-            break;
+            currentBoxandWhiskerData = boxandWhiskerData["HISPANIC"]
+            currentMinorityEffectivenessData = minorityEffectivenessData["HISPANIC"]
+        break;
         case "BLACK":
-            currentRace = "Black / African American";
-            break;
+            currentBoxandWhiskerData = boxandWhiskerData["BLACK"]
+            currentMinorityEffectivenessData = minorityEffectivenessData["BLACK"]
+        break;
         case "ASIAN":
-            currentRace = "Asian / Asian American";
-            break;
+            currentBoxandWhiskerData = boxandWhiskerData["ASIAN"]
+            currentMinorityEffectivenessData = minorityEffectivenessData["ASIAN"]
+        break;
     }
-
-    const MyChart = () => {
-        const svgRef = useRef();
-
-        useEffect(() => {
-            const svg = d3.select(svgRef.current);
-            testEiData
-        }, []);
-
-        return <svg ref={svgRef}></svg>;
-    };
-
-
 
     return (
         <div>
@@ -40,13 +27,17 @@ function ProposedVRAInfo({ activeRace, ensembleSplitData, boxandWhiskerData, cir
                 <div className='leaflet-container-big'>
                 <h3 style={{marginBottom: "0.5rem"}}>Simulated Elections</h3>
                 <h5>D/R: Democratic Victory/Republican Victory</h5>
-                <Mpld3Chart data={ensembleSplitTestNonVRA} figId="ensemble-splits" />
+                {ensembleSplitData && <Mpld3Chart data={ensembleSplitData} figId="ensemble-splits" />}
                 </div>
                 <div className='leaflet-container-big'>
                 <h3 style={{marginBottom: "0.5rem"}}>{currentRace} distribution in districts</h3>
                 <h5>Box and Whisker Data</h5>
-                <Mpld3Chart data={boxandWhiskerTestNonVRA} figId="box-whisker" />
-                {/* <BoxandWhiskerExtra /> */}
+                {currentBoxandWhiskerData && <Mpld3Chart data={currentBoxandWhiskerData} figId="box-whisker" />}
+                </div>
+                <div className='leaflet-container-big'>
+                <h3 style={{marginBottom: "0.5rem"}}>{currentRace} distribution in districts</h3>
+                <h5>{currentRace} Effectiveness vs Majority Districts</h5>
+                {currentMinorityEffectivenessData && <Mpld3Chart data={currentMinorityEffectivenessData} figId="minority-effectiveness" />}
                 </div>
             </div>
         </div>
