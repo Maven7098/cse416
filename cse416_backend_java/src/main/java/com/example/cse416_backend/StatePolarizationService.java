@@ -45,9 +45,7 @@ public class StatePolarizationService {
 
     private JsonNode getLocalPayload(String currentState) throws IOException {
         String stateCodeUpper = currentState.toUpperCase();
-        String resourceName = currentState.equals("ga")
-            ? stateCodeUpper + "-Polarization-EI-GeoJSON.json"
-            : stateCodeUpper + "-Precinct-EI-GeoJSON.json";
+        String resourceName = stateCodeUpper + "-Polarization-EI-GeoJSON.json";
 
         return objectMapper.readTree(
             new ClassPathResource("assets/" + currentState + "/" + resourceName).getInputStream()
