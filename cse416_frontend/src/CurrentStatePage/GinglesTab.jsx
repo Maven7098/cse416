@@ -72,7 +72,7 @@ function GinglesTab({
           <Col lg={true}>
             <Tab.Content>
               <Tab.Pane eventKey="gingles">
-                <GinglesMap ginglesData={ginglesData} activeRace={activeRace} />
+                <GinglesMap ginglesData={ginglesData} activeRace={activeRace} currentRace={currentRace} />
               </Tab.Pane>
               <Tab.Pane eventKey="ei">
                 <EIMap
