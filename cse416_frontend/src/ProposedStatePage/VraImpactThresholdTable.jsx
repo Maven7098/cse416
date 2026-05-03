@@ -10,6 +10,8 @@ function VraImpactThresholdTable({ data, race, activePrecinct }) {
     );
   }
   return (
+    // data has [vra_constrained_enacted, vra_constrained_proportionality, vra_constrained_both,
+    // nonvra_constrained_enacted, nonvra_constrained_proportionality, nonvra_constrained_both]
     <div>
       <table className="fixed-table">
         <thead>
@@ -27,8 +29,8 @@ function VraImpactThresholdTable({ data, race, activePrecinct }) {
               Satisfies Enacted Effectiveness (number of effective districts in
               plan)
             </td>
-            <td>{data.FALSE[0]}</td>
-            <td>{data.TRUE[0]}</td>
+            <td>{data[3]}</td>
+            <td>{data[0]}</td>
           </tr>
           <tr>
             {/* Rough Proportionality: from effectiveness.json */}
@@ -38,13 +40,13 @@ function VraImpactThresholdTable({ data, race, activePrecinct }) {
               Satisfies Rough Proportionality (number of effective districts
               proportional to demographics)
             </td>
-            <td>{data.FALSE[1]}</td>
-            <td>{data.TRUE[1]}</td>
+            <td>{data[4]}</td>
+            <td>{data[1]}</td>
           </tr>
           <tr>
             <td>Satisfies both conditions above, jointly</td>
-            <td>{data.FALSE[2]}</td>
-            <td>{data.TRUE[2]}</td>
+            <td>{data[5]}</td>
+            <td>{data[2]}</td>
           </tr>
         </tbody>
       </table>

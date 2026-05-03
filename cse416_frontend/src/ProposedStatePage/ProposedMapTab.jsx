@@ -6,6 +6,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Dropdown from "react-bootstrap/Dropdown";
 import ProposedVRAInfo from "./ProposedVRAInfo.jsx";
 // import ProposedVRAMap from "./ProposedVRAMap.jsx";
+import DatasetAbout from "./DatasetAbout.jsx"
 import { useState, useEffect } from "react";
 import "../CSS/CustomTab.css";
 
@@ -42,7 +43,7 @@ function MapTab({
       })
       .catch((error) => console.log(error.response?.data ?? error.message));
     // If Active State changes, then also reset districtData
-    setDistrictGeoJsonData("");
+    // setDistrictGeoJsonData("");
   }, [activeState, currentMode, currentCount, currentThreshold]);
 
   return (
@@ -53,6 +54,12 @@ function MapTab({
             <Nav variant="pills" className="flex-column stateinfo-tabs">
               <Nav.Item>
                 <Nav.Link eventKey="info">State Summary</Nav.Link>
+              </Nav.Item>
+              {/* <Nav.Item>
+                <Nav.Link eventKey="map">Interesting Maps</Nav.Link>
+              </Nav.Item> */}
+              <Nav.Item>
+                <Nav.Link eventKey="about">About Datasets</Nav.Link>
               </Nav.Item>
               <NavDropdown title="Select Dataset">
                     <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("Low")}}>
@@ -67,10 +74,10 @@ function MapTab({
                     <NavDropdown.Item onClick={() => {setCurrentCount(4096); setCurrentThreshold("Low")}}>
                       4096_Low
                     </NavDropdown.Item>
-                    <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("Medium")}}>
+                    <NavDropdown.Item onClick={() => {setCurrentCount(4096); setCurrentThreshold("Medium")}}>
                       4096_Medium
                     </NavDropdown.Item>
-                    <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("High")}}>
+                    <NavDropdown.Item onClick={() => {setCurrentCount(4096); setCurrentThreshold("High")}}>
                       4096_High
                     </NavDropdown.Item>
               </NavDropdown>
@@ -104,6 +111,9 @@ function MapTab({
                   longitude={longitude}
                 />
               </Tab.Pane> */}
+              <Tab.Pane eventKey="about">
+                <DatasetAbout />
+              </Tab.Pane>
             </Tab.Content>
           </Col>
         </Row>
