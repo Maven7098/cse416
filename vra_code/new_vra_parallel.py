@@ -28,8 +28,8 @@ INPUT_FILE = sys.argv[1]
 POP_COL = "TOTAL"
 ASSIGN_COL = "DISTRICT"
 
-DEM_COL = "TOTAL_DEM"
-REP_COL = "TOTAL_REP"
+DEM_COL = "DEMOCRATIC"
+REP_COL = "REPUBLICAN"
 
 # White Population is required as it is needed to print in box and whisker comparison
 GROUPS = {
@@ -40,7 +40,7 @@ GROUPS = {
         "reg_rep_col": "BLACK_REP",
     },
     "Hispanic": {
-        "pop_col": "WHITE",
+        "pop_col": "HISPANIC",
         "reg_total_col": "HISPANIC_REG",
         "reg_dem_col": "HISPANIC_DEM",
         "reg_rep_col": "HISPANIC_REP",
@@ -372,6 +372,57 @@ def render_ensemble_threshold(group_name, vra_eff, nonvra_eff, baseline_counts, 
     return [vra_count_baseline, vra_count_proportionality, vra_count_both,
             nonvra_count_baseline, nonvra_count_proportionality, nonvra_count_both]
     
+def save_interesting_plans_as_geojsons(base_gdf, interesting_plans, ensemble_type):
+    threshold_name = str(EFFECTIVENESS_THRESHOLD).replace(".", "p")
+
+    for rank, interesting_plan in enumerate(interesting_plans, start=1):
+        # Make a copy so the original gdf is not changed
+        plan_gdf = base_gdf.copy()
+
+        # The stored plan is:
+        # ID -> district number
+        plan_assignment = interesting_plan["plan"]
+
+        # Convert keys to strings to avoid int/string mismatch issues
+        plan_assignment_lookup = {
+            str(precinct_id): district
+            for precinct_id, district in plan_assignment.items()
+        }
+
+        # Preserves the original enacted district
+        plan_gdf["ORIGINAL_DISTRICT"] = plan_gdf["DISTRICT"]
+
+        # Replace DISTRICT with the generated plan's district assignment
+        plan_gdf["DISTRICT"] = (
+            plan_gdf["ID"]
+            .astype(str)
+            .map(plan_assignment_lookup)
+        )
+
+        # Save useful metadata columns for debugging/comparison
+        plan_gdf["INTERESTING_RANK"] = rank
+        plan_gdf["ENSEMBLE_TYPE"] = ensemble_type
+        plan_gdf["DEM_SEATS"] = interesting_plan["dem_seats"]
+        plan_gdf["EXTREME_SCORE"] = interesting_plan["extreme_score"]
+        plan_gdf["TOTAL_EFFECTIVE"] = interesting_plan["total_effective"]
+
+        # File name uses the sys.argv-based values
+        geojson_name = (
+            f"{OUTPUT_FILE}"
+            f"-{ensemble_type}"
+            f"-districts{NUM_DISTRICTS}"
+            f"-target{TARGET_PLANS}"
+            f"-threshold{threshold_name}"
+            f"-interesting{rank}"
+            f"-dem{interesting_plan['dem_seats']}"
+            f"-eff{interesting_plan['total_effective']}"
+            f".geojson"
+        )
+
+        plan_gdf.to_file(geojson_name, driver="GeoJSON")
+
+        print(f"Saved interesting plan GeoJSON: {geojson_name}")
+
 
 # ============================================================
 # MAIN EXECUTION
@@ -456,5 +507,22 @@ if __name__ == "__main__":
         json.dump({k: vra_res[k] for k in ["dem_seats", "effectiveness", "majority", "district_shares", "interesting_plans"]}, f)
     with open(f"{OUTPUT_FILE}-NonVRA.json", "w") as f:
         json.dump({k: nonvra_res[k] for k in ["dem_seats", "effectiveness", "majority", "district_shares", "interesting_plans"]}, f)
+
+    # ---------------------------------
+    # Converts the interesting plans into geojsons, using the generated plan's assignment
+    # ---------------------------------
+    save_interesting_plans_as_geojsons(
+        base_gdf=gdf,
+        interesting_plans=vra_res["interesting_plans"],
+        ensemble_type="VRA"
+    )
+
+    save_interesting_plans_as_geojsons(
+        base_gdf=gdf,
+        interesting_plans=nonvra_res["interesting_plans"],
+        ensemble_type="NonVRA"
+    )
+    # ---------------------------------
+    # ---------------------------------
 
     print(f"Successfully collected {len(vra_res['plans'])} VRA and {len(nonvra_res['plans'])} Non-VRA plans.")
