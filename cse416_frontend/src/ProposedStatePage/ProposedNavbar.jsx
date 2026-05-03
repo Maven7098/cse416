@@ -3,6 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, Outlet } from "react-router-dom";
+import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../CSS/Navbar.css";
 
@@ -19,17 +20,20 @@ function ProposedNavbar({
   // I have initially thought of setting this on the server
   // But why do we need to do that? Is the latitude or longitude important?
   switch (activeState) {
-    // Since Hispanic/Latino are the only feasible racial category in Iowa, force activeRace to HISPANIC if Iowa is selected
     case "ia":
       activeStateName = "Iowa";
       destination = "iowa";
-      setActiveRace("HISPANIC");
       break;
     case "ga":
       activeStateName = "Georgia";
       destination = "georgia";
       break;
   }
+
+  // Iowa only supports Hispanic — force the race selection after render
+  useEffect(() => {
+    if (activeState === "ia") setActiveRace("HISPANIC");
+  }, [activeState]);
 
   return (
     <>

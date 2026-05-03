@@ -25,6 +25,7 @@ public class DataSeedService {
     private final StateInfoRepository stateInfoRepository;
     private final PrecinctsGinglesRepository precinctsGinglesRepository;
     private final PolarizationDataRepository polarizationDataRepository;
+    private final CompareDataRepository compareDataRepository;
 
     public DataSeedService(
         HomeGeoJsonRepository homeGeoJsonRepository,
@@ -32,13 +33,15 @@ public class DataSeedService {
         EnsembleDataRepository ensembleDataRepository,
         StateInfoRepository stateInfoRepository,
         PrecinctsGinglesRepository precinctsGinglesRepository,
-        PolarizationDataRepository polarizationDataRepository) {
+        PolarizationDataRepository polarizationDataRepository,
+        CompareDataRepository compareDataRepository) {
         this.homeGeoJsonRepository = homeGeoJsonRepository;
         this.boxDataRepository = boxDataRepository;
         this.ensembleDataRepository = ensembleDataRepository;
         this.stateInfoRepository = stateInfoRepository;
         this.precinctsGinglesRepository = precinctsGinglesRepository;
         this.polarizationDataRepository = polarizationDataRepository;
+        this.compareDataRepository = compareDataRepository;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -48,6 +51,7 @@ public class DataSeedService {
         try {
             seedHomeGeoJsonData();
             seedBoxData();
+            seedCompareData();
             seedEnsembleData();
             seedStateInfo();
             seedPrecinctsGingles();
@@ -138,9 +142,11 @@ public class DataSeedService {
 
                     Document variantDoc = new Document();
                     for (String race : RACES) {
-                        String path = base + race + "-" + mode + "-Box.json";
-                        String json = loadJsonStringFromClasspath(path);
-                        variantDoc.put(race, parseJsonAsArray(json));
+                        String boxPath = base + race + "-" + mode + "-Box.json";
+                        variantDoc.put(race, Document.parse(loadJsonStringFromClasspath(boxPath)));
+
+                        String histPath = base + race + "-" + mode + "-Majority-Histogram.json";
+                        variantDoc.put(race + "Histogram", Document.parse(loadJsonStringFromClasspath(histPath)));
                     }
                     payloadDoc.put(variantKey, variantDoc);
                 }
@@ -149,6 +155,45 @@ public class DataSeedService {
             boxDataRepository.save(new BoxDataDocument(stateCode, mode, payloadDoc));
             logger.info("  Seeded {} box_data {} document", stateUpper, mode);
         }
+    }
+
+    private void seedCompareData() {
+        try {
+            logger.info("Seeding compare_data collection...");
+            seedCompareDataForState("ia");
+            seedCompareDataForState("ga");
+            logger.info("compare_data seeding completed successfully");
+        } catch (IOException e) {
+            logger.error("Error seeding compare_data", e);
+        }
+    }
+
+    private void seedCompareDataForState(String stateCode) throws IOException {
+        String stateUpper = stateCode.toUpperCase();
+
+        if (compareDataRepository.findByCurrentState(stateCode).isPresent()) {
+            logger.info("  {} compare_data document already exists. Skipping.", stateUpper);
+            return;
+        }
+
+        Document payloadDoc = new Document();
+        for (String count : COUNTS) {
+            for (String threshold : THRESHOLDS) {
+                String folder = "Complete_" + count + "_" + threshold;
+                String variantKey = count + "_" + threshold;
+                String base = "assets/" + stateCode + "/" + folder
+                            + "/NEW-" + stateUpper + "-Precinct-";
+
+                Document variantDoc = new Document();
+                variantDoc.put("compareThreshold", Document.parse(loadJsonStringFromClasspath(base + "Compare-Threshold.json")));
+                variantDoc.put("compareBox", buildCompareRaceKeyedDoc(base, "-Compare-Box.json"));
+                variantDoc.put("compareHistogram", buildCompareRaceKeyedDoc(base, "-Compare-Histogram.json"));
+                payloadDoc.put(variantKey, variantDoc);
+            }
+        }
+
+        compareDataRepository.save(new CompareDataDocument(stateCode, payloadDoc));
+        logger.info("  Seeded {} compare_data document", stateUpper);
     }
 
     private void seedEnsembleData() {
@@ -186,6 +231,14 @@ public class DataSeedService {
             ensembleDataRepository.save(new EnsembleDataDocument(stateCode, mode, payloadDoc));
             logger.info("  Seeded {} ensemble_data {} document", stateUpper, mode);
         }
+    }
+
+    private Document buildCompareRaceKeyedDoc(String base, String fileSuffix) throws IOException {
+        Document raceKeyedDoc = new Document();
+        for (String race : RACES) {
+            raceKeyedDoc.put(race, Document.parse(loadJsonStringFromClasspath(base + race + fileSuffix)));
+        }
+        return raceKeyedDoc;
     }
 
     private void seedStateInfo() {

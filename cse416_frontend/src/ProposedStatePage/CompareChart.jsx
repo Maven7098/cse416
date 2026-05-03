@@ -11,9 +11,9 @@ function CompareChart({
   currentRace
 }) {
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
-  const [vraImpactThresholdTable, setVraImpactThresholdTable] = useState("");
-  const [boxandWhiskerData, setBoxandWhiskerData] = useState("");
-  const [minorityEffectivenessData, setMinorityEffectivenessData] = useState("");
+  const [vraImpactThresholdTable, setVraImpactThresholdTable] = useState(null);
+  const [compareBoxandWhiskerData, setCompareBoxandWhiskerData] = useState("");
+  const [compareHistogram, setCompareHistogram] = useState("");
 
   // 2 modes - district-vra (Voting Rights Act), district-non-vra (Race Blind Districting)
   // There are racial versions of all of those data
@@ -23,35 +23,29 @@ function CompareChart({
       .then((response) => {
         setVraImpactThresholdTable(response.data[0]);
         setCompareBoxandWhiskerData(response.data[1]);
-        setVraHistogram(response.data[2]);
-        setNonVraHistogram(response.data[3]);
+        setCompareHistogram(response.data[2]);
       })
       .catch((error) => console.log(error.response?.data ?? error.message));
   }, [activeState]);
 
-  const [vraImpactThresholdData, setVraImpactThresholdData] = useState(vraImpactThresholdTable.Black);
-  const [currentBoxandWhiskerData, setCurrentBoxandWhiskerData] = useState(boxandWhiskerData.Black);
-  const [currentMinorityEffectivenessData, setCurrentMinorityEffectivenessData] = useState(minorityEffectivenessData.Black);
+  const [vraImpactThresholdData, setVraImpactThresholdData] = useState(null);
 
   useEffect(() => {
     switch (activeRace) {
     case "HISPANIC":
-      setVraImpactThresholdData(vraImpactThresholdTable.Hispanic)
-      setCurrentBoxandWhiskerData(boxandWhiskerData.Hispanic)
-      setCurrentMinorityEffectivenessData(minorityEffectivenessData.Hispanic)
+      setVraImpactThresholdData(vraImpactThresholdTable?.Hispanic)
       break;
     case "BLACK":
-      setVraImpactThresholdData(vraImpactThresholdTable.Black)
-      setCurrentBoxandWhiskerData(boxandWhiskerData.Black)
-      setCurrentMinorityEffectivenessData(minorityEffectivenessData.Black)
+      setVraImpactThresholdData(vraImpactThresholdTable?.Black)
       break;
     case "ASIAN":
-      setVraImpactThresholdData(vraImpactThresholdTable.Asian)
-      currentBoxandWhiskerData(boxandWhiskerData.Asian)
-      setCurrentMinorityEffectivenessData(minorityEffectivenessData.Asian)
+      setVraImpactThresholdData(vraImpactThresholdTable?.Asian)
       break;
     }
-  }, [activeRace]);
+  }, [activeRace, vraImpactThresholdTable]);
+
+  const currentCompareBoxandWhiskerData = compareBoxandWhiskerData?.[activeRace];
+  const currentCompareHistogramData = compareHistogram?.[activeRace];
 
   return (
     // in accordance with the Navbar
@@ -67,18 +61,17 @@ function CompareChart({
           {currentRace} distribution in districts
         </h3>
         <h5>Box and Whisker Data</h5>
-        {boxandWhiskerData && (
-          <Mpld3Chart data={boxandWhiskerData} figId="box-whisker" />
+        {currentCompareBoxandWhiskerData && (
+          <Mpld3Chart data={currentCompareBoxandWhiskerData} figId="box-whisker" />
         )}
+      </div>
+      <div className="leaflet-container-big">
         <h3 style={{ marginBottom: "0.5rem" }}>
           {currentRace} distribution in districts
         </h3>
-        <h5>{currentRace} Effectiveness vs Majority Districts</h5>
-        {minorityEffectivenessData && (
-          <Mpld3Chart
-            data={minorityEffectivenessData}
-            figId="minority-effectiveness"
-          />
+        <h5>Compare Histogram</h5>
+        {currentCompareHistogramData && (
+          <Mpld3Chart data={currentCompareHistogramData} figId="compare-histogram" />
         )}
       </div>
     </div>

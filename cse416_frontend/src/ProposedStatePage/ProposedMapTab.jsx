@@ -16,7 +16,7 @@ function MapTab({
   activeState,
   activeRace,
   currentRace,
-  currentMode,
+  mode: currentMode,
   latitude,
   longitude,
 }) {

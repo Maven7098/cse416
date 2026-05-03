@@ -11,7 +11,7 @@ function ProposedVRAInfo({
 }) {
   let currentBoxandWhiskerData = "";
   let currentMinorityEffectivenessData = "";
-  switch (activeRace) {
+  switch (activeRace && boxandWhiskerData && minorityEffectivenessData ? activeRace : null) {
     case "HISPANIC":
       currentBoxandWhiskerData = boxandWhiskerData.HISPANIC;
       currentMinorityEffectivenessData = minorityEffectivenessData.HISPANIC;

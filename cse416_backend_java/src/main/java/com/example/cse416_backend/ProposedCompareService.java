@@ -5,7 +5,6 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,54 +12,47 @@ import java.io.IOException;
 @Service
 public class ProposedCompareService {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final String[] RACES = {"Asian", "Black", "Hispanic"};
 
-    public ProposedCompareService() {}
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final CompareDataRepository compareDataRepository;
+
+    public ProposedCompareService(CompareDataRepository compareDataRepository) {
+        this.compareDataRepository = compareDataRepository;
+    }
 
     // Returns:
-    // [0] Compare-Box charts (GUI-21): minority effectiveness box plots, one per race
-    // [1] Compare-Histogram charts (GUI-22): minority effectiveness histograms, one per race
-    // [2] VRA Impact Threshold Table (GUI-20): placeholder until Compare-Threshold.json is generated
+    // [0] VRA Impact Threshold Table (GUI-20): race-keyed {Black, Hispanic, Asian}
+    // [1] Compare-Box charts (GUI-21): race-keyed uppercase {ASIAN, BLACK, HISPANIC} mpld3 objects
+    // [2] Compare Histogram (GUI-22): race-keyed uppercase {ASIAN, BLACK, HISPANIC} mpld3 objects
     public ArrayNode getHomePayload(String currentState, String count, String threshold)
             throws IOException {
         ArrayNode response = objectMapper.createArrayNode();
         if (!currentState.equals("ia") && !currentState.equals("ga")) return response;
 
-        String folder = "Complete_" + count + "_" + threshold;
-        String prefix = "assets/" + currentState + "/" + folder
-                      + "/NEW-" + currentState.toUpperCase() + "-Precinct-";
+        String variantKey = count + "_" + threshold;
 
-        // [0] Compare-Box: one mpld3 chart object per race, tagged with race key
-        ArrayNode compareBox = objectMapper.createArrayNode();
-        for (String race : new String[]{"Asian", "Black", "Hispanic"}) {
-            JsonNode node = loadJsonNode(prefix + race + "-Compare-Box.json");
-            if (node.isObject()) {
-                ObjectNode tagged = ((ObjectNode) node).deepCopy();
-                tagged.put("race", race.toUpperCase());
-                compareBox.add(tagged);
-            }
-        }
-        response.add(compareBox);
+        CompareDataDocument compareDoc = compareDataRepository.findByCurrentState(currentState)
+            .orElseThrow(() -> new IOException(
+                "Missing compare_data for " + currentState));
 
-        // [1] Compare-Histogram: one mpld3 chart object per race, tagged with race key
-        ArrayNode compareHist = objectMapper.createArrayNode();
-        for (String race : new String[]{"Asian", "Black", "Hispanic"}) {
-            JsonNode node = loadJsonNode(prefix + race + "-Compare-Histogram.json");
-            if (node.isObject()) {
-                ObjectNode tagged = ((ObjectNode) node).deepCopy();
-                tagged.put("race", race.toUpperCase());
-                compareHist.add(tagged);
-            }
-        }
-        response.add(compareHist);
+        org.bson.Document variant = (org.bson.Document) compareDoc.getPayload().get(variantKey);
+        JsonNode thresholdNode = objectMapper.readTree(((org.bson.Document) variant.get("compareThreshold")).toJson());
 
-        // [2] VRA Impact Threshold Table — placeholder until Compare-Threshold.json is generated
-        response.add(objectMapper.createObjectNode());
+        response.add(thresholdNode);
+        response.add(buildUppercaseRaceKeyedNode((org.bson.Document) variant.get("compareBox")));
+        response.add(buildUppercaseRaceKeyedNode((org.bson.Document) variant.get("compareHistogram")));
 
         return response;
     }
 
-    private JsonNode loadJsonNode(String resourcePath) throws IOException {
-        return objectMapper.readTree(new ClassPathResource(resourcePath).getInputStream());
+    // Remaps title-case keys (Asian, Black, Hispanic) to uppercase (ASIAN, BLACK, HISPANIC)
+    private ObjectNode buildUppercaseRaceKeyedNode(org.bson.Document doc) throws IOException {
+        ObjectNode node = objectMapper.createObjectNode();
+        for (String race : RACES) {
+            node.set(race.toUpperCase(),
+                objectMapper.readTree(((org.bson.Document) doc.get(race)).toJson()));
+        }
+        return node;
     }
 }
