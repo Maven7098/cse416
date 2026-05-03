@@ -14,7 +14,7 @@ function GinglesMap({ ginglesData, activeRace }) {
   // And Render them on GinglesChart (Rename it to GinglesTable?)
   const [activePrecinct, setActivePrecinct] = useState("");
 
-  const width = 840;
+  const width = 1050;
   const height = 680;
 
   return (
@@ -27,7 +27,7 @@ function GinglesMap({ ginglesData, activeRace }) {
       {ginglesData ? (
         <>
           <div className="leaflet-containerset">
-            <div className="leaflet-container-big">
+            <div className="leaflet-container-big" style={{ flex: 2 }}>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 {/* Gingles Data */}
                 <h3>Racial Polarization Data</h3>

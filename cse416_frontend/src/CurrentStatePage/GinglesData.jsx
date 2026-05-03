@@ -6,7 +6,7 @@ import Tooltip from "../Chart/Tooltip";
 import Axis from "../Chart/Axis";
 import { regressionExp } from "d3-regression";
 
-const MARGIN = { top: 30, right: 30, bottom: 50, left: 180 };
+const MARGIN = { top: 30, right: 30, bottom: 50, left: 65 };
 
 function GinglesData({
   width,
