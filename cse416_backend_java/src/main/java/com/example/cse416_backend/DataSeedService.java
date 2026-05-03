@@ -7,10 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bson.Document;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 
 @Service
 public class DataSeedService {
@@ -19,6 +23,10 @@ public class DataSeedService {
     private static final String[] COUNTS = {"256", "4096"};
     private static final String[] THRESHOLDS = {"Low", "Medium", "High"};
     private static final String[] RACES = {"Asian", "Black", "Hispanic"};
+
+    @Value("${app.assets.path}")
+    private String assetsPath;
+
     private final HomeGeoJsonRepository homeGeoJsonRepository;
     private final BoxDataRepository boxDataRepository;
     private final EnsembleDataRepository ensembleDataRepository;
@@ -68,7 +76,7 @@ public class DataSeedService {
             logger.info("Seeding home_geojson collection...");
 
             if (homeGeoJsonRepository.findBycurrentState("ia").isEmpty()) {
-                String iaJsonString = loadJsonStringFromClasspath("assets/ia/IA-State-GeoJSON.json");
+                String iaJsonString = loadJsonString("assets/ia/IA-State-GeoJSON.json");
                 if (iaJsonString != null && !iaJsonString.isEmpty()) {
                     HomeGeoJsonDocument iaDoc = new HomeGeoJsonDocument();
                     iaDoc.setcurrentState("ia");
@@ -81,7 +89,7 @@ public class DataSeedService {
             }
 
             if (homeGeoJsonRepository.findBycurrentState("ga").isEmpty()) {
-                String gaJsonString = loadJsonStringFromClasspath("assets/ga/GA-State-GeoJSON.json");
+                String gaJsonString = loadJsonString("assets/ga/GA-State-GeoJSON.json");
                 if (gaJsonString != null && !gaJsonString.isEmpty()) {
                     HomeGeoJsonDocument gaDoc = new HomeGeoJsonDocument();
                     gaDoc.setcurrentState("ga");
@@ -99,10 +107,15 @@ public class DataSeedService {
         }
     }
 
-    private String loadJsonStringFromClasspath(String resourcePath) throws IOException {
+    private String loadJsonString(String resourcePath) throws IOException {
         try {
-            // Load from backend_java classpath resources
-            ClassPathResource resource = new ClassPathResource(resourcePath);
+            // Try loading from filesystem first using the configured assets path
+            Resource resource = new FileSystemResource(Paths.get(assetsPath, resourcePath).toFile());
+            if (!resource.exists()) {
+                // Fallback to classpath if not found on filesystem (e.g. if running from a clean jar)
+                resource = new ClassPathResource(resourcePath);
+            }
+            
             try (InputStream inputStream = resource.getInputStream()) {
                 return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             }
@@ -143,10 +156,10 @@ public class DataSeedService {
                     Document variantDoc = new Document();
                     for (String race : RACES) {
                         String boxPath = base + race + "-" + mode + "-Box.json";
-                        variantDoc.put(race, Document.parse(loadJsonStringFromClasspath(boxPath)));
+                        variantDoc.put(race, Document.parse(loadJsonString(boxPath)));
 
                         String histPath = base + race + "-" + mode + "-Majority-Histogram.json";
-                        variantDoc.put(race + "Histogram", Document.parse(loadJsonStringFromClasspath(histPath)));
+                        variantDoc.put(race + "Histogram", Document.parse(loadJsonString(histPath)));
                     }
                     payloadDoc.put(variantKey, variantDoc);
                 }
@@ -185,7 +198,7 @@ public class DataSeedService {
                             + "/NEW-" + stateUpper + "-Precinct-";
 
                 Document variantDoc = new Document();
-                variantDoc.put("compareThreshold", Document.parse(loadJsonStringFromClasspath(base + "Compare-Threshold.json")));
+                variantDoc.put("compareThreshold", Document.parse(loadJsonString(base + "Compare-Threshold.json")));
                 variantDoc.put("compareBox", buildCompareRaceKeyedDoc(base, "-Compare-Box.json"));
                 variantDoc.put("compareHistogram", buildCompareRaceKeyedDoc(base, "-Compare-Histogram.json"));
                 payloadDoc.put(variantKey, variantDoc);
@@ -223,7 +236,7 @@ public class DataSeedService {
                     String variantKey = count + "_" + threshold;
                     String path = "assets/" + stateCode + "/" + folder
                                 + "/NEW-" + stateUpper + "-Precinct-" + mode + "-Splits.json";
-                    String json = loadJsonStringFromClasspath(path);
+                    String json = loadJsonString(path);
                     payloadDoc.put(variantKey, Document.parse(json));
                 }
             }
@@ -236,7 +249,7 @@ public class DataSeedService {
     private Document buildCompareRaceKeyedDoc(String base, String fileSuffix) throws IOException {
         Document raceKeyedDoc = new Document();
         for (String race : RACES) {
-            raceKeyedDoc.put(race, Document.parse(loadJsonStringFromClasspath(base + race + fileSuffix)));
+            raceKeyedDoc.put(race, Document.parse(loadJsonString(base + race + fileSuffix)));
         }
         return raceKeyedDoc;
     }
@@ -256,7 +269,7 @@ public class DataSeedService {
         String stateCodeUpper = stateCode.toUpperCase();
         
         if (stateInfoRepository.findByCurrentState(stateCode).isEmpty()) {
-            String stateInfoJson = loadJsonStringFromClasspath(
+            String stateInfoJson = loadJsonString(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-State-Info.json");
             if (stateInfoJson != null && !stateInfoJson.isEmpty()) {
                 Document payloadDoc = new Document();
@@ -310,10 +323,10 @@ public class DataSeedService {
         String stateCodeUpper = stateCode.toUpperCase();
         String base = "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-" + race + "-";
 
-        String harrisJson    = loadJsonStringFromClasspath(base + "Harris-EI.json");
-        String harrisKdeJson = loadJsonStringFromClasspath(base + "Harris-KDE.json");
-        String trumpJson     = loadJsonStringFromClasspath(base + "Trump-EI.json");
-        String trumpKdeJson  = loadJsonStringFromClasspath(base + "Trump-KDE.json");
+        String harrisJson    = loadJsonString(base + "Harris-EI.json");
+        String harrisKdeJson = loadJsonString(base + "Harris-KDE.json");
+        String trumpJson     = loadJsonString(base + "Trump-EI.json");
+        String trumpKdeJson  = loadJsonString(base + "Trump-KDE.json");
 
         Document racePayload = new Document();
         racePayload.put("Harris", buildPolarizationCandidatePayload(harrisJson, harrisKdeJson));
@@ -336,7 +349,7 @@ public class DataSeedService {
         String stateCodeUpper = stateCode.toUpperCase();
         
         if (precinctsGinglesRepository.findByCurrentState(stateCode).isEmpty()) {
-            String ginglesJson = loadJsonStringFromClasspath(
+            String ginglesJson = loadJsonString(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles.json");
             if (ginglesJson != null && !ginglesJson.isEmpty()) {
                 Document payloadDoc = new Document();

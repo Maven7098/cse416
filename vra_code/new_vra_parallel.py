@@ -276,6 +276,7 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     scatter = ax.scatter(x_vals, y_vals, marker="o", label="Enacted Plan")
     mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(scatter, labels=labels))
     ax.set_title(f"{group_name} Population Percentage by Ordered District Bucket")
+    ax.set_xlabel("District Bucket")
     ax.set_ylabel(f"{group_name} Population Share")
     ax.legend(); ax.grid(True, axis="y", alpha=0.3)
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y:.0%}"))
@@ -286,7 +287,7 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     plt.close(fig)
 
 def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, baseline_counts):
-    fig, ax = plt.subplots(figsize=(8.2, 7.2))
+    fig, ax = plt.subplots(figsize=(5.96, 7.2))
     ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
     ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
     ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan")
@@ -302,12 +303,13 @@ def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, basel
     plt.close(fig)
 
 def render_minority_effectiveness_histogram(group_name, vra_eff, nonvra_eff):
-    fig, ax = plt.subplots(figsize=(8.2, 7.2))
+    fig, ax = plt.subplots(figsize=(5.96, 7.2))
     all_vals = vra_eff[group_name] + nonvra_eff[group_name]
     bins = np.arange(min(all_vals), max(all_vals) + 2) - 0.5
     ax.hist(vra_eff[group_name], label="VRA-Constrained", alpha=0.5, bins=bins)
     ax.hist(nonvra_eff[group_name], label="Race-Blind", alpha=0.5, bins=bins)
     ax.set_title(f"{group_name} Effectiveness Histogram")
+    ax.set_xlabel("Number of Districts")
     ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
     ax.legend(); fig.tight_layout();
     mpld3.save_html(fig, f"{OUTPUT_FILE}-{group_name}-Compare-Histogram.html")
@@ -322,6 +324,7 @@ def render_minority_effectiveness_majority_histogram(group_name, vra_eff, vra_ma
     ax.hist(vra_eff[group_name], label=f"{group_name} Effective", alpha=0.5, bins=bins)
     ax.hist(vra_majority[group_name], label=f"{group_name} Majority", alpha=0.5, bins=bins)
     ax.set_title(f"{group_name} Effectiveness vs Majority Histogram")
+    ax.set_xlabel("Number of Districts")
     ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
     ax.legend(); fig.tight_layout();
     mpld3.save_html(fig, f"{OUTPUT_FILE}-{group_name}-{suffix}-Majority-Histogram.html")

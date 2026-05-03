@@ -4,7 +4,6 @@ import * as d3 from "d3";
 import { useState } from "react";
 import Tooltip from "../Chart/Tooltip";
 import Axis from "../Chart/Axis";
-import { regressionExp } from "d3-regression";
 
 const MARGIN = { top: 30, right: 30, bottom: 50, left: 65 };
 
@@ -162,10 +161,6 @@ function GinglesData({
     );
   });
 
-  const exponentialRegression = regressionExp()
-    .x((d) => d.x) // x-accessor
-    .y((d) => d.y); // y-accessor
-
   const dataDem = data
     .filter((precinct) => precinct.DEMOCRATIC > precinct.REPUBLICAN)
     .map((precinct) => {
@@ -186,7 +181,6 @@ function GinglesData({
         y: (100 * precinct.DEMOCRATIC) / precinct.TOTAL,
       };
     });
-  const resultDem = exponentialRegression(dataDem);
   const dataRep = data
     .filter((precinct) => precinct.REPUBLICAN >= precinct.DEMOCRATIC)
     .map((precinct) => {
@@ -207,15 +201,6 @@ function GinglesData({
         y: (100 * precinct.REPUBLICAN) / precinct.TOTAL,
       };
     });
-  const resultRep = exponentialRegression(dataRep);
-
-  // 4. Use result to draw line (result.a is slope, result.b is intercept)
-  const lineBuilder = d3
-    .line()
-    .x((d) => xScale(d[0])) // Use the first value in the point array (x-coord)
-    .y((d) => yScale(d[1])); // Use the second value in the point array (y-coord)
-  const demPath = lineBuilder(resultDem);
-  const repPath = lineBuilder(resultRep);
 
   return (
     <div style={{ position: "relative" }} key={key}>
@@ -250,62 +235,36 @@ function GinglesData({
         >
           {/* Circles */}
           {allShapes}
-          {/* Lines - Democratic */}
-          <path
-            d={demPath}
-            opacity={1}
-            stroke="#000088"
-            fill="none"
-            strokeWidth={4}
-            clipPath="url(#gridClip)"
-            style={{
-              animation: `pathsFadeIn 0.1s ease-out forwards ${lineStartDelay}s`,
-              opacity: 0,
-            }}
-          />
-          {/* Lines - Republican */}
-          <path
-            d={repPath}
-            opacity={1}
-            stroke="#880000"
-            fill="none"
-            strokeWidth={4}
-            clipPath="url(#gridClip)"
-            style={{
-              animation: `pathsFadeIn 0.1s ease-out forwards ${lineStartDelay + 0.01}s`,
-              opacity: 0,
-            }}
-          />
           {/* Build a Legend */}
           <rect
             key="BOX"
-            width={220}
+            width={120}
             height={50}
             fill="#ffffff"
             stroke="#000000"
             fillOpacity={0.6}
-            x={boundsWidth - 210}
+            x={boundsWidth - 110}
             y={-20}
           />
           <circle
             key="DEMOCRATIC"
             r={6}
-            cx={boundsWidth - 195}
+            cx={boundsWidth - 90}
             cy={-5}
             fill="#0000ff"
           />
           <circle
             key="REPUBLICAN"
             r={6}
-            cx={boundsWidth - 195}
+            cx={boundsWidth - 90}
             cy={15}
             fill="#ff0000"
           />
-          <text x={boundsWidth - 180} y={0} alignmentBaseline="central">
-            Democratic Precincts
+          <text x={boundsWidth - 75} y={0} alignmentBaseline="central">
+            Democratic
           </text>
-          <text x={boundsWidth - 180} y={20} alignmentBaseline="central">
-            Republican Precincts
+          <text x={boundsWidth - 75} y={20} alignmentBaseline="central">
+            Republican
           </text>
         </g>
         <g

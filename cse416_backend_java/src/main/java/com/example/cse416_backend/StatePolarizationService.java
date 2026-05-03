@@ -1,14 +1,18 @@
 package com.example.cse416_backend;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ArrayNode;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.Optional;
 
 @Service
 public class StatePolarizationService {
@@ -16,6 +20,9 @@ public class StatePolarizationService {
     private final PrecinctsGinglesRepository precinctsGinglesRepository;
     private final PolarizationDataRepository polarizationDataRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Value("${app.assets.path}")
+    private String assetsPath;
 
     public StatePolarizationService(PrecinctsGinglesRepository precinctsGinglesRepository, PolarizationDataRepository polarizationDataRepository) {
         this.precinctsGinglesRepository = precinctsGinglesRepository;
@@ -46,10 +53,17 @@ public class StatePolarizationService {
     private JsonNode getLocalPayload(String currentState) throws IOException {
         String stateCodeUpper = currentState.toUpperCase();
         String resourceName = stateCodeUpper + "-Polarization-EI-GeoJSON.json";
+        String resourcePath = "assets/" + currentState + "/" + resourceName;
 
-        return objectMapper.readTree(
-            new ClassPathResource("assets/" + currentState + "/" + resourceName).getInputStream()
-        );
+        return objectMapper.readTree(getResource(resourcePath).getInputStream());
+    }
+
+    private Resource getResource(String resourcePath) {
+        Resource resource = new FileSystemResource(Paths.get(assetsPath, resourcePath).toFile());
+        if (!resource.exists()) {
+            resource = new ClassPathResource(resourcePath);
+        }
+        return resource;
     }
 
     // Return the following:

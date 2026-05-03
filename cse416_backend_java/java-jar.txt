@@ -1,0 +1,571 @@
+
+ ▝▜▄     Gemini CLI v0.40.1
+   ▝▜▄
+  ▗▟▀    Signed in with Google /auth
+ ▝▀      Plan: Gemini Code Assist for individuals /upgrade
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+ > I ran ./mvnw clean package, then when I ran the jar file, I ran into this error:      
+   Exception in thread "main" java.lang.ClassNotFoundException:                          
+   com.example.cse416_backend.Cse416BackendApplication, Caused by: java.io.IOException:  
+   Zip 'Local File Header Record' not found at position 4294967295                       
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+  Diagnosing JAR Build Error: 
+  Investigating build configuration and JAR size to diagnose the
+  ClassNotFoundException and Zip error.
+
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls -lh target/*.jar && du -sh target/                                    │
+│                                                                                   │
+│ -rw-rw-r-- 1 seongwhong seongwhong 5.8G May  3 16:38 target/cse416-backend-0.0.1- │
+│ SNAPSHOT.jar                                                                      │
+│ 30G     target/                                                                   │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  ReadFile  pom.xml
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell du -sh src/main/resources/assets/*                                       │
+│                                                                                   │
+│ 4.0K    src/main/resources/assets/add_count.py                                    │
+│ 14G     src/main/resources/assets/ga                                              │
+│ 4.6G    src/main/resources/assets/ia                                              │
+│ 4.0K    src/main/resources/assets/merge_json.py                                   │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  SearchText  'classpath:|getResourceAsStream|getResource' → No matches found
+  ✓  SearchText  'assets/|/ga/|/ia/' → Found 26 matches
+  ✓  ReadFile  src/.../DataSeedService.java
+   → Read lines 1-100 of 368 from src/main/java/com/example/cse416_backend/DataSeedS…
+  ✓  ReadFile  src/.../DataSeedService.java
+   → Read lines 340-368 of 368 from src/main/java/com/example/cse416_backend/DataSee…
+  ✓  SearchText  'loadJsonStringFromClasspath' in src/main/java/com/example/cse416_b…
+   → Found 14 matches
+  ✓  ReadFile  src/.../DataSeedService.java
+   → Read lines 102-115 of 368 from src/main/java/com/example/cse416_backend/DataSee…
+  ✓  ReadFile  src/.../StateHeatmapService.java
+  ✓  ReadFile  src/.../application.properties
+  Refactoring Asset Loading: 
+  Refactoring the application to load large assets from the filesystem instead of the
+  classpath to resolve the oversized JAR issue.
+
+  ✓  Edit  application.properties → Accepted (+1, -0)
+
+      1   spring.application.name=cse416-backend
+      2   spring.mongodb.port=27017
+      3   spring.mongodb.uri=mongodb://127.0.0.1:27017/test
+      4 + app.assets.path=src/main/resources/assets
+
+  ✓  Edit  DataSeedService.java → Accepted (+8, -0)
+
+       7   import org.slf4j.LoggerFactory;
+       8   import org.bson.Document;
+       9   import org.springframework.core.io.ClassPathResource;
+      10 + import org.springframework.core.io.FileSystemResource;
+      11 + import org.springframework.core.io.Resource;
+      12 + import org.springframework.beans.factory.annotation.Value;
+      13
+      14   import java.io.IOException;
+      15   import java.io.InputStream;
+      16   import java.nio.charset.StandardCharsets;
+      17 + import java.nio.file.Paths;
+      18
+      19   @Service
+      20   public class DataSeedService {
+      23       private static final String[] COUNTS = {"256", "4096"};
+      24       private static final String[] THRESHOLDS = {"Low", "Medium", "High"};
+      25       private static final String[] RACES = {"Asian", "Black", "Hispanic"};
+      26 + 
+      27 +     @Value("${app.assets.path}")
+      28 +     private String assetsPath;
+      29 + 
+      30       private final HomeGeoJsonRepository homeGeoJsonRepository;
+      31       private final BoxDataRepository boxDataRepository;
+      32       private final EnsembleDataRepository ensembleDataRepository;
+
+  ✓  Edit  application.properties → Accepted (+1, -1)
+
+      1   spring.application.name=cse416-backend
+      2   spring.mongodb.port=27017
+      3   spring.mongodb.uri=mongodb://127.0.0.1:27017/test
+      4 - app.assets.path=src/main/resources/assets
+      4 + app.assets.path=src/main/resources
+
+  ✓  Edit  DataSeedService.java → Accepted (+8, -3)
+
+      107       }
+      108   }
+      109
+      110 - private String loadJsonStringFromClasspath(String resourcePath) throws
+          IOException {
+      110 + private String loadJsonString(String resourcePath) throws IOException {
+      111       try {
+      112 -         // Load from backend_java classpath resources
+      113 -         ClassPathResource resource = new ClassPathResource(resourcePath);
+      112 +         // Try loading from filesystem first using the configured assets
+          path
+      113 +         Resource resource = new FileSystemResource(Paths.get(assetsPath,
+          resourcePath).toFile());
+      114 +         if (!resource.exists()) {
+      115 +             // Fallback to classpath if not found on filesystem (e.g. if
+          running from a clean jar)
+      116 +             resource = new ClassPathResource(resourcePath);
+      117 +         }
+      118 +         
+      119           try (InputStream inputStream = resource.getInputStream()) {
+      120               return new String(inputStream.readAllBytes(),
+            StandardCharsets.UTF_8);
+      121           }
+
+  ✓  Edit  DataSeedService.java → Accepted (+13, -13)
+
+       76           logger.info("Seeding home_geojson collection...");
+       77
+       78           if (homeGeoJsonRepository.findBycurrentState("ia").isEmpty()) {
+       79 -             String iaJsonString =
+          loadJsonStringFromClasspath("assets/ia/IA-State-GeoJSON.json");
+       79 +             String iaJsonString =
+          loadJsonString("assets/ia/IA-State-GeoJSON.json");
+       80               if (iaJsonString != null && !iaJsonString.isEmpty()) {
+       81                   HomeGeoJsonDocument iaDoc = new HomeGeoJsonDocument();
+       82                   iaDoc.setcurrentState("ia");
+      ═══════════════════════════════════════════════════════════════════════════════
+       89           }
+       90
+       91           if (homeGeoJsonRepository.findBycurrentState("ga").isEmpty()) {
+       92 -             String gaJsonString =
+          loadJsonStringFromClasspath("assets/ga/GA-State-GeoJSON.json");
+       92 +             String gaJsonString =
+          loadJsonString("assets/ga/GA-State-GeoJSON.json");
+       93               if (gaJsonString != null && !gaJsonString.isEmpty()) {
+       94                   HomeGeoJsonDocument gaDoc = new HomeGeoJsonDocument();
+       95                   gaDoc.setcurrentState("ga");
+      ═══════════════════════════════════════════════════════════════════════════════
+      156                   Document variantDoc = new Document();
+      157                   for (String race : RACES) {
+      158                      String boxPath = base + race + "-" + mode +
+           "-Box.json";
+      159 -                     variantDoc.put(race,
+          Document.parse(loadJsonStringFromClasspath(boxPath)));
+      159 +                     variantDoc.put(race,
+          Document.parse(loadJsonString(boxPath)));
+      160
+      161                       String histPath = base + race + "-" + mode +
+            "-Majority-Histogram.json";
+      162 -                     variantDoc.put(race + "Histogram",
+          Document.parse(loadJsonStringFromClasspath(histPath)));
+      162 +                     variantDoc.put(race + "Histogram",
+          Document.parse(loadJsonString(histPath)));
+      163                   }
+      164                   payloadDoc.put(variantKey, variantDoc);
+      165               }
+      ═══════════════════════════════════════════════════════════════════════════════
+      198                           + "/NEW-" + stateUpper + "-Precinct-";
+      199
+      200               Document variantDoc = new Document();
+      201 -             variantDoc.put("compareThreshold",
+          Document.parse(loadJsonStringFromClasspath(base +
+          "Compare-Threshold.json")));
+      201 +             variantDoc.put("compareThreshold",
+          Document.parse(loadJsonString(base + "Compare-Threshold.json")));
+      202               variantDoc.put("compareBox", buildCompareRaceKeyedDoc(base,
+            "-Compare-Box.json"));
+      203              variantDoc.put("compareHistogram",
+           buildCompareRaceKeyedDoc(base, "-Compare-Histogram.json"));
+      204               payloadDoc.put(variantKey, variantDoc);
+      ═══════════════════════════════════════════════════════════════════════════════
+      236                   String variantKey = count + "_" + threshold;
+      237                   String path = "assets/" + stateCode + "/" + folder
+      238                              + "/NEW-" + stateUpper + "-Precinct-" + mode +
+           "-Splits.json";
+      239 -                 String json = loadJsonStringFromClasspath(path);
+      239 +                 String json = loadJsonString(path);
+      240                   payloadDoc.put(variantKey, Document.parse(json));
+      241               }
+      242           }
+      ═══════════════════════════════════════════════════════════════════════════════
+      249   private Document buildCompareRaceKeyedDoc(String base, String fileSuffix)
+            throws IOException {
+      250       Document raceKeyedDoc = new Document();
+      251       for (String race : RACES) {
+      252 -         raceKeyedDoc.put(race,
+          Document.parse(loadJsonStringFromClasspath(base + race + fileSuffix)));
+      252 +         raceKeyedDoc.put(race, Document.parse(loadJsonString(base + race
+          + fileSuffix)));
+      253       }
+      254       return raceKeyedDoc;
+      255   }
+      ═══════════════════════════════════════════════════════════════════════════════
+      269       String stateCodeUpper = stateCode.toUpperCase();
+      270       
+      271       if (stateInfoRepository.findByCurrentState(stateCode).isEmpty()) {
+      272 -         String stateInfoJson = loadJsonStringFromClasspath(
+      272 +         String stateInfoJson = loadJsonString(
+      273              "assets/" + stateCode + "/" + stateCodeUpper +
+           "-State-Info.json");
+      274           if (stateInfoJson != null && !stateInfoJson.isEmpty()) {
+      275               Document payloadDoc = new Document();
+      ═══════════════════════════════════════════════════════════════════════════════
+      323       String stateCodeUpper = stateCode.toUpperCase();
+      324       String base = "assets/" + stateCode + "/" + stateCodeUpper +
+            "-Polarization-" + race + "-";
+      325
+      326 -     String harrisJson    = loadJsonStringFromClasspath(base +
+          "Harris-EI.json");
+      327 -     String harrisKdeJson = loadJsonStringFromClasspath(base +
+          "Harris-KDE.json");
+      328 -     String trumpJson     = loadJsonStringFromClasspath(base +
+          "Trump-EI.json");
+      329 -     String trumpKdeJson  = loadJsonStringFromClasspath(base +
+          "Trump-KDE.json");
+      326 +     String harrisJson    = loadJsonString(base + "Harris-EI.json");
+      327 +     String harrisKdeJson = loadJsonString(base + "Harris-KDE.json");
+      328 +     String trumpJson     = loadJsonString(base + "Trump-EI.json");
+      329 +     String trumpKdeJson  = loadJsonString(base + "Trump-KDE.json");
+      330
+      331       Document racePayload = new Document();
+      332      racePayload.put("Harris",
+           buildPolarizationCandidatePayload(harrisJson, harrisKdeJson));
+      ═══════════════════════════════════════════════════════════════════════════════
+      349       String stateCodeUpper = stateCode.toUpperCase();
+      350       
+      351      if
+           (precinctsGinglesRepository.findByCurrentState(stateCode).isEmpty()) {
+      352 -         String ginglesJson = loadJsonStringFromClasspath(
+      352 +         String ginglesJson = loadJsonString(
+      353               "assets/" + stateCode + "/" + stateCodeUpper +
+            "-Polarization-Gingles.json");
+      354           if (ginglesJson != null && !ginglesJson.isEmpty()) {
+      355               Document payloadDoc = new Document();
+
+  ✓  ReadFile  src/.../StateHeatmapService.java
+  ✓  Edit  StateHeatmapService.java → Accepted (+22, -6)
+
+       4   import tools.jackson.databind.ObjectMapper;
+       5   import tools.jackson.databind.node.ArrayNode;
+       6
+       7 + import org.springframework.beans.factory.annotation.Value;
+       8   import org.springframework.core.io.ClassPathResource;
+       9 + import org.springframework.core.io.FileSystemResource;
+      10 + import org.springframework.core.io.Resource;
+      11   import org.springframework.stereotype.Service;
+      12
+      13   import java.io.IOException;
+      14 + import java.nio.file.Paths;
+      15
+      16   @Service
+      17   public class StateHeatmapService {
+      18       private final ObjectMapper objectMapper = new ObjectMapper();
+      19
+      20 +     @Value("${app.assets.path}")
+      21 +     private String assetsPath;
+      22 + 
+      23       public StateHeatmapService() {
+      24       }
+      25
+      ═══════════════════════════════════════════════════════════════════════════════
+      43      private ArrayNode getLocalPayload(String currentState) throws
+          IOException {
+      44           ArrayNode response = objectMapper.createArrayNode();
+      45           String stateCodeUpper = currentState.toUpperCase();
+      46 +         
+      47 +         String precinctPath = "assets/" + currentState + "/" +
+         stateCodeUpper + "-Precinct-GeoJSON.json";
+      48 +         String censusPath = "assets/" + currentState + "/" +
+         stateCodeUpper + "-CensusBlock-GeoJSON.json";
+      49 + 
+      50           // Heat map for Precinct (GUI-4)
+      40 -         JsonNode currentPrecinct = objectMapper.readTree(
+      41 -             new ClassPathResource("assets/" + currentState + "/" +
+         stateCodeUpper + "-Precinct-GeoJSON.json").getInputStream()
+      42 -         );
+      ═══════════════════════════════════════════════════════════════════════════════
+      51 +         JsonNode currentPrecinct =
+         objectMapper.readTree(getResource(precinctPath).getInputStream());
+      52           // Heat map for Census Block (GUI-5)
+      44 -         JsonNode currentCensusBlock = objectMapper.readTree(
+      45 -             new ClassPathResource("assets/" + currentState + "/" +
+         stateCodeUpper + "-CensusBlock-GeoJSON.json").getInputStream()
+      46 -         );
+      ═══════════════════════════════════════════════════════════════════════════════
+      53 +         JsonNode currentCensusBlock =
+         objectMapper.readTree(getResource(censusPath).getInputStream());
+      54 +         
+      55           response.add(currentPrecinct);
+      56           response.add(currentCensusBlock);
+      57           return response;
+      58       }
+      59 + 
+      60 +     private Resource getResource(String resourcePath) {
+      61 +         Resource resource = new FileSystemResource(Paths.get(assetsPath,
+         resourcePath).toFile());
+      62 +         if (!resource.exists()) {
+      63 +             resource = new ClassPathResource(resourcePath);
+      64 +         }
+      65 +         return resource;
+      66 +     }
+      67   }
+
+  ✓  ReadFile  src/.../StateSummaryService.java
+  ✓  Edit  StateSummaryService.java → Accepted (+18, -3)
+
+       1   package com.example.cse416_backend;
+       2
+       3   import java.io.IOException;
+       4 + import java.nio.file.Paths;
+       5   import java.util.Optional;
+       6
+       7 + import org.springframework.beans.factory.annotation.Value;
+       8   import org.springframework.core.io.ClassPathResource;
+       9 + import org.springframework.core.io.FileSystemResource;
+      10 + import org.springframework.core.io.Resource;
+      11   import org.springframework.stereotype.Service;
+      12
+      13   import tools.jackson.databind.JsonNode;
+      ═══════════════════════════════════════════════════════════════════════════════
+      20       private final StateInfoRepository stateInfoRepository;
+      21       private final ObjectMapper objectMapper = new ObjectMapper();
+      22
+      23 +     @Value("${app.assets.path}")
+      24 +     private String assetsPath;
+      25 + 
+      26       public StateSummaryService(StateInfoRepository stateInfoRepository) {
+      27           this.stateInfoRepository = stateInfoRepository;
+      28       }
+      ═══════════════════════════════════════════════════════════════════════════════
+      43      // Return the State (IA or GA) District GeoJSON file from local storage
+
+      44      private JsonNode getLocalPayload(String currentState) throws
+          IOException {
+      45           String stateCodeUpper = currentState.toUpperCase();
+      46 +         String resourcePath = "assets/" + currentState + "/" +
+         stateCodeUpper + "-District-Current-GeoJSON.json";
+      47 +         
+      48           // Read file 1 from
+           src/main/resources/assets/ia/IA-Congress-District.json
+      40 -         JsonNode currentDistrict = objectMapper.readTree(
+      41 -             new ClassPathResource("assets/" + currentState + "/" +
+         stateCodeUpper + "-District-Current-GeoJSON.json").getInputStream()
+      42 -         );
+      ═══════════════════════════════════════════════════════════════════════════════
+      49 +         JsonNode currentDistrict =
+         objectMapper.readTree(getResource(resourcePath).getInputStream());
+      50
+      51           // Combine them into a Map
+      52           return currentDistrict;
+      53       }
+      54
+      55 +     private Resource getResource(String resourcePath) {
+      56 +         Resource resource = new FileSystemResource(Paths.get(assetsPath,
+         resourcePath).toFile());
+      57 +         if (!resource.exists()) {
+      58 +             resource = new ClassPathResource(resourcePath);
+      59 +         }
+      60 +         return resource;
+      61 +     }
+      62 + 
+      63       // Return the State information (State data summary) as per GUI-3 from
+           Mongo
+      64       // Read file 3 from src/main/resources/assets/ia/IA-State-Info.json
+      65      private JsonNode getMongoPayload(String currentState) throws
+          IOException{
+
+  ✓  ReadFile  s/.../StatePolarizationService.java
+  ✓  Edit  StatePolarizationService.java → Accepted (+22, -8)
+
+       1   package com.example.cse416_backend;
+       2
+       3 - import tools.jackson.databind.JsonNode;
+       4 - import tools.jackson.databind.ObjectMapper;
+       5 - import tools.jackson.databind.node.ArrayNode;
+       3 + import java.io.IOException;
+       4 + import java.nio.file.Paths;
+       5 + import java.util.Optional;
+       6
+       7 + import org.springframework.beans.factory.annotation.Value;
+       8   import org.springframework.core.io.ClassPathResource;
+       9 + import org.springframework.core.io.FileSystemResource;
+      10 + import org.springframework.core.io.Resource;
+      11   import org.springframework.stereotype.Service;
+      12
+      10 - import java.io.IOException;
+      11 - import java.util.Optional;
+      13 + import tools.jackson.databind.JsonNode;
+      14 + import tools.jackson.databind.ObjectMapper;
+      15 + import tools.jackson.databind.node.ArrayNode;
+      16
+      17   @Service
+      18   public class StatePolarizationService {
+      21       private final PolarizationDataRepository polarizationDataRepository;
+      22       private final ObjectMapper objectMapper = new ObjectMapper();
+      23
+      24 +     @Value("${app.assets.path}")
+      25 +     private String assetsPath;
+      26 + 
+      27       public StatePolarizationService(PrecinctsGinglesRepository
+           precinctsGinglesRepository, PolarizationDataRepository
+           polarizationDataRepository) {
+      28           this.precinctsGinglesRepository = precinctsGinglesRepository;
+      29           this.polarizationDataRepository = polarizationDataRepository;
+      ═══════════════════════════════════════════════════════════════════════════════
+      53      private JsonNode getLocalPayload(String currentState) throws
+          IOException {
+      54           String stateCodeUpper = currentState.toUpperCase();
+      55          String resourceName = stateCodeUpper +
+          "-Polarization-EI-GeoJSON.json";
+      56 +         String resourcePath = "assets/" + currentState + "/" +
+         resourceName;
+      57
+      50 -         return objectMapper.readTree(
+      51 -             new ClassPathResource("assets/" + currentState + "/" +
+         resourceName).getInputStream()
+      52 -         );
+      58 +         return
+         objectMapper.readTree(getResource(resourcePath).getInputStream());
+      59       }
+      60
+      61 +     private Resource getResource(String resourcePath) {
+      62 +         Resource resource = new FileSystemResource(Paths.get(assetsPath,
+         resourcePath).toFile());
+      63 +         if (!resource.exists()) {
+      64 +             resource = new ClassPathResource(resourcePath);
+      65 +         }
+      66 +         return resource;
+      67 +     }
+      68 + 
+      69       // Return the following:
+      70       // Gingles Table (GUI-9, 10, 11)
+      71       // Gingles Regression (as a math formula) (GUI-9)
+
+  ✓  Edit  pom.xml → Accepted (+9, -0)
+
+      65   </dependencies>
+      66
+      67   <build>
+      68 +     <resources>
+      69 +         <resource>
+      70 +             <directory>src/main/resources</directory>
+      71 +             <excludes>
+      72 +                 <exclude>assets/ga/**</exclude>
+      73 +                 <exclude>assets/ia/**</exclude>
+      74 +             </excludes>
+      75 +         </resource>
+      76 +     </resources>
+      77       <plugins>
+      78           <plugin>
+      79               <groupId>org.springframework.boot</groupId>
+
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ./mvnw clean package -DskipTests                                         │
+│                                                                                   │
+│ ... first 40 lines hidden (Ctrl+O to show) ...                                    │
+│ [INFO] The original artifact has been renamed to /home/seongwhong/Documents/SUNYE │
+│ ssentials/CSE416/CSE416_Project/cse416_backend_java/target/cse416-backend-0.0.1-S │
+│ NAPSHOT.jar.original                                                              │
+│ [INFO] ------------------------------------------------------------------------   │
+│ [INFO] BUILD SUCCESS                                                              │
+│ [INFO] ------------------------------------------------------------------------   │
+│ [INFO] Total time:  5.452 s                                                       │
+│ [INFO] Finished at: 2026-05-03T17:00:12-04:00                                     │
+│ [INFO] ------------------------------------------------------------------------   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls -lh target/*.jar                                                      │
+│                                                                                   │
+│ -rw-rw-r-- 1 seongwhong seongwhong 27M May  3 17:00 target/cse416-backend-0.0.1-S │
+│ NAPSHOT.jar                                                                       │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell timeout 15s java -jar target/cse416-backend-0.0.1-SNAPSHOT.jar || true   │
+│                                                                                   │
+│ ... first 160 lines hidden (Ctrl+O to show) ...                                   │
+│ c.e.cse416_backend.DataSeedService       : polarization_data seeding completed su │
+│ ccessfully                                                                        │
+│ 2026-05-03T17:00:25.914-04:00  INFO 93786 --- [cse416-backend] [           main]  │
+│ c.e.cse416_backend.DataSeedService       : ===== Database Seeding Completed ===== │
+│ 2026-05-03T17:00:38.575-04:00  INFO 93786 --- [cse416-backend] [ionShutdownHook]  │
+│ o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting  │
+│ for active requests to complete                                                   │
+│ 2026-05-03T17:00:38.578-04:00  INFO 93786 --- [cse416-backend] [tomcat-shutdown]  │
+│ o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete             │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  SearchText  'ClassPathResource' → Found 8 matches
+
+✦ The issue was caused by the 5.8GB JAR file, which exceeded the 4GB limit of the
+  standard ZIP format used for Java executable JARs. This resulted in the Zip 'Local File
+  Header Record' not found error and prevented the JVM from finding your main class.
+
+  I have refactored the application to load these large assets from the filesystem
+  instead of bundling them into the JAR. This keeps the JAR small (currently 27MB) and
+  avoids the 4GB limit.
+
+  Changes Made:
+   1. Refactored Asset Loading: DataSeedService, StateHeatmapService,
+      StateSummaryService, and StatePolarizationService now attempt to load assets from
+      the filesystem first, with a fallback to the classpath.
+   2. Configuration: Added app.assets.path=src/main/resources to
+      src/main/resources/application.properties. This allows the application to find your
+      assets/ folder in the project root by default.
+   3. Build Optimization: Updated pom.xml to exclude the large assets/ga and assets/ia
+      directories from the final JAR build.
+
+  How to run the application:
+   1. Rebuild the JAR:
+
+   1     ./mvnw clean package
+   2. Run the JAR:
+      Since the assets are no longer in the JAR, the app needs to know where they are. If
+  you run from the project root, it will use the default path:
+
+   1     java -jar target/cse416-backend-0.0.1-SNAPSHOT.jar
+      If you run from a different directory, you can specify the assets path using a
+  system property:
+
+   1     java -Dapp.assets.path=/path/to/your/project/src/main/resources -jar
+     target/cse416-backend-0.0.1-SNAPSHOT.jar
+
+  The application now starts correctly and is much more efficient to build and
+  distribute.
+
+
+  Fixed Oversized JAR Issue: 
+  Recapping the fix for the oversized JAR and ClassNotFoundException.
+
+
+✦ The issue was caused by the 5.8GB JAR file, which exceeded the 4GB limit of the
+  standard ZIP format used for Java executable JARs. This resulted in the Zip 'Local File
+  Header Record' not found error and prevented the JVM from finding your main class.
+
+  I have refactored the application to load these large assets from the filesystem
+  instead of bundling them into the JAR. This keeps the JAR small (currently 27MB) and
+  avoids the 4GB limit.
+
+  Changes Made:
+   1. Refactored Asset Loading: DataSeedService, StateHeatmapService,
+      StateSummaryService, and StatePolarizationService now attempt to load assets from
+      the filesystem first, with a fallback to the classpath.
+   2. Configuration: Added app.assets.path=src/main/resources to
+      src/main/resources/application.properties. This allows the application to find your
+      assets/ folder in the project root by default.
+   3. Build Optimization: Updated pom.xml to exclude the large assets/ga and assets/ia
+      directories from the final JAR build.
+
+  How to run the application:
+   1. Rebuild the JAR:
+   1     ./mvnw clean package
+   2. Run the JAR:
+      Since the assets are no longer in the JAR, the app needs to know where they are. If
+  you run from the project root, it will use the default path:
+
+   1     java -jar target/cse416-backend-0.0.1-SNAPSHOT.jar
+      If you run from a different directory, you can specify the assets path using a
+  system property:
+
+   1     java -Dapp.assets.path=/path/to/your/project/src/main/resources -jar
+     target/cse416-backend-0.0.1-SNAPSHOT.jar
+
+  The application now starts correctly and is much more efficient to build and
+  distribute.
+
+
