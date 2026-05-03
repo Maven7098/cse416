@@ -4,8 +4,8 @@ import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Dropdown from "react-bootstrap/Dropdown";
-import ProposedVRAMap from "./ProposedVRAMap.jsx";
 import ProposedVRAInfo from "./ProposedVRAInfo.jsx";
+// import ProposedVRAMap from "./ProposedVRAMap.jsx";
 import { useState, useEffect } from "react";
 import "../CSS/CustomTab.css";
 
@@ -20,8 +20,9 @@ function MapTab({
   longitude,
 }) {
   const [activeMap, setactiveMap] = useState("Precinct");
-
-  const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
+  const [currentCount, setCurrentCount] = useState("4096");
+  const [currentThreshold, setCurrentThreshold] = useState("High");
+  //const [districtGeoJsonData, setDistrictGeoJsonData] = useState("");
   const [ensembleSplitData, setEnsembleSplitData] = useState(null);
   const [boxandWhiskerData, setBoxandWhiskerData] = useState([]);
   const [minorityEffectivenessData, setMinorityEffectivenessData] = useState(
@@ -32,34 +33,17 @@ function MapTab({
   useEffect(() => {
     axios
       .get(
-        `http://localhost:8080/proposed?currentState=${activeState}&currentMode=${currentMode}`,
+        `http://localhost:8080/proposed?currentState=${activeState}&currentMode=${currentMode}&count=${currentCount}&threshold=${currentThreshold}`,
       )
       .then((response) => {
-        const payload = Array.isArray(response.data) ? response.data : [];
-
-        const districtPayload =
-          payload[0] && typeof payload[0] === "object" ? payload[0] : "";
-        let ensemblePayload =
-          payload[1] && typeof payload[1] === "object" ? payload[1] : null;
-        if (Array.isArray(ensemblePayload) && ensemblePayload.length > 0) {
-          ensemblePayload = ensemblePayload[0];
-        }
-        // boxandWhiskerData and minorityEffectivenessData are 3 racial groups combined
-        setDistrictGeoJsonData(districtPayload);
-        setEnsembleSplitData(
-          ensemblePayload && !Array.isArray(ensemblePayload)
-            ? ensemblePayload
-            : null,
-        );
-        setBoxandWhiskerData(Array.isArray(payload[2]) ? payload[2] : []);
-        setMinorityEffectivenessData(
-          Array.isArray(payload[3]) ? payload[3] : [],
-        );
+        setEnsembleSplitData(response.data[0]);
+        setBoxandWhiskerData(response.data[1]);
+        setMinorityEffectivenessData(response.data[2]);
       })
       .catch((error) => console.log(error.response?.data ?? error.message));
     // If Active State changes, then also reset districtData
     setDistrictGeoJsonData("");
-  }, [activeState, currentMode]);
+  }, [activeState, currentMode, currentCount, currentThreshold]);
 
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="info" fluid>
@@ -70,17 +54,34 @@ function MapTab({
               <Nav.Item>
                 <Nav.Link eventKey="info">State Summary</Nav.Link>
               </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="map">Interesting Maps</Nav.Link>
-              </Nav.Item>
-              <NavDropdown title={`Select Map`}>
+              <NavDropdown title="Select Dataset">
+                    <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("Low")}}>
+                      256_Low
+                    </NavDropdown.Item>
+                    <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("Medium")}}>
+                      256_Medium
+                    </NavDropdown.Item>
+                    <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("High")}}>
+                      256_High
+                    </NavDropdown.Item>
+                    <NavDropdown.Item onClick={() => {setCurrentCount(4096); setCurrentThreshold("Low")}}>
+                      4096_Low
+                    </NavDropdown.Item>
+                    <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("Medium")}}>
+                      4096_Medium
+                    </NavDropdown.Item>
+                    <NavDropdown.Item onClick={() => {setCurrentCount(256); setCurrentThreshold("High")}}>
+                      4096_High
+                    </NavDropdown.Item>
+              </NavDropdown>
+              {/* <NavDropdown title="Select Map">
                 {districtGeoJsonData != "" &&
                   districtGeoJsonData.map((item, index) => (
                     <NavDropdown.Item onClick={() => setactiveMap(item)}>
                       Map {index}
                     </NavDropdown.Item>
                   ))}
-              </NavDropdown>
+              </NavDropdown> */}
             </Nav>
           </Col>
           <Col lg={true}>
@@ -94,7 +95,7 @@ function MapTab({
                   minorityEffectivenessData={minorityEffectivenessData}
                 />
               </Tab.Pane>
-              <Tab.Pane eventKey="map">
+              {/* <Tab.Pane eventKey="map">
                 <ProposedVRAMap
                   activeState={activeState}
                   activeMap={activeMap}
@@ -102,7 +103,7 @@ function MapTab({
                   latitude={latitude}
                   longitude={longitude}
                 />
-              </Tab.Pane>
+              </Tab.Pane> */}
             </Tab.Content>
           </Col>
         </Row>
