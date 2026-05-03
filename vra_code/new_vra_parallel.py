@@ -293,6 +293,8 @@ def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, basel
     ax.set_title(f"{group_name} Effectiveness Distribution")
     ax.set_xticks([1.2, 2.8], [f"{group_name} Voters", "White Voters"])
     ax.legend(); ax.grid(True, axis="y", alpha=0.3)
+    ax.set_ylim(bottom=0)
+    ax.yaxis.get_major_locator().set_params(integer=True)
     fig.tight_layout()
     mpld3.save_html(fig, f"{OUTPUT_FILE}-{group_name}-Compare-Box.html")
     mpld3.save_json(fig, f"{OUTPUT_FILE}-{group_name}-Compare-Box.json")
@@ -416,7 +418,7 @@ def save_interesting_plans_as_geojsons(base_gdf, interesting_plans, ensemble_typ
             f"-interesting{rank}"
             f"-dem{interesting_plan['dem_seats']}"
             f"-eff{interesting_plan['total_effective']}"
-            f".geojson"
+            f"-GeoJSON.json"
         )
 
         plan_gdf.to_file(geojson_name, driver="GeoJSON")
