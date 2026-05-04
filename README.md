@@ -18,7 +18,7 @@ cd cse416_backend_java
 
 The server starts on **http://localhost:8080**.
 
-On first startup, `DataSeedService` automatically seeds all MongoDB collections (`box_data`, `compare_data`, `ensemble_data`, `home_geojson`, `state_info`, `precincts_gingles`, `polarization_data`) from the asset files in `src/main/resources/assets/`.
+On first startup, `DataSeedService` automatically seeds all MongoDB collections (`box_data`, `compare_data`, `ensemble_data`, `home_geojson`, `state_info`, `precincts_gingles`, `polarization_data`) from the asset files in `cse416_backend_java/src/main/resources/assets/`.
 
 > If you change seeding logic or asset files, drop the affected collection(s) in MongoDB and restart the backend to re-seed.
 

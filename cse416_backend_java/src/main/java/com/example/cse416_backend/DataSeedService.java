@@ -16,6 +16,24 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
+/**
+ * DataSeedService used to populate MongoDB on application startup.
+ * Spring calls seedDatabase() automatically via the @EventListener(ApplicationReadyEvent.class)
+ *
+ * Iterates over every supported state ("ia", "ga"), ensemble count (256, 4096), VRA threshold
+ * (Low, Medium, High), and race (Asian, Black, Hispanic), then loads the corresponding pre-
+ * computed JSON files from the assets directory and inserts them into MongoDB collections:
+ *   - home_geojson        : state-level GeoJSON for the homepage map
+ *   - box_data            : box-and-whisker + histogram data per ensemble variant
+ *   - ensemble_data       : ensemble split data per ensemble variant
+ *   - compare_data        : VRA vs. non-VRA comparison data per ensemble variant
+ *   - state_info          : district summary and right-panel state data
+ *   - precincts_gingles   : precinct GeoJSON with Gingles/EI chart data
+ *   - polarization_data   : Ecological Inference (EI) distribution and KDE data
+ *
+ * Asset Paths are resolved from the "app.assets.path" property in application.properties. Falls back to
+ * classpath resources if the external path is unavailable.
+ */
 @Service
 public class DataSeedService {
 

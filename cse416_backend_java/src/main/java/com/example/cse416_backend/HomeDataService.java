@@ -33,7 +33,6 @@ public class HomeDataService {
 
     // Get the state GeoJSON file from Mongo
     // Unlike other GeoJSON files, State sized files are small enough to be stored
-    // Should we get the currentState variable or leave it out?
     private JsonNode getMongoPayload(String currentState) throws IOException {
         Optional<HomeGeoJsonDocument> stateDoc = homeGeoJsonRepository.findBycurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
