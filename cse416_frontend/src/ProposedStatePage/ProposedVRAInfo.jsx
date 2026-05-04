@@ -9,6 +9,7 @@ function ProposedVRAInfo({
   boxandWhiskerData,
   minorityEffectivenessData,
 }) {
+  
   let currentBoxandWhiskerData = "";
   let currentMinorityEffectivenessData = "";
   switch (activeRace && boxandWhiskerData && minorityEffectivenessData ? activeRace : null) {

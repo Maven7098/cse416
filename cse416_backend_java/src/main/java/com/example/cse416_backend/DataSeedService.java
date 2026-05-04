@@ -327,10 +327,14 @@ public class DataSeedService {
         String harrisKdeJson = loadJsonString(base + "Harris-KDE.json");
         String trumpJson     = loadJsonString(base + "Trump-EI.json");
         String trumpKdeJson  = loadJsonString(base + "Trump-KDE.json");
+        String overlapJson   = loadJsonString(base + "Overlap.json");
 
         Document racePayload = new Document();
         racePayload.put("Harris", buildPolarizationCandidatePayload(harrisJson, harrisKdeJson));
         racePayload.put("Trump", buildPolarizationCandidatePayload(trumpJson, trumpKdeJson));
+        if (overlapJson != null && !overlapJson.isEmpty()) {
+            racePayload.put("overlap", Document.parse(overlapJson));
+        }
         return racePayload;
     }
 

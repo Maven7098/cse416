@@ -1,0 +1,479 @@
+
+ ▝▜▄     Gemini CLI v0.40.1
+   ▝▜▄
+  ▗▟▀    Signed in with Google /auth
+ ▝▀      Plan: Gemini Code Assist for individuals /upgrade
+
+
+ ▝▜▄     Gemini CLI v0.40.1
+   ▝▜▄
+  ▗▟▀    Signed in with Google /auth
+ ▝▀      Plan: Gemini Code Assist for individuals /upgrade
+
+
+ ▝▜▄     Gemini CLI v0.40.1
+   ▝▜▄
+  ▗▟▀    Signed in with Google /auth
+ ▝▀      Plan: Gemini Code Assist for individuals /upgrade
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+ > calculate the overlap between the white group and each of the feasible demographic    
+   groups in the state as a percentage of the white vote                                 
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+  Researching Demographic Data: 
+  Investigating data structure to calculate demographic overlap.
+
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell head -n 5 GA-Precinct-EI.csv                                             │
+│                                                                                   │
+│ ... first 16 lines hidden (Ctrl+O to show) ...                                    │
+│ APPLING-:-2,1452,734,538,1272,602,60,402,462,734,654,80,734,52,10,12,22,2,0,2,2   │
+│ ,62,10,42,52,0.505509641873278,0.370523415977961,0.414600550964187,0.0996677740   │
+│ 863787,0.667774086378738,0.505509641873278,0.891008174386921,0.108991825613079,   │
+│ 0.0358126721763085,0.192307692307692,0.230769230769231,0.00137741046831956,0,1,   │
+│ 0.0426997245179063,0.161290322580645,0.67741935483871                             │
+│ APPLING-:-3A1,607,19,506,525,546,15,457,472,3,3,0,3,11,0,10,10,0,0,0,0,47,1,39,   │
+│ 40,0.0313014827018122,0.833607907742998,0.899505766062603,0.0274725274725275,0.   │
+│ 836996336996337,0.00494233937397035,1,0,0.0181219110378913,0,0.909090909090909,   │
+│ 0,0,0,0.0774299835255354,0.0212765957446809,0.829787234042553                     │
+│                                                                                   │
+│ ✓  Shell head -n 5 IA-Precinct-EI.csv                                             │
+│                                                                                   │
+│ ... first 13 lines hidden (Ctrl+O to show) ...                                    │
+│ 3333333333,0.0779537149817296,0.15625,0.578125                                    │
+│ 19001-3SW FONTANELLE,839,108,466,574,723,93,405,498,0,0,0,0,10,2,4,6,6,1,4,5,10   │
+│ 0,12,53,65,0.128724672228844,0.555423122765197,0.861740166865316,0.128630705394   │
+│ 191,0.560165975103734,0,0,0,0.0119189511323004,0.2,0.4,0.00715137067938021,0.16   │
+│ 6666666666667,0.666666666666667,0.119189511323004,0.12,0.53                       │
+│ 19001-4SE ORIENT,811,150,417,567,688,121,369,490,0,0,0,0,5,2,0,2,4,0,4,4,114,27   │
+│ ,44,71,0.184956843403206,0.514180024660913,0.848335388409371,0.175872093023256,   │
+│ 0.536337209302326,0,0,0,0.0061652281134402,0.4,0,0.00493218249075216,0,1,0.1405   │
+│ 67200986437,0.236842105263158,0.385964912280702                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  ReadFile  presidential_ei.py
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating total counts for each demographic group in GA and IA.        │
+│                                                                                   │
+│ Traceback (most recent call last):                                                │
+│   File "<string>", line 2, in <module>                                            │
+│     import pandas as pd                                                           │
+│ ModuleNotFoundError: No module named 'pandas'                                     │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls pyei_venv/lib/python3.*/site-packages/pandas 2>/dev/null || ls regre… │
+│                                                                                   │
+│ api          core         plotting        tests              _version.py          │
+│ arrays       errors       __pycache__     tseries                                 │
+│ compat       __init__.py  pyproject.toml  _typing.py                              │
+│ _config      io           _testing        util                                    │
+│ conftest.py  _libs        testing.py      _version_meson.py                       │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating total counts for each demographic group in GA and IA using … │
+│                                                                                   │
+│ ... first 6 lines hidden (Ctrl+O to show) ...                                     │
+│ dtype: int64                                                                      │
+│                                                                                   │
+│ Iowa totals:                                                                      │
+│ WHITE       1321939                                                               │
+│ BLACK         15486                                                               │
+│ HISPANIC      49353                                                               │
+│ ASIAN         21604                                                               │
+│ OTHER        241064                                                               │
+│ dtype: int64                                                                      │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating the preferred candidate for each demographic group in Georg… │
+│                                                                                   │
+│ Total White Vote: 2044800                                                         │
+│ White Dem: 471889 (23.08%)                                                        │
+│ White Rep: 1572911 (76.92%)                                                       │
+│ Group BLACK: Preferred=Harris, Overlap=23.08%                                     │
+│ Group HISPANIC: Preferred=Harris, Overlap=23.08%                                  │
+│ Group ASIAN: Preferred=Harris, Overlap=23.08%                                     │
+│ Group OTHER: Preferred=Trump, Overlap=76.92%                                      │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  ReadFile  regression_test.py
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls GEMINI.md                                                             │
+│                                                                                   │
+│ ls: cannot access 'GEMINI.md': No such file or directory                          │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating precinct-level overlap between white voters and other demog… │
+│                                                                                   │
+│ Group BLACK: Precinct-level overlap = 19.41%                                      │
+│ Group HISPANIC: Precinct-level overlap = 5.81%                                    │
+│ Group ASIAN: Precinct-level overlap = 2.79%                                       │
+│ Group OTHER: Precinct-level overlap = 13.98%                                      │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls -F ga/ ia/                                                            │
+│                                                                                   │
+│ ... first 96 lines hidden (Ctrl+O to show) ...                                    │
+│ IA-Polarization-Hispanic-Harris-KDE.png                                           │
+│ IA-Polarization-Hispanic-Harris.txt                                               │
+│ IA-Polarization-Hispanic-Trump-EI.html                                            │
+│ IA-Polarization-Hispanic-Trump-EI.json                                            │
+│ IA-Polarization-Hispanic-Trump-EI.png                                             │
+│ IA-Polarization-Hispanic-Trump-KDE.html                                           │
+│ IA-Polarization-Hispanic-Trump-KDE.json                                           │
+│ IA-Polarization-Hispanic-Trump-KDE.png                                            │
+│ IA-Polarization-Hispanic-Trump.txt                                                │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat ga/GA-Polarization-Black-Harris.txt                                  │
+│                                                                                   │
+│ ... first 1990 lines hidden (Ctrl+O to show) ...                                  │
+│ 715: 0.9953616868940438                                                           │
+│ Estimated (posterior mean) support for the candidate from the group in precinct 2 │
+│ 716: 0.993498072291847                                                            │
+│ Estimated (posterior mean) support for the candidate from the group in precinct 2 │
+│ 717: 0.6176300447936041                                                           │
+│ Estimated (posterior mean) support for the candidate from the group in precinct 2 │
+│ 718: 0.934862220117108                                                            │
+│ Estimated (posterior mean) support for the candidate from the group in precinct 2 │
+│ 719: 0.7847886726685924                                                           │
+│ Output too long and was saved to:                                                 │
+│ /home/seongwhong/.gemini/tmp/pyei-trial/tool-outputs/session-982e6091-8317-40e7-a │
+│ 2d8-72c89af75aea/run_shell_command_1777922849620_0.txt                            │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating Black support for Harris using the counts from GA-Precinct-… │
+│                                                                                   │
+│ Black support from CSV counts:                                                    │
+│ 0.9676955082494865                                                                │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell head -c 1000 ga/GA-Polarization-Black-Harris-KDE.json                    │
+│                                                                                   │
+│ ... first 3 lines hidden (Ctrl+O to show) ...                                     │
+│ inear", "axes": [{"position": "bottom", "nticks": 9, "tickvalues": [-1.0, -0.75,  │
+│ -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0], "tickformat_formatter": "func", "tickfor │
+│ mat": [-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0], "scale": "linear", " │
+│ fontsize": 15.0, "grid": {"gridOn": false}, "visible": true}, {"position": "left" │
+│ , "nticks": 6, "tickvalues": null, "tickformat_formatter": "", "tickformat": null │
+│ , "scale": "linear", "fontsize": 10.0, "grid": {"gridOn": false}, "visible": true │
+│ }], "axesbg": "#FFFFFF", "axesbgalpha": null, "zoomable": true, "id": "el12470032 │
+│ e0be49-1e0d-49a7-9e8c-f08965828805", "lines": [{"data": "data01", "xindex": 0, "y │
+│ index": 1, "coordinates": "data", "id": "el1247001941734a-4164-4e60-9bdb-8ce2ee24 │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  ReadFile  input1.sh
+  ✓  ReadFile  input2.sh
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating group preferences and white vote overlap for both Georgia a… │
+│                                                                                   │
+│ ... first 1 line hidden (Ctrl+O to show) ...                                      │
+│ White Harris: 23.08%, White Trump: 76.92%                                         │
+│ Group BLACK: Preferred=Harris (96.77%), Overlap=23.08%                            │
+│ Group HISPANIC: Preferred=Harris (55.79%), Overlap=23.08%                         │
+│ Group ASIAN: Preferred=Harris (53.93%), Overlap=23.08%                            │
+│ --- Iowa ---                                                                      │
+│ White Harris: 40.59%, White Trump: 59.41%                                         │
+│ Group BLACK: Preferred=Harris (96.09%), Overlap=40.59%                            │
+│ Group HISPANIC: Preferred=Harris (66.71%), Overlap=40.59%                         │
+│ Group ASIAN: Preferred=Harris (56.23%), Overlap=40.59%                            │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Checking the maximum precinct percentage for each demographic group in … │
+│                                                                                   │
+│ Group BLACK: Max precinct percentage = 100.00%                                    │
+│ Group HISPANIC: Max precinct percentage = 63.87%                                  │
+│ Group ASIAN: Max precinct percentage = 60.71%                                     │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Checking the maximum precinct percentage for each demographic group in … │
+│                                                                                   │
+│ Group BLACK: Max precinct percentage = 77.78%                                     │
+│ Group HISPANIC: Max precinct percentage = 47.48%                                  │
+│ Group ASIAN: Max precinct percentage = 11.72%                                     │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Checking "Other" group support for Harris in Georgia.                    │
+│                                                                                   │
+│ Other Harris: 35.58%                                                              │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Checking if the sum of demographic-specific Democratic votes matches th… │
+│                                                                                   │
+│ Difference in DEM counts: 0                                                       │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat ga/GA-Polarization-Hispanic-Harris.txt | head -n 2                   │
+│                                                                                   │
+│ Hispanic support for Harris: 0.34438043571603455                                  │
+│ Non-Hispanic support for Harris: 0.4160399179873725                               │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat ga/GA-Polarization-Hispanic-Trump.txt | head -n 2                    │
+│                                                                                   │
+│ Hispanic support for Trump: 0.011408206063720077                                  │
+│ Non-Hispanic support for Trump: 0.3803700045182387                                │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  SearchText  'overlap' → No matches found
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating precinct-level overlap for Iowa.                             │
+│                                                                                   │
+│ Group BLACK: Precinct-level overlap = 1.27%                                       │
+│ Group HISPANIC: Precinct-level overlap = 3.33%                                    │
+│ Group ASIAN: Precinct-level overlap = 1.45%                                       │
+│ Group OTHER: Precinct-level overlap = 18.04%                                      │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Checking if the sum of racial groups matches the total population in Ge… │
+│                                                                                   │
+│ Total: 5213580                                                                    │
+│ Sum of races: 5213580                                                             │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat ga/GA-Polarization-Asian-Harris.txt | head -n 2                      │
+│                                                                                   │
+│ Asian support for Harris: 0.13317190013231658                                     │
+│ Non-Asian support for Harris: 0.42005969907421903                                 │
+│ Asian support for Trump: 0.04746372153758122                                      │
+│ Non-Asian support for Trump: 0.36952718676637697                                  │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  Calculating Distribution Overlap: 
+  Calculating the overlap between White and other demographic groups' support
+  distributions.
+
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Running EI and calculating distribution overlap between White and other… │
+│                                                                                   │
+│ ... first 21 lines hidden (Ctrl+O to show) ...                                    │
+│ rg/abs/1903.08008 for details                                                     │
+│ Traceback (most recent call last):                                                │
+│   File "<string>", line 34, in <module>                                           │
+│     white_samples = get_ei_samples(data_ga, "White", "Harris")                    │
+│   File "<string>", line 16, in get_ei_samples                                     │
+│     return ei.simulated_voting_prefs[:, 0] # Samples for the group support        │
+│            ^^^^^^^^^^^^^^^^^^^^^^^^^                                              │
+│ AttributeError: 'TwoByTwoEI' object has no attribute 'simulated_voting_prefs'. Di │
+│ d you mean: 'sampled_voting_prefs'?                                               │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating the percentage of White voters living in precincts where ot… │
+│                                                                                   │
+│ Group BLACK: Whites in majority-BLACK precincts = 6.83%                           │
+│ Group HISPANIC: Whites in majority-HISPANIC precincts = 0.02%                     │
+│ Group ASIAN: Whites in majority-ASIAN precincts = 0.01%                           │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating voting behavior overlap between White and other groups in G… │
+│                                                                                   │
+│ Group BLACK: Voting Behavior Overlap = 26.31%                                     │
+│ Group HISPANIC: Voting Behavior Overlap = 67.29%                                  │
+│ Group ASIAN: Voting Behavior Overlap = 69.15%                                     │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell Calculating voting behavior overlap between White and other groups in I… │
+│                                                                                   │
+│ Group BLACK: Voting Behavior Overlap = 44.50%                                     │
+│ Group HISPANIC: Voting Behavior Overlap = 73.89%                                  │
+│ Group ASIAN: Voting Behavior Overlap = 84.36%                                     │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+
+✦ To calculate the overlap between the white demographic group and each feasible
+  demographic group in the state (Georgia), I first identified the "feasible" groups
+  based on the provided data and analysis directories (ga/ and ia/). These groups are
+  Black, Hispanic, and Asian.
+
+  In the context of Gingles trials and ecological inference, "overlap" (or crossover)
+  typically refers to the percentage of the majority group (White) that supports the
+  candidate preferred by the minority group.
+
+  Analysis for Georgia
+  Based on the counts provided in GA-Precinct-EI.csv, the voting preferences and the
+  corresponding white vote overlap are as follows:
+
+   1. Total White Vote: 2,044,800 voters
+       * Support for Harris: 471,889 (23.08%)
+       * Support for Trump: 1,572,911 (76.92%)
+
+   2. Demographic Group Preferences and Overlap:
+       * Black Group:
+           * Preferred Candidate: Harris (96.77% support)
+           * Overlap with White Vote: 23.08% (Percentage of Whites voting for Harris)
+       * Hispanic Group:
+           * Preferred Candidate: Harris (55.79% support)
+           * Overlap with White Vote: 23.08% (Percentage of Whites voting for Harris)
+       * Asian Group:
+           * Preferred Candidate: Harris (53.93% support)
+           * Overlap with White Vote: 23.08% (Percentage of Whites voting for Harris)
+
+  All three feasible minority groups in Georgia prefer Harris. Therefore, the "overlap"
+  between the white group and each of these groups is the percentage of white voters who
+  also supported Harris, which is 23.08%.
+
+  Summary Table (Georgia)
+  ┌───────────────────┬─────────────────────┬───────────────────────────┐
+  │ Demographic Group │ Preferred Candidate │ Overlap (% of White Vote) │
+  ├───────────────────┼─────────────────────┼───────────────────────────┤
+  │ Black             │ Harris              │ 23.08%                    │
+  │ Hispanic          │ Harris              │ 23.08%                    │
+  │ Asian             │ Harris              │ 23.08%                    │
+  └───────────────────┴─────────────────────┴───────────────────────────┘
+
+  (Note: If the state in question were Iowa, the overlap would be 40.59%, as white voters
+  in Iowa supported Harris at a higher rate, and all three minority groups there also
+
+  Saving Overlap Calculation Code: 
+  Generating and saving a Python script to calculate demographic overlap.
+
+  ✓  WriteFile  calculate_overlap.py → Accepted (+59, -0)
+
+       1 import pandas as pd
+       2 import sys
+       3
+       4 def calculate_overlap(csv_file):
+       5     try:
+       6         df = pd.read_csv(csv_file)
+       7     except Exception as e:
+       8         print(f"Error reading {csv_file}: {e}")
+       9         return
+      10
+      11     # Demographic groups to analyze▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+      12     groups = ["BLACK", "HISPANIC", "ASIAN"]  /model                       quota
+      13     rial          Seongwoo     no sandbox    gemini-3-flash-preview    55% used
+      14     # Calculate total White votes and support percentages
+      15     white_dem = df["WHITE_DEM"].sum()
+      16     white_rep = df["WHITE_REP"].sum()
+      17     white_total = white_dem + white_rep
+      18     
+      19     if white_total == 0:
+      20         print("No white votes found in data.")
+      21         return
+      22
+      23     white_pct_harris = white_dem / white_total
+      24     white_pct_trump = white_rep / white_total
+      25
+      26     print(f"Analysis for: {csv_file}")
+      27     print(f"Total White Vote: {white_total:,}")
+      28     print(f"White support for Harris: {white_pct_harris:.2%}")
+      29     print(f"White support for Trump: {white_pct_trump:.2%}")
+      30     print("-" * 30)
+      31     print(f"{'Group':<10} | {'Preferred':<10} | {'Overlap (%)':<12}")
+      32     print("-" * 30)
+      33
+      34     for g in groups:
+      35         g_dem = df[f"{g}_DEM"].sum()
+      36         g_rep = df[f"{g}_REP"].sum()
+      37         g_total = g_dem + g_rep
+      38         
+      39         if g_total == 0:
+      40             print(f"{g:<10} | {'N/A':<10} | {'N/A':<12}")
+      41             continue
+      42             
+      43         # Determine group preference
+      44         pref_harris = g_dem / g_total
+      45         if pref_harris > 0.5:
+      46             preferred_candidate = "Harris"
+      47             overlap = white_pct_harris
+      48         else:
+      49             preferred_candidate = "Trump"
+      50             overlap = white_pct_trump
+      51             
+      52         print(f"{g:<10} | {preferred_candidate:<10} | {overlap:.2%}")
+      53
+      54 if __name__ == "__main__":
+      55     if len(sys.argv) > 1:
+      56         calculate_overlap(sys.argv[1])
+      57     else:
+      58         # Default to Georgia if no argument provided
+      59         calculate_overlap("GA-Precinct-EI.csv")
+
+
+✦ I have created a Python script named calculate_overlap.py that calculates the overlap
+  between the white demographic group and other feasible groups (Black, Hispanic, Asian)
+  as a percentage of the white vote.
+
+  The script identifies the preferred candidate for each group and then determines the
+  percentage of white voters who supported that same candidate.
+
+  Usage
+  You can run the script using the project's virtual environment:
+
+   1 ./pyei_venv/bin/python3 calculate_overlap.py GA-Precinct-EI.csv
+
+  Script Content: calculate_overlap.py
+
+    1 import pandas as pd
+    2 import sys
+    3
+    4 def calculate_overlap(csv_file):
+    5     try:
+    6         df = pd.read_csv(csv_file)
+    7     except Exception as e:
+    8         print(f"Error reading {csv_file}: {e}")
+    9         return
+   10
+   11     # Demographic groups to analyze
+   12     groups = ["BLACK", "HISPANIC", "ASIAN"]
+   13     
+   14     # Calculate total White votes and support percentages
+   15     white_dem = df["WHITE_DEM"].sum()
+   16     white_rep = df["WHITE_REP"].sum()
+   17     white_total = white_dem + white_rep
+   18     
+   19     if white_total == 0:
+   20         print("No white votes found in data.")
+   21         return
+   22
+   23     white_pct_harris = white_dem / white_total
+   24     white_pct_trump = white_rep / white_total
+   25
+   26     print(f"Analysis for: {csv_file}")
+   27     print(f"Total White Vote: {white_total:,}")
+   28     print(f"White support for Harris: {white_pct_harris:.2%}")
+   29     print(f"White support for Trump: {white_pct_trump:.2%}")
+   30     print("-" * 30)
+   31     print(f"{'Group':<10} | {'Preferred':<10} | {'Overlap (%)':<12}")
+   32     print("-" * 30)
+   33
+   34     for g in groups:
+   35         g_dem = df[f"{g}_DEM"].sum()
+   36         g_rep = df[f"{g}_REP"].sum()
+   37         g_total = g_dem + g_rep
+   38         
+   39         if g_total == 0:
+   40             print(f"{g:<10} | {'N/A':<10} | {'N/A':<12}")
+   41             continue
+   42             
+   43         # Determine group preference
+   44         pref_harris = g_dem / g_total
+   45         if pref_harris > 0.5:
+   46             preferred_candidate = "Harris"
+   47             overlap = white_pct_harris
+   48         else:
+   49             preferred_candidate = "Trump"
+   50             overlap = white_pct_trump
+   51             
+   52         print(f"{g:<10} | {preferred_candidate:<10} | {overlap:.2%}")
+   53
+   54 if __name__ == "__main__":
+   55     if len(sys.argv) > 1:
+   56         calculate_overlap(sys.argv[1])
+   57     else:
+   58         # Default to Georgia if no argument provided
+   59         calculate_overlap("GA-Precinct-EI.csv")
+
+

@@ -29,8 +29,8 @@ function VraImpactThresholdTable({ data, race, activePrecinct }) {
               Satisfies Enacted Effectiveness (number of effective districts in
               plan)
             </td>
-            <td>{data[3]}</td>
-            <td>{data[0]}</td>
+            <td>{data[3].toLocaleString()}</td>
+            <td>{data[0].toLocaleString()}</td>
           </tr>
           <tr>
             {/* Rough Proportionality: from effectiveness.json */}
@@ -40,13 +40,13 @@ function VraImpactThresholdTable({ data, race, activePrecinct }) {
               Satisfies Rough Proportionality (number of effective districts
               proportional to demographics)
             </td>
-            <td>{data[4]}</td>
-            <td>{data[1]}</td>
+            <td>{data[4].toLocaleString()}</td>
+            <td>{data[1].toLocaleString()}</td>
           </tr>
           <tr>
             <td>Satisfies both conditions above, jointly</td>
-            <td>{data[5]}</td>
-            <td>{data[2]}</td>
+            <td>{data[5].toLocaleString()}</td>
+            <td>{data[2].toLocaleString()}</td>
           </tr>
         </tbody>
       </table>
