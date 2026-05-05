@@ -287,7 +287,7 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     plt.close(fig)
 
 def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, baseline_counts):
-    fig, ax = plt.subplots(figsize=(5.96, 7.2))
+    fig, ax = plt.subplots(figsize=(5.46, 7.2))
     ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
     ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
     ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan")
@@ -303,7 +303,7 @@ def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, basel
     plt.close(fig)
 
 def render_minority_effectiveness_histogram(group_name, vra_eff, nonvra_eff):
-    fig, ax = plt.subplots(figsize=(5.96, 7.2))
+    fig, ax = plt.subplots(figsize=(5.46, 7.2))
     all_vals = vra_eff[group_name] + nonvra_eff[group_name]
     bins = np.arange(min(all_vals), max(all_vals) + 2) - 0.5
     ax.hist(vra_eff[group_name], label="VRA-Constrained", alpha=0.5, bins=bins)

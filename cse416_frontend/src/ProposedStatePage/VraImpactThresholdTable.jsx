@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../CSS/GinglesTable.css";
 
-function VraImpactThresholdTable({ data, race, activePrecinct }) {
+function VraImpactThresholdTable({ data }) {
   if (!data || data.length === 0) {
     return (
       <div style={{ padding: "1rem" }}>

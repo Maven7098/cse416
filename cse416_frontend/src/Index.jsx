@@ -8,7 +8,7 @@ import MapTab from "./CurrentStatePage/MapTab.jsx";
 import GinglesTab from "./CurrentStatePage/GinglesTab.jsx";
 import ProposedNavbar from "./ProposedStatePage/ProposedNavbar.jsx";
 import ProposedMapTab from "./ProposedStatePage/ProposedMapTab.jsx";
-import CompareChart from "./ProposedStatePage/CompareChart.jsx";
+import CompareMapTab from "./ProposedStatePage/CompareMapTab.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./CSS/index.css";
 
@@ -210,14 +210,12 @@ export default function App() {
                   currentRace={currentRace}
                   setActiveRace={setActiveRace}
                 />
-                <CompareChart
+                <CompareMapTab
                   activeState="ia"
                   activeRace={activeRace}
                   currentRace={currentRace}
                   activeStateName="Iowa"
                   mode="nonvra"
-                  latitude={41.878}
-                  longitude={-93.0977}
                 />
               </>
             }
@@ -232,14 +230,12 @@ export default function App() {
                   currentRace={currentRace}
                   setActiveRace={setActiveRace}
                 />
-                <CompareChart
+                <CompareMapTab
                   activeState="ga"
                   activeRace={activeRace}
                   currentRace={currentRace}
                   activeStateName="Georgia"
                   mode="nonvra"
-                  latitude={33.2478}
-                  longitude={-83.4411}
                 />
               </>
             }
