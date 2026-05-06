@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import sys
+import json
 
 INPUT_FILE = sys.argv[1]
 OUTPUT_FILE = sys.argv[2]
@@ -36,8 +37,12 @@ def model_func(x, a, b, c):
 popt_dem, pcov_dem = curve_fit(model_func, xdata, ydata_dem, maxfev=10000)
 popt_rep, pcov_rep = curve_fit(model_func, xdata, ydata_rep, maxfev=10000)
 
+# Export the formula
 print(f"Optimized Parameters: a={popt_dem[0]}, b={popt_dem[1]}, c={popt_dem[2]}")
 print(f"Optimized Parameters: a={popt_rep[0]}, b={popt_rep[1]}, c={popt_rep[2]}")
+with open(f'{OUTPUT_FILE}-{GROUP}-Line.json', "w") as f:
+    json.dump({"DEMOCRATIC": [popt_dem[0], popt_dem[1], popt_dem[2]],
+               "REPUBLICAN": [popt_rep[0], popt_rep[1], popt_rep[2]]}, f)
 
 # Generate a scatter plot
 fig, ax = plt.subplots(figsize=(16.1, 7.59))
@@ -52,7 +57,7 @@ ax.legend(); ax.grid(True, axis="y", alpha=0.3)
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y:.0%}"))
 ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:.0%}"))
 fig.tight_layout()
-mpld3.save_html(fig, f"{OUTPUT_FILE}-{GROUP}-Gingles.html")
-mpld3.save_json(fig, f"{OUTPUT_FILE}-{GROUP}-Gingles.json")
-plt.savefig(f"{OUTPUT_FILE}-{GROUP}-Gingles.png", dpi=200)
+mpld3.save_html(fig, f"{OUTPUT_FILE}-{GROUP}.html")
+mpld3.save_json(fig, f"{OUTPUT_FILE}-{GROUP}.json")
+plt.savefig(f"{OUTPUT_FILE}-{GROUP}.png", dpi=200)
 plt.close(fig)

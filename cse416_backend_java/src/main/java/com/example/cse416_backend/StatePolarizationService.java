@@ -36,9 +36,8 @@ public class StatePolarizationService {
         if (currentState.equals("ia") || currentState.equals("ga")){
             response.add(getGinglesPayload(currentState));
             response.add(getLocalPayload(currentState));
-            response.add(objectMapper.createArrayNode());
             
-            // Add polarization KDE data as element [3]
+            // Add polarization KDE data as element [2]
             Optional<PolarizationDataDocument> polarizationData = polarizationDataRepository.findByCurrentState(currentState);
             if (polarizationData.isPresent() && polarizationData.get().getPayload() != null) {
                 JsonNode kdeNode = objectMapper.readTree(polarizationData.get().getPayload().toJson());
@@ -71,17 +70,28 @@ public class StatePolarizationService {
     // Gingles Regression (as a math formula) (GUI-9)
     // EI Chart (GUI-13)
     // EI KDE Results (GUI-15)
-    private JsonNode getGinglesPayload(String currentState) throws IOException {
+    private ArrayNode getGinglesPayload(String currentState) throws IOException {
         Optional<PrecinctsGinglesDocument> stateDoc = precinctsGinglesRepository.findByCurrentState(currentState);
         if (stateDoc.isEmpty() || stateDoc.get().getPayload() == null) {
             throw new IOException("Missing precincts_gingles payload for state: " + currentState);
         }
 
         JsonNode payloadNode = objectMapper.readTree(stateDoc.get().getPayload().toJson());
-        JsonNode dataNode = payloadNode.get("data");
+        ArrayNode response = objectMapper.createArrayNode();
+        JsonNode dataNode = payloadNode.get("Data");
+        JsonNode asianNode = payloadNode.get("Asian");
+        JsonNode blackNode = payloadNode.get("Black");
+        JsonNode hispanicNode = payloadNode.get("Hispanic");
         if (dataNode == null || !dataNode.isArray()) {
             throw new IOException("Invalid precincts_gingles payload shape for state: " + currentState);
         }
-        return dataNode;
+        if (asianNode == null || blackNode == null || hispanicNode == null) {
+            throw new IOException("Invalid precincts_gingles payload line for state: " + currentState);
+        }
+        response.add(dataNode);
+        response.add(asianNode);
+        response.add(blackNode);
+        response.add(hispanicNode);
+        return response;
     }
 }

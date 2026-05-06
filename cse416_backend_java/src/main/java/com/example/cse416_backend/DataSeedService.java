@@ -373,9 +373,21 @@ public class DataSeedService {
         if (precinctsGinglesRepository.findByCurrentState(stateCode).isEmpty()) {
             String ginglesJson = loadJsonString(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles.json");
-            if (ginglesJson != null && !ginglesJson.isEmpty()) {
+            String asianLineJson = loadJsonString(
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles-Asian-Line.json");
+            String blackLineJson = loadJsonString(
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles-Black-Line.json");
+            String hispanicLineJson = loadJsonString(
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles-Hispanic-Line.json");
+            if (ginglesJson != null && !ginglesJson.isEmpty()
+            && asianLineJson != null && !asianLineJson.isEmpty()
+            && blackLineJson != null && !blackLineJson.isEmpty()
+            && hispanicLineJson != null && !hispanicLineJson.isEmpty()) {
                 Document payloadDoc = new Document();
-                payloadDoc.put("data", parseJsonAsArray(ginglesJson));
+                payloadDoc.put("Data", parseJsonAsArray(ginglesJson));
+                payloadDoc.put("Asian", Document.parse(asianLineJson));
+                payloadDoc.put("Black", Document.parse(blackLineJson));
+                payloadDoc.put("Hispanic", Document.parse(hispanicLineJson));
                 PrecinctsGinglesDocument doc = new PrecinctsGinglesDocument(stateCode, payloadDoc);
                 precinctsGinglesRepository.save(doc);
                 logger.info("  Seeded " + stateCodeUpper + " precincts_gingles document");

@@ -31,15 +31,28 @@ function GinglesTab({
     axios
       .get(`http://localhost:8080/polarization?currentState=${activeState}`)
       .then((response) => {
-        console.log(response.data)
         setGinglesData(response.data[0]);
         setPrecinctGeoJsonData(response.data[1]);
         // EiData and EiKdeData is 3 racial groups combined
         // Call them through response.data[2].BLACK
-        setEiData(response.data[3]);
+        setEiData(response.data[2]);
       })
       .catch((error) => console.log(error.response?.data ?? error.message));
   }, [activeState]);
+
+  // Select line based on race
+  let currentLine = ginglesData[1]
+  switch (activeRace) {
+    case "HISPANIC":
+      currentLine = ginglesData[2];
+      break;
+    case "BLACK":
+      currentLine = ginglesData[1];
+      break;
+    case "ASIAN":
+      currentLine = ginglesData[0];
+      break;
+  }
 
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="gingles" fluid>
@@ -72,7 +85,7 @@ function GinglesTab({
           <Col lg={true}>
             <Tab.Content>
               <Tab.Pane eventKey="gingles">
-                <GinglesMap ginglesData={ginglesData} activeRace={activeRace} currentRace={currentRace} />
+                <GinglesMap ginglesData={ginglesData[0]} lineData={currentLine} activeRace={activeRace} currentRace={currentRace} />
               </Tab.Pane>
               <Tab.Pane eventKey="ei">
                 <EIMap

@@ -4,7 +4,7 @@ import "../CSS/StateInfo.css";
 import GinglesData from "./GinglesData.jsx";
 import GinglesTable from "./GinglesTable.jsx";
 
-function GinglesMap({ ginglesData, activeRace, currentRace }) {
+function GinglesMap({ ginglesData, lineData, activeRace, currentRace }) {
   // What type of data will we need for GinglesMap.jsx?
   // Left: Gingles Analysis Results (GUI-9)
   // Right: Gingles Data (GUI-10, GUI-11)
@@ -33,6 +33,7 @@ function GinglesMap({ ginglesData, activeRace, currentRace }) {
                 <h3>Racial Polarization Data</h3>
                 <GinglesData
                   data={ginglesData}
+                  line={lineData}
                   race={activeRace}
                   currentRace={currentRace}
                   width={width}

@@ -11,6 +11,7 @@ function GinglesData({
   width,
   height,
   data,
+  line,
   activeRace,
   currentRace,
   setActivePrecinct,
@@ -202,6 +203,28 @@ function GinglesData({
       };
     });
 
+    // Constants for y = a * e^(b * x) + c
+    const aDem = line.DEMOCRATIC[0], bDem = line.DEMOCRATIC[1], cDem = line.DEMOCRATIC[2]
+    const aRep = line.REPUBLICAN[0], bRep = line.REPUBLICAN[1], cRep = line.REPUBLICAN[2]
+    // Line for Democrat and Republican respectively
+    const resultDem = d3.range(0, 100, 0.1).map(x => ({
+      x: x,
+      y: (aDem * Math.exp(bDem * x) + cDem)*100 // Exponential formula
+    }));
+    const resultRep = d3.range(0, 100, 0.1).map(x => ({
+      x: x,
+      y: (aRep * Math.exp(bRep * x) + cRep)*100 // Exponential formula
+    }));
+
+    // Use result to draw line (result.a is slope, result.b is intercept)
+    const lineBuilder = d3
+      .line()
+      .x((d) => xScale(d.x)) // Use the first value in the point array (x-coord)
+      .y((d) => yScale(d.y)); // Use the second value in the point array (y-coord)
+    const demPath = lineBuilder(resultDem);
+    const repPath = lineBuilder(resultRep);
+    console.log(resultRep); console.log(resultDem);
+
   return (
     <div style={{ position: "relative" }} key={key}>
       <style>{`
@@ -235,6 +258,32 @@ function GinglesData({
         >
           {/* Circles */}
           {allShapes}
+          {/* Lines - Democratic */}
+          <path
+            d={demPath}
+            opacity={1}
+            stroke="#000088"
+            fill="none"
+            strokeWidth={4}
+            clipPath="url(#gridClip)"
+            style={{
+              animation: `pathsFadeIn 0.1s ease-out forwards ${lineStartDelay}s`,
+              opacity: 0,
+            }}
+          />
+          {/* Lines - Republican */}
+          <path
+            d={repPath}
+            opacity={1}
+            stroke="#880000"
+            fill="none"
+            strokeWidth={4}
+            clipPath="url(#gridClip)"
+            style={{
+              animation: `pathsFadeIn 0.1s ease-out forwards ${lineStartDelay + 0.01}s`,
+              opacity: 0,
+            }}
+          />
           {/* Build a Legend */}
           <rect
             key="BOX"
