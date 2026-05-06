@@ -36,22 +36,22 @@ function GinglesData({
   // Y Axis: Vote Share (Democratic)
   // Calculate data extents for dynamic scaling
   const xValues = data.map((d) => {
-    let activeRace = d.BLACK;
+    let precincts = null;
     switch (activeRace) {
       case "HISPANIC":
-        activeRace = d.HISPANIC;
+        precincts = d.HISPANIC;
         break;
       case "BLACK":
-        activeRace = d.BLACK;
+        precincts = d.BLACK;
         break;
       case "ASIAN":
-        activeRace = d.ASIAN;
+        precincts = d.ASIAN;
         break;
     }
-    return 100 * (activeRace / d.TOTAL);
+    return 100 * (precincts / d.TOTAL);
   });
 
-  const yValues = data.map((d) => 100 * (d.DEMOCRATIC / d.TOTAL));
+  const yValues = data.map((d) => 100 * (d.TOTAL_DEM / d.TOTAL));
 
   const xMin = Math.max(0, d3.min(xValues) - 5);
   const xMax = Math.min(100, d3.max(xValues) + 5);
@@ -94,17 +94,17 @@ function GinglesData({
 
   // Build the shapes
   const allShapes = sortedData.map((d, i) => {
-    let activeRace = d.BLACK;
+    let precincts = null;
 
     switch (activeRace) {
       case "HISPANIC":
-        activeRace = d.HISPANIC;
+        precincts = d.HISPANIC;
         break;
       case "BLACK":
-        activeRace = d.BLACK;
+        precincts = d.BLACK;
         break;
       case "ASIAN":
-        activeRace = d.ASIAN;
+        precincts = d.ASIAN;
         break;
     }
 
@@ -113,16 +113,16 @@ function GinglesData({
         <circle
           key={`${i}-dem`}
           r={4}
-          cx={xScale(100 * (activeRace / d.TOTAL))}
-          cy={yScale(100 * (d.DEMOCRATIC / d.TOTAL))}
+          cx={xScale(100 * (precincts / d.TOTAL))}
+          cy={yScale(100 * (d.TOTAL_DEM / d.TOTAL))}
           stroke="#0000ff"
           fill="#0000ff"
           fillOpacity={0.7}
           onMouseEnter={() =>
             setHovered({
-              xPos: xScale(100 * (activeRace / d.TOTAL)),
-              yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
-              name: d.UNIQUE_ID,
+              xPos: xScale(100 * (precincts / d.TOTAL)),
+              yPos: yScale(100 * (d.TOTAL_DEM / d.TOTAL)),
+              name: d.ID,
             })
           }
           onClick={() => {
@@ -137,16 +137,16 @@ function GinglesData({
         <circle
           key={`${i}-rep`}
           r={4}
-          cx={xScale(100 * (activeRace / d.TOTAL))}
-          cy={yScale(100 * (d.REPUBLICAN / d.TOTAL))}
+          cx={xScale(100 * (precincts / d.TOTAL))}
+          cy={yScale(100 * (d.TOTAL_REP / d.TOTAL))}
           stroke="#ff0000"
           fill="#ff0000"
           fillOpacity={0.7}
           onMouseEnter={() =>
             setHovered({
-              xPos: xScale(100 * (activeRace / d.TOTAL)),
-              yPos: yScale(100 * (d.DEMOCRATIC / d.TOTAL)),
-              name: d.UNIQUE_ID,
+              xPos: xScale(100 * (precincts / d.TOTAL)),
+              yPos: yScale(100 * (d.TOTAL_DEM / d.TOTAL)),
+              name: d.ID,
             })
           }
           onClick={() => {
@@ -163,57 +163,57 @@ function GinglesData({
   });
 
   const dataDem = data
-    .filter((precinct) => precinct.DEMOCRATIC > precinct.REPUBLICAN)
+    .filter((precinct) => precinct.TOTAL_DEM > precinct.TOTAL_REP)
     .map((precinct) => {
-      let activeRace = precinct.BLACK;
+      let precincts = precinct.BLACK;
       switch (activeRace) {
         case "HISPANIC":
-          activeRace = precinct.HISPANIC;
+          precincts = precinct.HISPANIC;
           break;
         case "BLACK":
-          activeRace = precinct.BLACK;
+          precincts = precinct.BLACK;
           break;
         case "ASIAN":
-          activeRace = precinct.ASIAN;
+          precincts = precinct.ASIAN;
           break;
       }
       return {
-        x: (100 * activeRace) / precinct.TOTAL,
-        y: (100 * precinct.DEMOCRATIC) / precinct.TOTAL,
+        x: (100 * precincts) / precinct.TOTAL,
+        y: (100 * precinct.TOTAL_DEM) / precinct.TOTAL,
       };
     });
   const dataRep = data
-    .filter((precinct) => precinct.REPUBLICAN >= precinct.DEMOCRATIC)
+    .filter((precinct) => precinct.TOTAL_REP >= precinct.TOTAL_DEM)
     .map((precinct) => {
-      let activeRace = precinct.BLACK;
+      let precincts = precinct.BLACK;
       switch (activeRace) {
         case "HISPANIC":
-          activeRace = precinct.HISPANIC;
+          precincts = precinct.HISPANIC;
           break;
         case "BLACK":
-          activeRace = precinct.BLACK;
+          precincts = precinct.BLACK;
           break;
         case "ASIAN":
-          activeRace = precinct.ASIAN;
+          precincts = precinct.ASIAN;
           break;
       }
       return {
-        x: (100 * activeRace) / precinct.TOTAL,
-        y: (100 * precinct.REPUBLICAN) / precinct.TOTAL,
+        x: (100 * precincts) / precinct.TOTAL,
+        y: (100 * precinct.TOTAL_REP) / precinct.TOTAL,
       };
     });
 
     // Constants for y = a * e^(b * x) + c
-    const aDem = line.DEMOCRATIC[0], bDem = line.DEMOCRATIC[1], cDem = line.DEMOCRATIC[2]
-    const aRep = line.REPUBLICAN[0], bRep = line.REPUBLICAN[1], cRep = line.REPUBLICAN[2]
+    const aDem = line.TOTAL_DEM[0], bDem = line.TOTAL_DEM[1], cDem = line.TOTAL_DEM[2]
+    const aRep = line.TOTAL_REP[0], bRep = line.TOTAL_REP[1], cRep = line.TOTAL_REP[2]
     // Line for Democrat and Republican respectively
     const resultDem = d3.range(0, 100, 0.1).map(x => ({
       x: x,
-      y: (aDem * Math.exp(bDem * x) + cDem)*100 // Exponential formula
+      y: (aDem * Math.exp(bDem * x) + cDem)  // Exponential formula
     }));
     const resultRep = d3.range(0, 100, 0.1).map(x => ({
       x: x,
-      y: (aRep * Math.exp(bRep * x) + cRep)*100 // Exponential formula
+      y: (aRep * Math.exp(bRep * x) + cRep) // Exponential formula
     }));
 
     // Use result to draw line (result.a is slope, result.b is intercept)
@@ -223,7 +223,6 @@ function GinglesData({
       .y((d) => yScale(d.y)); // Use the second value in the point array (y-coord)
     const demPath = lineBuilder(resultDem);
     const repPath = lineBuilder(resultRep);
-    console.log(resultRep); console.log(resultDem);
 
   return (
     <div style={{ position: "relative" }} key={key}>
@@ -296,14 +295,14 @@ function GinglesData({
             y={-20}
           />
           <circle
-            key="DEMOCRATIC"
+            key="TOTAL_DEM"
             r={6}
             cx={boundsWidth - 90}
             cy={-5}
             fill="#0000ff"
           />
           <circle
-            key="REPUBLICAN"
+            key="TOTAL_REP"
             r={6}
             cx={boundsWidth - 90}
             cy={15}

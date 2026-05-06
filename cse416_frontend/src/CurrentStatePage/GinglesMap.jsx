@@ -16,7 +16,7 @@ function GinglesMap({ ginglesData, lineData, activeRace, currentRace }) {
 
   const width = 1050;
   const height = 680;
-
+  
   return (
     // Load the GeoJSON for the districting map
     // For Map 1 only: Map 2 does not have districting map
@@ -34,7 +34,7 @@ function GinglesMap({ ginglesData, lineData, activeRace, currentRace }) {
                 <GinglesData
                   data={ginglesData}
                   line={lineData}
-                  race={activeRace}
+                  activeRace={activeRace}
                   currentRace={currentRace}
                   width={width}
                   height={height}

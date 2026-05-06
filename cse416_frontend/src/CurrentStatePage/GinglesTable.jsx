@@ -13,8 +13,8 @@ function GinglesTable({ data, race, activePrecinct }) {
   // TODO Today: Pagination
   // Divide the charts by 15
   const linePerPage = 18;
-  const lineUNIQUE_ID = data.length;
-  const totalPages = Math.ceil(lineUNIQUE_ID / linePerPage);
+  const lineID = data.length;
+  const totalPages = Math.ceil(lineID / linePerPage);
   const [paginatedData, setPaginatedData] = useState(
     data.slice(0, linePerPage),
   );
@@ -51,7 +51,7 @@ function GinglesTable({ data, race, activePrecinct }) {
         </thead>
         {paginatedData.map(function (precinct) {
           return (
-            <tbody key={precinct.UNIQUE_ID}>
+            <tbody key={precinct.ID}>
               <tr>
                 {activePrecinct === precinct ? (
                   <td
@@ -69,7 +69,7 @@ function GinglesTable({ data, race, activePrecinct }) {
                         textOverflow: "ellipsis",
                       }}
                     >
-                      {precinct.UNIQUE_ID}
+                      {precinct.ID}
                     </div>
                   </td>
                 ) : (
@@ -82,7 +82,7 @@ function GinglesTable({ data, race, activePrecinct }) {
                         textOverflow: "ellipsis",
                       }}
                     >
-                      {precinct.UNIQUE_ID}
+                      {precinct.ID}
                     </div>
                   </td>
                 )}
@@ -165,10 +165,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.DEMOCRATIC}
+                    {precinct.TOTAL_DEM}
                   </td>
                 ) : (
-                  <td>{precinct.DEMOCRATIC}</td>
+                  <td>{precinct.TOTAL_DEM}</td>
                 )}
                 {activePrecinct === precinct ? (
                   <td
@@ -178,10 +178,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.REPUBLICAN}
+                    {precinct.TOTAL_REP}
                   </td>
                 ) : (
-                  <td>{precinct.REPUBLICAN}</td>
+                  <td>{precinct.TOTAL_REP}</td>
                 )}
               </tr>
             </tbody>

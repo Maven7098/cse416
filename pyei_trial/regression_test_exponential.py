@@ -21,40 +21,53 @@ print(gingles['TOTAL_DEM'])
 print(gingles['TOTAL_REP'])
 
 # Create your independent and dependent variables for curve fitting.
-xdata = (gingles[GROUP.upper()]/gingles['TOTAL']) * 100
-ydata_dem = (gingles['TOTAL_DEM']/gingles['TOTAL']) * 100
-ydata_rep = (gingles['TOTAL_REP']/gingles['TOTAL']) * 100
-print(xdata)
-print(ydata_dem)
-print(ydata_rep)
+# Normalize to [0, 1] for stable regression
+xdata_norm = gingles[GROUP.upper()]/gingles['TOTAL']
+ydata_dem_norm = gingles['TOTAL_DEM']/gingles['TOTAL']
+ydata_rep_norm = gingles['TOTAL_REP']/gingles['TOTAL']
 
-# 2. Define the regression logic
-# We use a quadratic model (ax^2 + bx + c) because it is stable and easy to plot in Desmos.
-def get_best_fit(x, y):
-    # np.polyfit(x, y, 2) returns [a, b, c] for y = ax^2 + bx + c
-    return np.polyfit(x, y, 2)
+# Data for plotting (0-100 scale)
+xdata = xdata_norm * 100
+ydata_dem = ydata_dem_norm * 100
+ydata_rep = ydata_rep_norm * 100
 
-popt_dem = get_best_fit(xdata, ydata_dem)
-popt_rep = get_best_fit(xdata, ydata_rep)
+# 2. Define your nonlinear model (e.g., an exponential growth model)
+def model_func(x, a, b, c):
+    return a * np.exp(b * x) + c
+
+# 3. Perform the regression on normalized data
+# p0 is an optional initial guess for the parameters [a, b, c]
+try:
+    popt_dem_norm, pcov_dem = curve_fit(model_func, xdata_norm, ydata_dem_norm, p0=[0.1, 1, 0], maxfev=20000)
+    popt_rep_norm, pcov_rep = curve_fit(model_func, xdata_norm, ydata_rep_norm, p0=[0.1, 1, 0], maxfev=20000)
+except Exception as e:
+    print(f"Regression failed: {e}")
+    # Fallback to some defaults or handle error
+    popt_dem_norm = [0, 0, 0.5]
+    popt_rep_norm = [0, 0, 0.5]
+
+# Rescale parameters for the 0-100 scale formula: Y = A * exp(B * X) + C
+# y/100 = a * exp(b * x/100) + c  =>  y = 100*a * exp((b/100) * x) + 100*c
+popt_dem = [popt_dem_norm[0] * 100, popt_dem_norm[1] / 100, popt_dem_norm[2] * 100]
+popt_rep = [popt_rep_norm[0] * 100, popt_rep_norm[1] / 100, popt_rep_norm[2] * 100]
 
 # Export the formula
 print(f"Optimized Parameters (DEM): a={popt_dem[0]}, b={popt_dem[1]}, c={popt_dem[2]}")
 print(f"Optimized Parameters (REP): a={popt_rep[0]}, b={popt_rep[1]}, c={popt_rep[2]}")
 with open(f'{OUTPUT_FILE}-{GROUP}-Line.json', "w") as f:
-    json.dump({"DEMOCRATIC": [popt_dem[0], popt_dem[1], popt_dem[2]],
-               "REPUBLICAN": [popt_rep[0], popt_rep[1], popt_rep[2]]}, f)
+    json.dump({"TOTAL_DEM": [popt_dem[0], popt_dem[1], popt_dem[2]],
+               "TOTAL_REP": [popt_rep[0], popt_rep[1], popt_rep[2]]}, f)
 
 # Generate a scatter plot
 fig, ax = plt.subplots(figsize=(16.1, 7.59))
 ax.scatter(xdata, ydata_dem, marker="o", color='blue', alpha=0.3, label="Democratic")
 ax.scatter(xdata, ydata_rep, marker="o", color='red', alpha=0.3, label="Republican")
-# Sort xdata for plotting the curve to avoid jagged lines
-x_plot = np.linspace(0, 100, 200)
-def model_func(x, a, b, c):
-    return a * x**2 + b * x + c
 
+# Plot the curves
+x_plot = np.linspace(0, 100, 200)
 ax.plot(x_plot, model_func(x_plot, *popt_dem), color='darkblue', linewidth=2, label='Democratic Curve')
 ax.plot(x_plot, model_func(x_plot, *popt_rep), color='darkred', linewidth=2, label='Republican Curve')
+
 ax.set_title(f"{GROUP} Population vs Vote Share")
 ax.set_xlabel(f"Percent {GROUP} (%)")
 ax.set_ylabel(f"Vote Share (%)")
@@ -68,3 +81,4 @@ mpld3.save_html(fig, f"{OUTPUT_FILE}-{GROUP}.html")
 mpld3.save_json(fig, f"{OUTPUT_FILE}-{GROUP}.json")
 plt.savefig(f"{OUTPUT_FILE}-{GROUP}.png", dpi=200)
 plt.close(fig)
+
