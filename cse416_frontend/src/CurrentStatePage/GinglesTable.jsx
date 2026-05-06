@@ -12,7 +12,7 @@ function GinglesTable({ data, race, activePrecinct }) {
 
   // TODO Today: Pagination
   // Divide the charts by 15
-  const linePerPage = 18;
+  const linePerPage = 20;
   const lineID = data.length;
   const totalPages = Math.ceil(lineID / linePerPage);
   const [paginatedData, setPaginatedData] = useState(
@@ -51,7 +51,7 @@ function GinglesTable({ data, race, activePrecinct }) {
         </thead>
         {paginatedData.map(function (precinct) {
           return (
-            <tbody key={precinct.ID}>
+            <tbody key={precinct.ID} style={{textAlign: "right", fontSize: "small"}}>
               <tr>
                 {activePrecinct === precinct ? (
                   <td
@@ -64,9 +64,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                     <div
                       style={{
                         height: "3em",
-                        alignContent: "center",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        textAlign: "center",
+                        fontSize: "x-small"
                       }}
                     >
                       {precinct.ID}
@@ -77,9 +78,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                     <div
                       style={{
                         height: "3em",
-                        alignContent: "center",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        textAlign: "center",
+                        fontSize: "x-small"
                       }}
                     >
                       {precinct.ID}
@@ -94,10 +96,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.TOTAL}
+                    {Number(precinct.TOTAL).toLocaleString()}
                   </td>
                 ) : (
-                  <td>{precinct.TOTAL}</td>
+                  <td>{Number(precinct.TOTAL).toLocaleString()}</td>
                 )}
                 {activePrecinct === precinct ? (
                   <td
@@ -107,12 +109,12 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.HISPANIC}
+                    {Number(precinct.HISPANIC).toLocaleString()}
                   </td>
                 ) : race == "HISPANIC" ? (
-                  <td style={{ fontWeight: "bold" }}>{precinct.HISPANIC}</td>
+                  <td style={{ fontWeight: "bold" }}>{Number(precinct.HISPANIC).toLocaleString()}</td>
                 ) : (
-                  <td>{precinct.HISPANIC}</td>
+                  <td>{Number(precinct.HISPANIC).toLocaleString()}</td>
                 )}
                 {activePrecinct === precinct ? (
                   <td
@@ -122,12 +124,12 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.BLACK}
+                    {Number(precinct.BLACK).toLocaleString()}
                   </td>
                 ) : race == "BLACK" ? (
-                  <td style={{ fontWeight: "bold" }}>{precinct.BLACK}</td>
+                  <td style={{ fontWeight: "bold" }}>{Number(precinct.BLACK).toLocaleString()}</td>
                 ) : (
-                  <td>{precinct.BLACK}</td>
+                  <td>{Number(precinct.BLACK).toLocaleString()}</td>
                 )}
                 {activePrecinct === precinct ? (
                   <td
@@ -137,12 +139,12 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.ASIAN}
+                    {Number(precinct.ASIAN).toLocaleString()}
                   </td>
                 ) : race == "ASIAN" ? (
-                  <td style={{ fontWeight: "bold" }}>{precinct.ASIAN}</td>
+                  <td style={{ fontWeight: "bold" }}>{Number(precinct.ASIAN).toLocaleString()}</td>
                 ) : (
-                  <td>{precinct.ASIAN}</td>
+                  <td>{Number(precinct.ASIAN).toLocaleString()}</td>
                 )}
                 {activePrecinct === precinct ? (
                   <td
@@ -152,10 +154,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.WHITE}
+                    {Number(precinct.WHITE).toLocaleString()}
                   </td>
                 ) : (
-                  <td>{precinct.WHITE}</td>
+                  <td>{Number(precinct.WHITE).toLocaleString()}</td>
                 )}
                 {activePrecinct === precinct ? (
                   <td
@@ -165,10 +167,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.TOTAL_DEM}
+                    {Number(precinct.TOTAL_DEM).toLocaleString()}
                   </td>
                 ) : (
-                  <td>{precinct.TOTAL_DEM}</td>
+                  <td>{Number(precinct.TOTAL_DEM).toLocaleString()}</td>
                 )}
                 {activePrecinct === precinct ? (
                   <td
@@ -178,10 +180,10 @@ function GinglesTable({ data, race, activePrecinct }) {
                       fontWeight: "bold",
                     }}
                   >
-                    {precinct.TOTAL_REP}
+                    {Number(precinct.TOTAL_REP).toLocaleString()}
                   </td>
                 ) : (
-                  <td>{precinct.TOTAL_REP}</td>
+                  <td>{Number(precinct.TOTAL_REP).toLocaleString()}</td>
                 )}
               </tr>
             </tbody>

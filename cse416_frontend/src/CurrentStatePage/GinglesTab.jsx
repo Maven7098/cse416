@@ -99,10 +99,10 @@ function GinglesTab({
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="gingles-about">
-                <GinglesAbout />
+                <GinglesAbout activeState={activeState} />
               </Tab.Pane>
               <Tab.Pane eventKey="ei-about">
-                <EIAbout />
+                <EIAbout activeState={activeState} />
               </Tab.Pane>
             </Tab.Content>
           </Col>

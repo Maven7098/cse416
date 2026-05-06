@@ -1,4 +1,4 @@
-function EIAbout() {
+function EIAbout({activeState}) {
   return (
     <div className="leaflet-containerset">
       <div className="leaflet-container-big">
@@ -10,6 +10,7 @@ function EIAbout() {
         </p>
         <p>Produces probability voting curves</p>
         <p>Use PyEI software</p>
+        <p>{activeState == "ga" ? "Black votes are likely polarized": "Hispanic votes are likely to be polarized"}</p>
       </div>
     </div>
   );

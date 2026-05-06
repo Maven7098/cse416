@@ -1,4 +1,4 @@
-function GinglesAbout() {
+function GinglesAbout({activeState}) {
   return (
     <div className="leaflet-containerset">
       <div className="leaflet-container-big">
@@ -11,6 +11,7 @@ function GinglesAbout() {
         <p>
           Bubble x-axis location based on population demographic in the precinct
         </p>
+        <p>{activeState == "ga" ? "Black votes are likely polarized": "Hispanic votes are likely to be polarized"}</p>
       </div>
     </div>
   );

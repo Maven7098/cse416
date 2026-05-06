@@ -15,8 +15,8 @@ function GinglesMap({ ginglesData, lineData, activeRace, currentRace }) {
   const [activePrecinct, setActivePrecinct] = useState("");
 
   const width = 1050;
-  const height = 680;
-  
+  const height = 780;
+
   return (
     // Load the GeoJSON for the districting map
     // For Map 1 only: Map 2 does not have districting map
