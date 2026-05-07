@@ -10,7 +10,7 @@ import { useState } from "react";
 import "../CSS/CustomTab.css";
 
 function MapTab({ activeState, activeRace, currentRace, latitude, longitude }) {
-  const [currentMode, setCurrentMode] = useState("Precinct");
+  const [currentMode, setCurrentMode] = useState("District");
 
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="info" fluid>
@@ -18,20 +18,17 @@ function MapTab({ activeState, activeRace, currentRace, latitude, longitude }) {
         <Row>
           <Col lg="auto">
             <Nav variant="pills" className="flex-column stateinfo-tabs">
-              <Nav.Item>
-                <Nav.Link eventKey="info">State Summary</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="heatmap">State Heatmap</Nav.Link>
-              </Nav.Item>
               <NavDropdown title={`Select Display Mode`}>
+                <NavDropdown.Item onClick={() => setCurrentMode("District")}>
+                  District Map
+                </NavDropdown.Item>
                 <NavDropdown.Item onClick={() => setCurrentMode("Precinct")}>
-                  Precinct
+                  Precinct Heatmap
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => setCurrentMode("Census Block")}
                 >
-                  Census Block
+                  Census Block Heatmap
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
@@ -42,16 +39,7 @@ function MapTab({ activeState, activeRace, currentRace, latitude, longitude }) {
                 <StateInfo
                   activeState={activeState}
                   activeRace={activeRace}
-                  currentRace={currentRace}
-                  latitude={latitude}
-                  longitude={longitude}
-                />
-              </Tab.Pane>
-              <Tab.Pane eventKey="heatmap">
-                <StateHeatmap
-                  activeState={activeState}
                   currentMode={currentMode}
-                  activeRace={activeRace}
                   currentRace={currentRace}
                   latitude={latitude}
                   longitude={longitude}

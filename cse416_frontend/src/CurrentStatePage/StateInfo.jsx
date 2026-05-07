@@ -4,12 +4,14 @@ import "leaflet/dist/leaflet.css";
 import "../CSS/StateInfo.css";
 import State from "./State.jsx";
 import District from "./District.jsx";
+import Legend from "./MapLegend.jsx"
 
 import axios from "axios";
 
 function StateInfo({
   activeState,
   activeRace,
+  currentMode,
   currentRace,
   latitude,
   longitude,
@@ -18,6 +20,7 @@ function StateInfo({
   const [districtData, setDistrictData] = useState("");
   const [currentState, setCurrentState] = useState("");
 
+  // Set District Info GeoJSON Data
   useEffect(() => {
     axios
       .get(`http://localhost:8080/district?currentState=${activeState}`)
@@ -28,6 +31,30 @@ function StateInfo({
       .catch((error) => console.log(error.response?.data ?? error.message));
     // If Active State changes, then also reset districtData
     setDistrictData("");
+  }, [activeState]);
+
+  const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
+  const [censusBlockGeoJsonData, setCensusBlockGeoJsonData] = useState("");
+
+  // Set the Precinct and Census Block GeoJSON Data
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/heatmap?currentState=${activeState}`)
+      .then((response) => {
+        const payload = Array.isArray(response.data) ? response.data : [];
+        const normalized = Array.isArray(payload[0]) ? payload[0] : payload;
+        setPrecinctGeoJsonData(
+          normalized[0] && typeof normalized[0] === "object"
+            ? normalized[0]
+            : "",
+        );
+        setCensusBlockGeoJsonData(
+          normalized[1] && typeof normalized[1] === "object"
+            ? normalized[1]
+            : "",
+        );
+      })
+      .catch((error) => console.log(error.response?.data ?? error.message));
   }, [activeState]);
 
   const resizeMap = (mapRef) => {
@@ -100,6 +127,55 @@ function StateInfo({
     });
   }
 
+  function getColor(d) {
+    return d > 0.9
+      ? "#800026"
+      : d > 0.6
+        ? "#BD0026"
+        : d > 0.4
+          ? "#E31A1C"
+          : d > 0.2
+            ? "#FC4E2A"
+            : d > 0.1
+              ? "#FD8D3C"
+              : "#FFEDA0";
+  }
+
+  function precinctHeatmap(feature) {
+    // Need to find data on which President won which district
+    // No third party won any district in Georgia or Iowa, so I only keep 2 values
+    let mapRace;
+
+    switch (activeRace) {
+      case "HISPANIC":
+        mapRace = feature.properties.HISPANIC / feature.properties.TOTAL;
+        break;
+      case "BLACK":
+        mapRace = feature.properties.BLACK / feature.properties.TOTAL;
+        break;
+      case "ASIAN":
+        mapRace = feature.properties.ASIAN / feature.properties.TOTAL;
+        break;
+    }
+
+    return {
+      // property type should be chosen later on (after graph rendering is done)
+      fillColor: getColor(mapRace),
+      opacity: 0,
+      fillOpacity: 0.7,
+    };
+  }
+
+  const grades = ["0%", "10%", "20%", "40%", "60%", "90%"];
+  const colors = [
+    "#FFEDA0",
+    "#FD8D3C",
+    "#FC4E2A",
+    "#E31A1C",
+    "#BD0026",
+    "#800026",
+  ];
+
   const width = 820;
   const heightState = 500;
   const heightDistrict = 523;
@@ -113,7 +189,7 @@ function StateInfo({
     <div>
       <div className="leaflet-containerset">
         <div className="leaflet-container-big">
-          <h3>Select District</h3>
+          {currentMode == "District" ? <h3>Select District</h3> : <h3>{currentRace} {currentMode} Heatmap</h3>}
           <MapContainer
             center={[latitude, longitude]}
             key={JSON.stringify(districtGeoJsonData)}
@@ -127,12 +203,33 @@ function StateInfo({
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <GeoJSON
+            {currentMode == "District" && <GeoJSON
               data={districtGeoJsonData}
               style={districtWindow}
               onEachFeature={onEachFeature}
               key={JSON.stringify(districtGeoJsonData)}
-            />
+            /> }
+            {currentMode == "Precinct" &&
+              <>
+                <Legend grades={grades} colors={colors} title={currentRace} />
+                <GeoJSON
+                  data={precinctGeoJsonData}
+                  style={precinctHeatmap}
+                  key={JSON.stringify(precinctGeoJsonData)}
+                />
+              </>
+            }
+            { currentMode == "Census Block" &&
+              <>
+                <Legend grades={grades} colors={colors} title={currentRace} />
+                <GeoJSON
+                  data={censusBlockGeoJsonData}
+                  style={precinctHeatmap}
+                  key={JSON.stringify(censusBlockGeoJsonData)}
+                />
+              </>
+            }
+            
           </MapContainer>
         </div>
         <div className="leaflet-container-big">

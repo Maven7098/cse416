@@ -273,7 +273,7 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     for bucket in sorted(dots.keys()):
         item = dots[bucket]
         x_vals.append(bucket); y_vals.append(item["share"]); labels.append(f"District {item['district']}: {item['share']:.2%}")
-    scatter = ax.scatter(x_vals, y_vals, marker="o", label="Enacted Plan", color="lightyellow")
+    scatter = ax.scatter(x_vals, y_vals, marker="o", label="Enacted Plan", color="lightyellow", edgecolor="black")
     mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(scatter, labels=labels))
     ax.set_title(f"{group_name} Population Percentage by Ordered District Bucket")
     ax.set_xlabel("District Bucket")
@@ -290,7 +290,8 @@ def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, basel
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
     ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
     ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
-    ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow")
+    scatter = ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow", edgecolor="black")
+    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(scatter, labels=labels))
     ax.set_title(f"{group_name} Effectiveness Distribution")
     ax.set_xticks([1.2, 2.8], [f"{group_name} Voters", "White Voters"])
     ax.legend(); ax.grid(True, axis="y", alpha=0.3)
@@ -306,8 +307,10 @@ def render_minority_effectiveness_histogram(group_name, vra_eff, nonvra_eff):
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
     all_vals = vra_eff[group_name] + nonvra_eff[group_name]
     bins = np.arange(min(all_vals), max(all_vals) + 2) - 0.5
-    ax.hist(vra_eff[group_name], label="VRA-Constrained", alpha=0.5, bins=bins)
-    ax.hist(nonvra_eff[group_name], label="Race-Blind", alpha=0.5, bins=bins)
+    hist_vra = ax.hist(vra_eff[group_name], label="VRA-Constrained", alpha=0.5, bins=bins)
+    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_vra, labels=labels))
+    hist_nonvra = ax.hist(nonvra_eff[group_name], label="Race-Blind", alpha=0.5, bins=bins)
+    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_nonvra, labels=labels))
     ax.set_title(f"{group_name} Effectiveness Histogram")
     ax.set_xlabel("Number of Districts")
     ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
@@ -321,8 +324,10 @@ def render_minority_effectiveness_majority_histogram(group_name, vra_eff, vra_ma
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
     all_vals = vra_eff[group_name] + vra_majority[group_name]
     bins = np.arange(min(all_vals), max(all_vals) + 2) - 0.5
-    ax.hist(vra_eff[group_name], label=f"{group_name} Effective", alpha=0.5, bins=bins)
-    ax.hist(vra_majority[group_name], label=f"{group_name} Majority", alpha=0.5, bins=bins)
+    hist_eff = ax.hist(vra_eff[group_name], label=f"{group_name} Effective", alpha=0.5, bins=bins)
+    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_eff, labels=labels))
+    hist_maj = ax.hist(vra_majority[group_name], label=f"{group_name} Majority", alpha=0.5, bins=bins)
+    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_maj, labels=labels))
     ax.set_title(f"{group_name} Effectiveness vs Majority Histogram")
     ax.set_xlabel("Number of Districts")
     ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
@@ -336,7 +341,8 @@ def render_ensemble_charts_histogram(dem_seats, suffix):
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
 
     bins = np.arange(min(dem_seats), max(dem_seats) + 2) - 0.5
-    ax.hist(dem_seats, bins=bins, color="lightyellow")
+    hist = ax.hist(dem_seats, bins=bins, color="lightyellow", edgecolor="black")
+    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist, labels=labels))
     # arguments are passed to np.histogram
     ax.set_title('Democratic/Republican Splits')
     #ax.set_xlabel('Democratic/Republican Splits')
