@@ -5,7 +5,7 @@ import "../CSS/StateInfo.css";
 import axios from "axios";
 import Mpld3Chart from "../Chart/Mpld3Chart.jsx";
 
-function CompareChart({ currentRace, currentVraImpactThresholdData, currentCompareBoxandWhiskerData, currentCompareHistogramData }) {
+function CompareChart({ currentCount, currentRace, currentVraImpactThresholdData, currentCompareBoxandWhiskerData, currentCompareHistogramData }) {
 
   return (
     // in accordance with the Navbar
@@ -14,7 +14,7 @@ function CompareChart({ currentRace, currentVraImpactThresholdData, currentCompa
         <h3 style={{ marginBottom: "0.5rem" }}>
           {currentRace} VRA Impact Threshold Table
         </h3>
-        <VraImpactThresholdTable data={currentVraImpactThresholdData} />
+        <VraImpactThresholdTable data={currentVraImpactThresholdData} count={currentCount} />
       </div>
       <div className="leaflet-container-big">
         <h3 style={{ marginBottom: "0.5rem" }}>

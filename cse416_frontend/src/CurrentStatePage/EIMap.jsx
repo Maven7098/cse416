@@ -42,12 +42,12 @@ function EIMap({
         case "D":
           setCurrentEiData(eiData.Hispanic.Harris.chart)
           setCurrentEiKdeData(eiData.Hispanic.Harris.kde)
-          setCurrentOverlap(eiData.Hispanic.overlap.Harris)
+          setCurrentOverlap(eiData.Hispanic.Harris.overlap.overlap)
           break;
         case "R":
           setCurrentEiData(eiData.Hispanic.Trump.chart)
           setCurrentEiKdeData(eiData.Hispanic.Trump.kde)
-          setCurrentOverlap(eiData.Hispanic.overlap.Trump)
+          setCurrentOverlap(eiData.Hispanic.Trump.overlap.overlap)
           break;
       }
       break;
@@ -56,12 +56,12 @@ function EIMap({
         case "D":
           setCurrentEiData(eiData.Black.Harris.chart)
           setCurrentEiKdeData(eiData.Black.Harris.kde)
-          setCurrentOverlap(eiData.Black.overlap.Harris)
+          setCurrentOverlap(eiData.Black.Harris.overlap.overlap)
           break;
         case "R":
           setCurrentEiData(eiData.Black.Trump.chart)
           setCurrentEiKdeData(eiData.Black.Trump.kde)
-          setCurrentOverlap(eiData.Black.overlap.Trump)
+          setCurrentOverlap(eiData.Black.Trump.overlap.overlap)
           break;
       }
       break;
@@ -70,12 +70,12 @@ function EIMap({
         case "D":
           setCurrentEiData(eiData.Asian.Harris.chart)
           setCurrentEiKdeData(eiData.Asian.Harris.kde)
-          setCurrentOverlap(eiData.Asian.overlap.Harris)
+          setCurrentOverlap(eiData.Asian.Harris.overlap.overlap)
           break;
         case "R":
           setCurrentEiData(eiData.Asian.Trump.chart)
           setCurrentEiKdeData(eiData.Asian.Trump.kde)
-          setCurrentOverlap(eiData.Asian.overlap.Trump)
+          setCurrentOverlap(eiData.Asian.Trump.overlap.overlap)
           break;
       }
       break;
@@ -246,7 +246,7 @@ function EIMap({
               )}
             </section>
             <section>
-              <h5>{currentRace} Voting Overlap with Whites: {currentOverlap}</h5>
+              <h5>{currentRace} Voting Overlap with Whites: {Number(currentOverlap).toFixed(5)}</h5>
             </section>
           </div>
         </div>

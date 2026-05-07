@@ -37,7 +37,7 @@ Things to add to GeoJSON:
 "DISTRICT_L": "1|-0%" <- I don't understand this data.
 
 Total - POPULATION
-Not Hispanic or Latino
+Not Hispanic or Hispanic
 American Indian or Alaska Native Alone <- POP_IN
 Asian Alone <- POP_AS
 Black or African American Alone <- POP_AA
@@ -51,7 +51,7 @@ Asian and White
 Black or African American and White
 American Indian or Alaska Native and Black or African American
 Remainder of Two or More Race Responses
-Hispanic or Latino
+Hispanic or Hispanic
 
 # Presently, tot_est (+- moe) is used for districting.
 # What other kinds of data do we need, though?

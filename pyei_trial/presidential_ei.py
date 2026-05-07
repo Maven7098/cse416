@@ -12,6 +12,8 @@ import matplotlib as mpl
 import mpld3;
 import pandas as pd;
 import sys;
+import json;
+from scipy.stats import gaussian_kde;
 
 # Fix DPI and precise 680x330 (for display in site)
 fig, ax = plt.subplots(figsize=(6.8, 3.3))
@@ -60,6 +62,20 @@ with open(f"{sys.argv[4]}.txt", "w") as f:
     for index, item in enumerate(precinct_posterior_means):
         f.write("Estimated (posterior mean) support for the candidate from the group in precinct {index}: " + str(precinct_posterior_means[index][0][0]) + "\n")
 
+# Calculate Overlap in the KDE plot
+samples_group = ei_2by2.sampled_voting_prefs[0]
+samples_complement = ei_2by2.sampled_voting_prefs[1]
+kde_group = gaussian_kde(samples_group)
+kde_complement = gaussian_kde(samples_complement)
+x = np.linspace(0, 1, 1000)
+overlap = np.trapezoid(np.minimum(kde_group(x), kde_complement(x)), x)
+
+with open(f"{sys.argv[4]}.txt", "a") as f:
+    f.write(f"Overlap in KDE distributions: {overlap}\n")
+
+with open(f"{sys.argv[4]}-Overlap.json", "w") as f:
+    json.dump({"overlap": overlap}, f)
+
 fig = ei_2by2.plot_kde().figure
 fig.set_size_inches(6.8,3.3)
 mpld3.save_json(fig, f"{sys.argv[4]}-EI.json")
@@ -72,8 +88,8 @@ mpld3.save_html(fig, f"{sys.argv[4]}-KDE.html")
 mpld3.save_json(fig, f"{sys.argv[4]}-KDE.json")
 plt.savefig(f"{sys.argv[4]}-KDE.png", dpi=200)
 
-fig = ei_2by2.precinct_level_plot().figure
-fig.set_size_inches(6.8,3.3)
-mpld3.save_json(fig, f"{sys.argv[4]}-EI-Precinct.json")
-mpld3.save_html(fig, f"{sys.argv[4]}-EI-Precinct.html")
-plt.savefig(f"{sys.argv[4]}-EI-Precinct.png", dpi=200)
+#fig = ei_2by2.precinct_level_plot().figure
+#fig.set_size_inches(6.8,3.3)
+#mpld3.save_json(fig, f"{sys.argv[4]}-EI-Precinct.json")
+#mpld3.save_html(fig, f"{sys.argv[4]}-EI-Precinct.html")
+#plt.savefig(f"{sys.argv[4]}-EI-Precinct.png", dpi=200)

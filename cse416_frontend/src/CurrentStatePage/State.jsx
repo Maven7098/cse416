@@ -190,6 +190,9 @@ function State({ width, height, activeState, activeRace, currentRace }) {
           </p>
         </div>
       </div>
+      <h4 style={{ margin: "1em" }}>
+        Current Districting Party: {activeState.PARTY == "D" ? "Democratic" : "Republican"}
+      </h4>
       <h5>
         {currentRace} Effective Districts: {minorityEffective}
       </h5>
@@ -198,12 +201,10 @@ function State({ width, height, activeState, activeRace, currentRace }) {
       </h5>
       <h5>
         {currentRace} Proportionality:{" "}
-      {(minorityEffective / (activeState.DSEAT + activeState.RSEAT)) / (minorityPercent)}
+      {((minorityEffective / (activeState.DSEAT + activeState.RSEAT)) / (minorityPercent)).toFixed(3)}
       </h5>
-      <h4>Total Population: {activeState.TOTAL}</h4>
-      <p style={{ margin: "1em" }}>
-        Current Districting Party: {activeState.PARTY == "D" ? "Democratic" : "Republican"}
-      </p>
+      <br />
+      <h4>Population</h4>
       <svg width={width} height={height}>
         <g
           width={boundsWidth}

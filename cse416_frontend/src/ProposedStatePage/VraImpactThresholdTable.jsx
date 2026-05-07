@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../CSS/GinglesTable.css";
 
-function VraImpactThresholdTable({ data }) {
+function VraImpactThresholdTable({ data, count }) {
   if (!data || data.length === 0) {
     return (
       <div style={{ padding: "1rem" }}>
@@ -15,38 +15,39 @@ function VraImpactThresholdTable({ data }) {
     <div>
       <table className="fixed-table">
         <thead>
-          <tr>
+          <tr style={{textAlign: "left", fontSize: "small"}}>
             <th>VRA Impact Threshold</th>
             <th>Race-Blind</th>
             <th>VRA-Constrainted</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{textAlign: "right", fontSize: "large"}}>
           <tr>
             {/* Enacted Effectiveness: from effectiveness.json */}
             {/* Count effectiveness.json > 5 (for GA), > 0 (for IA) */}
-            <td>
+            <td style={{textAlign: "left", fontSize: "small"}}>
               Satisfies Enacted Effectiveness (number of effective districts in
               plan)
             </td>
-            <td>{data[3].toLocaleString()}</td>
-            <td>{data[0].toLocaleString()}</td>
+            <td>{data[3]/count*100}%</td>
+            <td>{data[0]/count*100}%</td>
           </tr>
           <tr>
             {/* Rough Proportionality: from effectiveness.json */}
             {/* (MinorityEffective/TotalDistrict) / (MinorityPopulation/TotalPopulation) */}
             {/* Count effectiveness.json > ? (for GA), > 0 (for IA) */}
-            <td>
+            <td style={{textAlign: "left", fontSize: "small"}}>
               Satisfies Rough Proportionality (number of effective districts
               proportional to demographics)
             </td>
-            <td>{data[4].toLocaleString()}</td>
-            <td>{data[1].toLocaleString()}</td>
+            <td>{data[4]/count*100}%</td>
+            <td>{data[1]/count*100}%</td>
           </tr>
           <tr>
-            <td>Satisfies both conditions above, jointly</td>
-            <td>{data[5].toLocaleString()}</td>
-            <td>{data[2].toLocaleString()}</td>
+            <td style={{textAlign: "left", fontSize: "small"}}>
+              Satisfies both conditions above, jointly</td>
+            <td>{data[5]/count*100}%</td>
+            <td>{data[2]/count*100}%</td>
           </tr>
         </tbody>
       </table>

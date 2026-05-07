@@ -16,17 +16,17 @@ import "./CSS/index.css";
 
 export default function App() {
   const [activeRace, setActiveRace] = useState("BLACK");
-  const [currentRace, setCurrentRace] = useState("Black / African American");
+  const [currentRace, setCurrentRace] = useState("Black");
   useEffect(() => {
     switch (activeRace) {
       case "HISPANIC":
-        setCurrentRace("Hispanic / Latino");
+        setCurrentRace("Hispanic");
         break;
       case "BLACK":
-        setCurrentRace("Black / African American");
+        setCurrentRace("Black");
         break;
       case "ASIAN":
-        setCurrentRace("Asian / Asian American");
+        setCurrentRace("Asian");
         break;
     }
   }, [activeRace]);

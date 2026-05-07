@@ -2,7 +2,9 @@
 
 source new-vra/bin/activate.fish
 
-mkdir Complete_256_Low Complete_4096_Low Complete_256_Medium Complete_4096_Medium Complete_256_High Complete_4096_High
+
+mkdir -p ga/Complete_256_Low ga/Complete_4096_Low ga/Complete_256_Medium ga/Complete_4096_Medium ga/Complete_256_High ga/Complete_4096_High
+mkdir -p ia/Complete_256_Low ia/Complete_4096_Low ia/Complete_256_Medium ia/Complete_4096_Medium ia/Complete_256_High ia/Complete_4096_High
 
 python3 new_vra_parallel.py GA-Precinct-EI-GeoJSON.json ga/Complete_256_High/NEW-GA-Precinct 14 256 0.75
 python3 new_vra_parallel.py GA-Precinct-EI-GeoJSON.json ga/Complete_256_Medium/NEW-GA-Precinct 14 256 0.6

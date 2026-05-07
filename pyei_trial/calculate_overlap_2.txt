@@ -1,0 +1,475 @@
+
+ ▝▜▄     Gemini CLI v0.41.2
+   ▝▜▄
+  ▗▟▀    Signed in with Google /auth
+ ▝▀      Plan: Gemini Code Assist for individuals /upgrade
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+ > In presidential_ei.py, how can I calculate the overlap in the graph                   
+   ei_2by2.plot_kde()?                                                                   
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+  Researching Overlap Calculation in presidential_ei.py: 
+  Investigating `presidential_ei.py` to understand the use of `ei_2by2.plot_kde()`
+  and how overlap might be calculated.
+
+  ✓  ReadFile  presidential_ei.py
+  ✓  ReadFile  calculate_overlap.py
+  ✓  GoogleSearch  Searching the web for: "pyei TwoByTwoEI calculate overlap plot_kd…
+   → No information found.
+  ✓  GoogleSearch  Searching the web for: "pyei library TwoByTwoEI samples posterior"
+   → No information found.
+  ✓  GoogleSearch  Searching the web for: "github pyei library ecological inference"
+   → No information found.
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls pyei_venv/lib/python3.*/site-packages/pyei/                           │
+│                                                                                   │
+│ data.py                          __init__.py    r_by_c_models.py                  │
+│ distribution_utils.py            io_utils.py    r_by_c.py                         │
+│ goodmans_er.py                   plot_utils.py  r_by_c_utils.py                   │
+│ greiner_quinn_gibbs_sampling.py  __pycache__    two_by_two.py                     │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell find pyei_venv -name two_by_two.py                                       │
+│                                                                                   │
+│ pyei_venv/lib/python3.13/site-packages/pyei/two_by_two.py                         │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  ReadFile  .gitignore
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat pyei_venv/lib/python3.13/site-packages/pyei/two_by_two.py | head -n… │
+│                                                                                   │
+│ ... first 104 lines hidden (Ctrl+O to show) ...                                   │
+│             upper=upper_level_u_bound,                                            │
+│         )                                                                         │
+│                                                                                   │
+│         mu_i = tn_mean_upper * group_fraction + tn_mean_lower * (1 - gro          │
+│ up_fraction)                                                                      │
+│         w_i = pm.Deterministic(                                                   │
+│             "w_i", sigma_upper**2 * group_fraction + sigma_12 * (1 - gro          │
+│ up_fraction)                                                                      │
+│         )                                                                         │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell grep -n "class TwoByTwoEI" pyei_venv/lib/python3.13/site-packages/pyei/… │
+│                                                                                   │
+│ 424:class TwoByTwoEIBaseBayes:                                                    │
+│ 729:class TwoByTwoEI(TwoByTwoEIBaseBayes):                                        │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell sed -n '729,900p' pyei_venv/lib/python3.13/site-packages/pyei/two_by_tw… │
+│                                                                                   │
+│ ... first 200 lines hidden (Ctrl+O to show) ...                                   │
+│         # The stracking on the next line convers to a num_samples x num_          │
+│ precincts array                                                                   │
+│         precinct_level_samples_gp1 = (                                            │
+│             self.sim_trace["posterior"]["b_1"].stack(all_draws=["chain",          │
+│  "draw"]).values.T                                                                │
+│         )                                                                         │
+│         precinct_posterior_means_gp1 = precinct_level_samples_gp1.mean(a          │
+│ xis=0)                                                                            │
+│         precinct_credible_intervals_gp1 = np.percentile(                          │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell grep -n "def plot_kde" pyei_venv/lib/python3.13/site-packages/pyei/two_… │
+│                                                                                   │
+│ 618:    def plot_kde(self, ax=None):                                              │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell sed -n '618,635p' pyei_venv/lib/python3.13/site-packages/pyei/two_by_tw… │
+│                                                                                   │
+│ ... first 9 lines hidden (Ctrl+O to show) ...                                     │
+│             plot_by="candidate",                                                  │
+│             axes=ax,                                                              │
+│         )                                                                         │
+│                                                                                   │
+│     def plot_boxplot(self, ax=None):                                              │
+│         """Boxplot of voting prefs for each group                                 │
+│         Optional arguments:                                                       │
+│         ax  :  matplotlib axes object"""                                          │
+│         return plot_boxplots(                                                     │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell grep -n "def _voting_prefs_array" pyei_venv/lib/python3.13/site-package… │
+│                                                                                   │
+│ 467:    def _voting_prefs_array(self):                                            │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell sed -n '467,475p' pyei_venv/lib/python3.13/site-packages/pyei/two_by_tw… │
+│                                                                                   │
+│ ... first 1 line hidden (Ctrl+O to show) ...                                      │
+│         """Bundles together the samples as num_samples x 2 x 1 array,             │
+│         for ease of passing to plots"""                                           │
+│         num_samples = len(self.sampled_voting_prefs[0])                           │
+│         sampled_voting_prefs = np.empty((num_samples, 2, 1))  # num_samples x 2 x │
+│  1                                                                                │
+│         sampled_voting_prefs[:, 0, 0] = self.sampled_voting_prefs[0]              │
+│         sampled_voting_prefs[:, 1, 0] = self.sampled_voting_prefs[1]              │
+│         return sampled_voting_prefs                                               │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell sed -n '663,680p' pyei_venv/lib/python3.13/site-packages/pyei/two_by_tw… │
+│                                                                                   │
+│ ... first 13 lines hidden (Ctrl+O to show) ...                                    │
+│ erence                                                                            │
+│             between the two groups' preferences for the given candidate is more t │
+│ han                                                                               │
+│             {threshold}                                                           │
+│         percentile: float                                                         │
+│             If not None, function will return the central interval which {percent │
+│ ile}                                                                              │
+│             equals the estimated probability that difference between the two grou │
+│ ps'                                                                               │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls pyei_venv/lib/python3.13/site-packages/pyei/distribution_utils.py     │
+│                                                                                   │
+│ pyei_venv/lib/python3.13/site-packages/pyei/distribution_utils.py                 │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat pyei_venv/lib/python3.13/site-packages/pyei/distribution_utils.py    │
+│                                                                                   │
+│ ... first 106 lines hidden (Ctrl+O to show) ...                                   │
+│                                                                                   │
+│         else:                                                                     │
+│             if ran < pi[lower - ll]:                                              │
+│                 return lower                                                      │
+│             ran = ran - pi[lower - ll]                                            │
+│             if lower == ll:                                                       │
+│                 samp = sample_low_to_high(upper, ran, pi, -ll, uu)                │
+│                 return samp                                                       │
+│             lower = lower - 1                                                     │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat pyei_venv/lib/python3.13/site-packages/pyei/plot_utils.py | head -n… │
+│                                                                                   │
+│ ... first 91 lines hidden (Ctrl+O to show) ...                                    │
+│         The (ordered) names of colors to use to fill ridgeplots                   │
+│     z_init : float                                                                │
+│         The initial value for the z-order (helps determine                        │
+│         how plots get drawn over one another)                                     │
+│     trans                                                                         │
+│         The y-translation for this plot                                           │
+│     overlap : float, optional                                                     │
+│         how much this ridgeplot may overlap with the ridgeplot                    │
+│         above it                                                                  │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell grep -n "def plot_kdes" pyei_venv/lib/python3.13/site-packages/pyei/plo… │
+│                                                                                   │
+│ 657:def plot_kdes(sampled_voting_prefs, group_names, candidate_names, plot_by="ca │
+│ ndidate", axes=None):                                                             │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell sed -n '657,750p' pyei_venv/lib/python3.13/site-packages/pyei/plot_util… │
+│                                                                                   │
+│ ... first 96 lines hidden (Ctrl+O to show) ...                                    │
+│ def plot_conf_or_credible_interval(intervals, group_names, candidate_name, title, │
+│  ax=None):                                                                        │
+│     """                                                                           │
+│     Plot confidence of credible interval for two different groups                 │
+│                                                                                   │
+│     Parameters                                                                    │
+│     ----------                                                                    │
+│     intervals : list of arrays or tuple                                           │
+│         Length is number of demographic groups, each element in the array         │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  ✓  ReadFile  calculate_overlap.txt
+  ✓  ReadFile  regression_test.py
+  ✓  SearchText  'Voting Behavior Overlap' → Found 8 matches
+  ✓  ReadFile  regression_test_exponential.py
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell grep -r "overlap" pyei_venv/lib/python3.13/site-packages/pyei/           │
+│                                                                                   │
+│ pyei_venv/lib/python3.13/site-packages/pyei/plot_utils.py:    overlap=1.3,        │
+│ pyei_venv/lib/python3.13/site-packages/pyei/plot_utils.py:    overlap : float, op │
+│ tional                                                                            │
+│ pyei_venv/lib/python3.13/site-packages/pyei/plot_utils.py:        how much this r │
+│ idgeplot may overlap with the ridgeplot                                           │
+│ pyei_venv/lib/python3.13/site-packages/pyei/plot_utils.py:        group_y = overl │
+│ ap * group_y / group_y.max()                                                      │
+│ grep: pyei_venv/lib/python3.13/site-packages/pyei/__pycache__/plot_utils.cpython- │
+│ 313.pyc: binary file matches                                                      │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ./pyei_venv/bin/python3 -c "import numpy; print(numpy.__version__)"      │
+│                                                                                   │
+│ 2.4.4                                                                             │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell sed -n '710,725p' pyei_venv/lib/python3.13/site-packages/pyei/two_by_tw… │
+│                                                                                   │
+│ ... first 8 lines hidden (Ctrl+O to show) ...                                     │
+│         return plot_polarization_kde(                                             │
+│             samples,                                                              │
+│             thresholds,                                                           │
+│             percentile,                                                           │
+│             groups,  # pylint: disable=duplicate-code                             │
+│             self.candidate_name,                                                  │
+│             show_threshold,                                                       │
+│             ax,                                                                   │
+│             color=color,                                                          │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell sed -n '681,700p' pyei_venv/lib/python3.13/site-packages/pyei/two_by_tw… │
+│                                                                                   │
+│ ... first 13 lines hidden (Ctrl+O to show) ...                                    │
+│             default="steelblue"                                                   │
+│                                                                                   │
+│         Returns                                                                   │
+│         -------                                                                   │
+│         Matplotlib axis object                                                    │
+│                                                                                   │
+│         """                                                                       │
+│         return_interval = threshold is None                                       │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+
+✦ To calculate the overlap between the two distributions shown in the ei_2by2.plot_kde()
+  graph (which represents the posterior distributions of voting preferences for the
+  selected demographic group and its complement), you can use the posterior samples
+  stored in the TwoByTwoEI object.
+
+  The samples are available in the sampled_voting_prefs dictionary of your ei_2by2
+  instance. You can calculate the Overlapping Coefficient (OVL)—the area under the
+  minimum of the two density functions—using either a histogram-based approach or by
+  fitting Kernel Density Estimators (KDE) and integrating their intersection.
+
+  Recommended Implementation
+
+  You can add the following code to presidential_ei.py after the ei_2by2.fit() call:
+
+    1 from scipy.stats import gaussian_kde
+    2
+    3 # 1. Extract the samples for the two groups
+    4 # Group 0 is your selected demographic (e.g., Black)
+    5 # Group 1 is the complement (e.g., Non-Black)
+    6 samples_group = ei_2by2.sampled_voting_prefs[0]
+    7 samples_complement = ei_2by2.sampled_voting_prefs[1]
+    8
+    9 # 2. Estimate the KDE for both sets of samples
+   10 kde_group = gaussian_kde(samples_group)
+   11 kde_complement = gaussian_kde(samples_complement)
+   12
+   13 # 3. Calculate the intersection over the [0, 1] range
+   14 x = np.linspace(0, 1, 1000)
+   15 y_group = kde_group(x)
+   16 y_complement = kde_complement(x)
+   17
+   18 # The overlap is the area under the minimum of the two curves
+   19 overlap = np.trapz(np.minimum(y_group, y_complement), x)
+   20
+   21 print(f"Overlap between {demographic_group_name} and Non-{demographic_group_name}:
+      {overlap:.4f}")
+   22
+   23 # Optional: Save the overlap value to your output file
+   24 with open(f"{sys.argv[4]}.txt", "a") as f:
+   25     f.write(f"Distribution Overlap: {overlap:.4f}\n")
+
+  Explanation
+   - ei_2by2.sampled_voting_prefs[0]: Contains the MCMC samples for the voting preference
+     ($b_1$) of the demographic group you specified (e.g., Black support for Harris).
+   - ei_2by2.sampled_voting_prefs[1]: Contains the samples for the complement group
+     ($b_2$).
+   - gaussian_kde: Fits a smooth curve to these samples, matching the lines seen in the
+     plot_kde() graph.
+   - np.minimum & np.trapz: Find the intersection of these two curves and integrate to
+     find the total area of overlap. An overlap of 1.0 means the distributions are
+     identical, while 0.0 means they are completely separate.
+
+  Simplified Histogram Version
+  If you prefer a faster calculation without fitting KDEs, you can use numpy.histogram:
+
+   1 bins = 1000
+   2 h1, _ = np.histogram(samples_group, bins=bins, range=(0, 1), density=True)
+   3 h2, _ = np.histogram(samples_complement, bins=bins, range=(0, 1), density=True)
+   4 overlap = np.sum(np.minimum(h1, h2)) / bins
+
+  This will give you a very close approximation to the visual overlap in the graph.
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+ > Can you store it as a file?                                                           
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ./pyei_venv/bin/python3 -c "import scipy; print(scipy.__version__)"      │
+│                                                                                   │
+│ 1.17.1                                                                            │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  Implementing Overlap Calculation and Storage: 
+  Modifying `presidential_ei.py` to calculate the distribution overlap and store it
+  in a file.
+
+  ✓  Edit  presidential_ei.py → Accepted (+2, -0)
+
+      12   import mpld3;
+      13   import pandas as pd;
+      14   import sys;
+      15 + import json;
+      16 + from scipy.stats import gaussian_kde;
+      17
+      18   # Fix DPI and precise 680x330 (for display in site)
+      19   fig, ax = plt.subplots(figsize=(6.8, 3.3))
+
+  ✓  Edit  presidential_ei.py → Accepted (+14, -0)
+
+      62       for index, item in enumerate(precinct_posterior_means):
+      63          f.write("Estimated (posterior mean) support for the candidate from
+          the group in precinct {index}: " +
+          str(precinct_posterior_means[index][0][0]) + "\n")
+      64
+      65 + # Calculate Overlap in the KDE plot
+      66 + samples_group = ei_2by2.sampled_voting_prefs[0]
+      67 + samples_complement = ei_2by2.sampled_voting_prefs[1]
+      68 + kde_group = gaussian_kde(samples_group)
+      69 + kde_complement = gaussian_kde(samples_complement)
+      70 + x = np.linspace(0, 1, 1000)
+      71 + overlap = np.trapz(np.minimum(kde_group(x), kde_complement(x)), x)
+      72 + 
+      73 + with open(f"{sys.argv[4]}.txt", "a") as f:
+      74 +     f.write(f"Overlap in KDE distributions: {overlap}\n")
+      75 + 
+      76 + with open(f"{sys.argv[4]}-Overlap.json", "w") as f:
+      77 +     json.dump({"overlap": overlap}, f)
+      78 + 
+      79   fig = ei_2by2.plot_kde().figure
+      80   fig.set_size_inches(6.8,3.3)
+      81   mpld3.save_json(fig, f"{sys.argv[4]}-EI.json")
+
+  ✓  ReadFile  input1.sh
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ls -d Complete/                                                          │
+│                                                                                   │
+│ ls: cannot access 'Complete/': No such file or directory                          │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ./pyei_venv/bin/python3 presidential_ei.py GA-Precinct-EI.csv Black Har… │
+│                                                                                   │
+│ ... first 24 lines hidden (Ctrl+O to show) ...                                    │
+│   File "/home/seongwhong/Documents/SUNYEssentials/CSE416/CSE416_Project/pyei_tria │
+│ l/presidential_ei.py", line 71, in <module>                                       │
+│     overlap = np.trapz(np.minimum(kde_group(x), kde_complement(x)), x)            │
+│               ^^^^^^^^                                                            │
+│   File "/home/seongwhong/Documents/SUNYEssentials/CSE416/CSE416_Project/pyei_tria │
+│ l/pyei_venv/lib/python3.13/site-packages/numpy/__init__.py", line 792, in __getat │
+│ tr__                                                                              │
+│     raise AttributeError(f"module {__name__!r} has no attribute {attr!r}")        │
+│ AttributeError: module 'numpy' has no attribute 'trapz'. Did you mean: 'trace'?   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ./pyei_venv/bin/python3 -c "import numpy; print(numpy.trapezoid)"        │
+│                                                                                   │
+│ <function trapezoid at 0x7f0ef45ba520>                                            │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+  Fixing Deprecated NumPy Function in Overlap Calculation: 
+  Fixing the overlap calculation in `presidential_ei.py` to use `np.trapezoid`
+  instead of the deprecated `np.trapz`.
+
+  ✓  Edit  presidential_ei.py → Accepted (+1, -1)
+
+      68   kde_group = gaussian_kde(samples_group)
+      69   kde_complement = gaussian_kde(samples_complement)
+      70   x = np.linspace(0, 1, 1000)
+      71 - overlap = np.trapz(np.minimum(kde_group(x), kde_complement(x)), x)
+      71 + overlap = np.trapezoid(np.minimum(kde_group(x), kde_complement(x)), x)
+      72
+      73   with open(f"{sys.argv[4]}.txt", "a") as f:
+      74       f.write(f"Overlap in KDE distributions: {overlap}\n")
+
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ./pyei_venv/bin/python3 -c "import numpy as np; from scipy.stats import… │
+│                                                                                   │
+│ 0.33336866095065454                                                               │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell ./pyei_venv/bin/python3 presidential_ei.py GA-Precinct-EI.csv Black Har… │
+│                                                                                   │
+│ ... first 16 lines hidden (Ctrl+O to show) ...                                    │
+│ env/lib/python3.13/site-packages/mpld3/mplexporter/utils.py:68: UserWarning: line │
+│  style '(np.int64(0), None)' not understood: defaulting to solid line.            │
+│   warnings.warn("line style '{0}' not understood: "                               │
+│ /home/seongwhong/Documents/SUNYEssentials/CSE416/CSE416_Project/pyei_trial/pyei_v │
+│ env/lib/python3.13/site-packages/pyei/plot_utils.py:216: UserWarning: User attemp │
+│ ted to plot 2720 precinct-level voting preference ridgeplots. Automatically restr │
+│ icting to first 50 precincts (run with `show_all_precincts=True` to plot all prec │
+│ inct ridgeplots.)                                                                 │
+│   warnings.warn(                                                                  │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell cat test_output_fast-Overlap.json && tail -n 5 test_output_fast.txt      │
+│                                                                                   │
+│ {"overlap": 0.0}Estimated (posterior mean) support for the candidate from the gro │
+│ up in precinct {index}: 0.9942748952142623                                        │
+│ Estimated (posterior mean) support for the candidate from the group in precinct { │
+│ index}: 0.6123375354220262                                                        │
+│ Estimated (posterior mean) support for the candidate from the group in precinct { │
+│ index}: 0.9340096382011633                                                        │
+│ Estimated (posterior mean) support for the candidate from the group in precinct { │
+│ index}: 0.7609355367966159                                                        │
+│ Overlap in KDE distributions: 0.0                                                 │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell head -n 5 test_output_fast.txt                                           │
+│                                                                                   │
+│ Black support for Harris: 0.9956959947436319                                      │
+│ Non-Black support for Harris: 0.1819290654373304                                  │
+│ Confidence Score for Black: 0.9996249574141843Estimated (posterior mean) support  │
+│ for the candidate from the group in precinct {index}: 0.9947131965228938          │
+│ Estimated (posterior mean) support for the candidate from the group in precinct { │
+│ index}: 0.9943762552757749                                                        │
+│ Estimated (posterior mean) support for the candidate from the group in precinct { │
+│ index}: 0.9929712217280375                                                        │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell rm test_output_fast*                                                     │
+│                                                                                   │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│ ✓  Shell rm test_output*                                                          │
+│                                                                                   │
+│                                                                                   │
+╰───────────────────────────────────────────────────────────────────────────────────╯
+
+✦ I have updated presidential_ei.py to calculate the Overlapping Coefficient (OVL)
+  between the two distributions shown in the KDE plot and store it in two separate files.
+
+  Changes Made:
+   1. Imports: Added json and scipy.stats.gaussian_kde to the script.
+   2. Calculation: Added logic to extract the posterior samples for both groups, estimate
+      their probability densities using Kernel Density Estimation (KDE), and integrate
+      the intersection using the trapezoidal rule.
+   3. Compatibility: Used np.trapezoid to ensure compatibility with NumPy 2.x (which
+      removed np.trapz).
+   4. Storage: 
+       * Text File: The overlap value is appended to the existing .txt summary file.
+       * JSON File: A new file named {output_prefix}-Overlap.json is created, containing
+         the overlap value (e.g., {"overlap": 0.0421}).
+
+  How to use:
+  When you run the script, it will now automatically generate the overlap file along with
+  your plots:
+
+   1 ./pyei_venv/bin/python3 presidential_ei.py GA-Precinct-EI.csv Black Harris
+     ga/GA-Polarization-Black-Harris
+  This will produce ga/GA-Polarization-Black-Harris-Overlap.json and add an "Overlap in
+  KDE distributions" line to ga/GA-Polarization-Black-Harris.txt.
+
+  An overlap of 1.0 indicates identical distributions, while 0.0 indicates no overlap at
+  all (common when groups have vastly different voting preferences).
+
+

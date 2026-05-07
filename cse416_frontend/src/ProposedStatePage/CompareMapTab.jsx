@@ -84,6 +84,7 @@ function CompareMapTab({ activeState, activeRace, currentRace, mode: currentMode
             <Tab.Content>
               <Tab.Pane eventKey="info">
                 <CompareChart
+                  currentCount={currentCount}
                   currentRace={currentRace}
                   currentVraImpactThresholdData={currentVraImpactThresholdData}
                   currentCompareBoxandWhiskerData={currentCompareBoxandWhiskerData}

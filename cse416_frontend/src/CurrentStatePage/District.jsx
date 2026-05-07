@@ -10,22 +10,26 @@ function District({ activeRace, currentRace, width, height, districtData }) {
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
+  let minorityCalculated = "";
   let minorityCalibrated = "";
   let minorityEffective = "";
   let minorityMajority = "";
   switch (activeRace) {
     case "HISPANIC":
-      minorityCalibrated = districtData.HISPANIC_EFF;
+      minorityCalculated = districtData.HISPANIC_EFF;
+      minorityCalibrated = districtData.HISPANIC_CALB;
       minorityEffective = districtData.HISPANIC_DIST;
       minorityMajority = districtData.HISPANIC_MAJ;
       break;
     case "BLACK":
-      minorityCalibrated = districtData.BLACK_EFF;
+      minorityCalculated = districtData.BLACK_EFF;
+      minorityCalibrated = districtData.BLACK_CALB;
       minorityEffective = districtData.BLACK_DIST;
       minorityMajority = districtData.BLACK_MAJ;
       break;
     case "ASIAN":
-      minorityCalibrated = districtData.ASIAN_EFF;
+      minorityCalculated = districtData.ASIAN_EFF;
+      minorityCalibrated = districtData.ASIAN_CALB;
       minorityEffective = districtData.ASIAN_DIST;
       minorityMajority = districtData.ASIAN_MAJ;
       break;
@@ -153,7 +157,10 @@ function District({ activeRace, currentRace, width, height, districtData }) {
     <div>
       <h4>District No.: {districtData.DISTRICT}</h4>
       <h5>
-        {currentRace} Calibrated Score: {minorityCalibrated}
+        {currentRace} Calculated Score: {Number(minorityCalculated).toFixed(5)}
+      </h5>
+      <h5>
+        {currentRace} Calibrated Score: {Number(minorityCalibrated).toFixed(5)}
       </h5>
       <h5>
         {currentRace} Effective District:{" "}

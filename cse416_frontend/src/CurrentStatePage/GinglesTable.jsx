@@ -51,7 +51,7 @@ function GinglesTable({ data, race, activePrecinct }) {
         </thead>
         {paginatedData.map(function (precinct) {
           return (
-            <tbody key={precinct.ID} style={{textAlign: "right", fontSize: "small"}}>
+            <tbody key={precinct.ID} style={{textAlign: "right", fontSize: "medium"}}>
               <tr>
                 {activePrecinct === precinct ? (
                   <td

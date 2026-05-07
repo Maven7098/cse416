@@ -101,8 +101,8 @@ function StateInfo({
   }
 
   const width = 820;
-  const heightState = 560;
-  const heightDistrict = 560;
+  const heightState = 500;
+  const heightDistrict = 523;
 
   return (
     // Load the GeoJSON for the districting map

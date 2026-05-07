@@ -343,26 +343,27 @@ public class DataSeedService {
 
         String harrisJson    = loadJsonString(base + "Harris-EI.json");
         String harrisKdeJson = loadJsonString(base + "Harris-KDE.json");
+        String harrisOverlapJson = loadJsonString(base + "Harris-Overlap.json");
         String trumpJson     = loadJsonString(base + "Trump-EI.json");
         String trumpKdeJson  = loadJsonString(base + "Trump-KDE.json");
-        String overlapJson   = loadJsonString(base + "Overlap.json");
+        String trumpOverlapJson = loadJsonString(base + "Trump-Overlap.json");
 
         Document racePayload = new Document();
-        racePayload.put("Harris", buildPolarizationCandidatePayload(harrisJson, harrisKdeJson));
-        racePayload.put("Trump", buildPolarizationCandidatePayload(trumpJson, trumpKdeJson));
-        if (overlapJson != null && !overlapJson.isEmpty()) {
-            racePayload.put("overlap", Document.parse(overlapJson));
-        }
+        racePayload.put("Harris", buildPolarizationCandidatePayload(harrisJson, harrisKdeJson, harrisOverlapJson));
+        racePayload.put("Trump", buildPolarizationCandidatePayload(trumpJson, trumpKdeJson, trumpOverlapJson));
         return racePayload;
     }
 
-    private Document buildPolarizationCandidatePayload(String chartJson, String kdeJson) throws IOException {
+    private Document buildPolarizationCandidatePayload(String chartJson, String kdeJson, String overlapJson) throws IOException {
         Document candidatePayload = new Document();
         if (chartJson != null && !chartJson.isEmpty()) {
             candidatePayload.put("chart", Document.parse(chartJson));
         }
         if (kdeJson != null && !kdeJson.isEmpty()) {
             candidatePayload.put("kde", Document.parse(kdeJson));
+        }
+        if (overlapJson != null && !overlapJson.isEmpty()) {
+            candidatePayload.put("overlap", Document.parse(overlapJson));
         }
         return candidatePayload;
     }

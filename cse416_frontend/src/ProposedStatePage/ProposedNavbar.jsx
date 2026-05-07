@@ -69,19 +69,19 @@ function ProposedNavbar({
               </Nav>
               <NavDropdown
                 className="ms-lg-auto"
-                title={`Selected: ${currentRace}`}
+                title={`Selected Racial/Ethnic Group: ${currentRace}`}
               >
                 {activeState == "ga" && (
                   <NavDropdown.Item onClick={() => setActiveRace("BLACK")}>
-                    Black / African American
+                    Black
                   </NavDropdown.Item>
                 )}
                 <NavDropdown.Item onClick={() => setActiveRace("HISPANIC")}>
-                  Hispanic / Latino
+                  Hispanic
                 </NavDropdown.Item>
                 {activeState == "ga" && (
                   <NavDropdown.Item onClick={() => setActiveRace("ASIAN")}>
-                    Asian / Asian American
+                    Asian
                   </NavDropdown.Item>
                 )}
               </NavDropdown>

@@ -273,7 +273,7 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     for bucket in sorted(dots.keys()):
         item = dots[bucket]
         x_vals.append(bucket); y_vals.append(item["share"]); labels.append(f"District {item['district']}: {item['share']:.2%}")
-    scatter = ax.scatter(x_vals, y_vals, marker="o", label="Enacted Plan")
+    scatter = ax.scatter(x_vals, y_vals, marker="o", label="Enacted Plan", color="lightyellow")
     mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(scatter, labels=labels))
     ax.set_title(f"{group_name} Population Percentage by Ordered District Bucket")
     ax.set_xlabel("District Bucket")
@@ -290,7 +290,7 @@ def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, basel
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
     ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
     ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
-    ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan")
+    ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow")
     ax.set_title(f"{group_name} Effectiveness Distribution")
     ax.set_xticks([1.2, 2.8], [f"{group_name} Voters", "White Voters"])
     ax.legend(); ax.grid(True, axis="y", alpha=0.3)
@@ -336,10 +336,10 @@ def render_ensemble_charts_histogram(dem_seats, suffix):
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
 
     bins = np.arange(min(dem_seats), max(dem_seats) + 2) - 0.5
-    ax.hist(dem_seats, bins=bins)
+    ax.hist(dem_seats, bins=bins, color="lightyellow")
     # arguments are passed to np.histogram
     ax.set_title('Democratic/Republican Splits')
-    ax.set_xlabel('Democratic Seats')
+    #ax.set_xlabel('Democratic/Republican Splits')
     gen_ticks = []
     counter = 0
     while counter <= NUM_DISTRICTS:
