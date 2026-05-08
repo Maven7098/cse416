@@ -291,7 +291,10 @@ def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, basel
     ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
     ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
     scatter = ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow", edgecolor="black")
+    
+    labels = [f"Enacted {group_name}: {baseline_counts[group_name]}", f"Enacted White: {baseline_counts['White']}"]
     mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(scatter, labels=labels))
+
     ax.set_title(f"{group_name} Effectiveness Distribution")
     ax.set_xticks([1.2, 2.8], [f"{group_name} Voters", "White Voters"])
     ax.legend(); ax.grid(True, axis="y", alpha=0.3)
@@ -307,10 +310,17 @@ def render_minority_effectiveness_histogram(group_name, vra_eff, nonvra_eff):
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
     all_vals = vra_eff[group_name] + nonvra_eff[group_name]
     bins = np.arange(min(all_vals), max(all_vals) + 2) - 0.5
-    hist_vra = ax.hist(vra_eff[group_name], label="VRA-Constrained", alpha=0.5, bins=bins)
-    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_vra, labels=labels))
-    hist_nonvra = ax.hist(nonvra_eff[group_name], label="Race-Blind", alpha=0.5, bins=bins)
-    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_nonvra, labels=labels))
+    n_vra, bins_vra, patches_vra = ax.hist(vra_eff[group_name], label="VRA-Constrained", alpha=0.5, bins=bins, edgecolor="black")
+    n_nonvra, bins_nonvra, patches_nonvra = ax.hist(nonvra_eff[group_name], label="Race-Blind", alpha=0.5, bins=bins, edgecolor="black")
+    
+    for i, patch in enumerate(patches_vra):
+        label = f"VRA-Constrained: {int(n_vra[i])} plans"
+        mpld3.plugins.connect(fig, mpld3.plugins.LineLabelTooltip(patch, label=label))
+
+    for i, patch in enumerate(patches_nonvra):
+        label = f"Race-Blind: {int(n_nonvra[i])} plans"
+        mpld3.plugins.connect(fig, mpld3.plugins.LineLabelTooltip(patch, label=label))
+
     ax.set_title(f"{group_name} Effectiveness Histogram")
     ax.set_xlabel("Number of Districts")
     ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
@@ -324,10 +334,17 @@ def render_minority_effectiveness_majority_histogram(group_name, vra_eff, vra_ma
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
     all_vals = vra_eff[group_name] + vra_majority[group_name]
     bins = np.arange(min(all_vals), max(all_vals) + 2) - 0.5
-    hist_eff = ax.hist(vra_eff[group_name], label=f"{group_name} Effective", alpha=0.5, bins=bins)
-    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_eff, labels=labels))
-    hist_maj = ax.hist(vra_majority[group_name], label=f"{group_name} Majority", alpha=0.5, bins=bins)
-    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist_maj, labels=labels))
+    n_eff, bins_eff, patches_eff = ax.hist(vra_eff[group_name], label=f"{group_name} Effective", alpha=0.5, bins=bins, edgecolor="black")
+    n_maj, bins_maj, patches_maj = ax.hist(vra_majority[group_name], label=f"{group_name} Majority", alpha=0.5, bins=bins, edgecolor="black")
+    
+    for i, patch in enumerate(patches_eff):
+        label = f"{group_name} Effective: {int(n_eff[i])} plans"
+        mpld3.plugins.connect(fig, mpld3.plugins.LineLabelTooltip(patch, label=label))
+
+    for i, patch in enumerate(patches_maj):
+        label = f"{group_name} Majority: {int(n_maj[i])} plans"
+        mpld3.plugins.connect(fig, mpld3.plugins.LineLabelTooltip(patch, label=label))
+
     ax.set_title(f"{group_name} Effectiveness vs Majority Histogram")
     ax.set_xlabel("Number of Districts")
     ax.set_xticks(range(NUM_DISTRICTS + 1), [f"{c}" for c in range(NUM_DISTRICTS + 1)])
@@ -341,8 +358,12 @@ def render_ensemble_charts_histogram(dem_seats, suffix):
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
 
     bins = np.arange(min(dem_seats), max(dem_seats) + 2) - 0.5
-    hist = ax.hist(dem_seats, bins=bins, color="lightyellow", edgecolor="black")
-    mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(hist, labels=labels))
+    n, bins, patches = ax.hist(dem_seats, bins=bins, color="lightyellow", edgecolor="black")
+    
+    for i, patch in enumerate(patches):
+        label = f"Split {int(bins[i])}/{NUM_DISTRICTS-int(bins[i])}: {int(n[i])} plans"
+        mpld3.plugins.connect(fig, mpld3.plugins.LineLabelTooltip(patch, label=label))
+
     # arguments are passed to np.histogram
     ax.set_title('Democratic/Republican Splits')
     #ax.set_xlabel('Democratic/Republican Splits')
