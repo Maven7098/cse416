@@ -15,7 +15,7 @@ function VraImpactThresholdTable({ data, count }) {
     <div>
       <table className="fixed-table">
         <thead>
-          <tr style={{textAlign: "left", fontSize: "small"}}>
+          <tr style={{textAlign: "left", fontSize: "medium"}}>
             <th>VRA Impact Threshold</th>
             <th>Race-Blind</th>
             <th>VRA-Constrainted</th>
@@ -25,29 +25,29 @@ function VraImpactThresholdTable({ data, count }) {
           <tr>
             {/* Enacted Effectiveness: from effectiveness.json */}
             {/* Count effectiveness.json > 5 (for GA), > 0 (for IA) */}
-            <td style={{textAlign: "left", fontSize: "small"}}>
+            <td style={{textAlign: "left", fontSize: "medium"}}>
               Satisfies Enacted Effectiveness (number of effective districts in
               plan)
             </td>
-            <td>{data[3]/count*100}%</td>
-            <td>{data[0]/count*100}%</td>
+            <td>{(data[3]/count*100).toFixed(3)}%</td>
+            <td>{(data[0]/count*100).toFixed(3)}%</td>
           </tr>
           <tr>
             {/* Rough Proportionality: from effectiveness.json */}
             {/* (MinorityEffective/TotalDistrict) / (MinorityPopulation/TotalPopulation) */}
             {/* Count effectiveness.json > ? (for GA), > 0 (for IA) */}
-            <td style={{textAlign: "left", fontSize: "small"}}>
+            <td style={{textAlign: "left", fontSize: "medium"}}>
               Satisfies Rough Proportionality (number of effective districts
               proportional to demographics)
             </td>
-            <td>{data[4]/count*100}%</td>
-            <td>{data[1]/count*100}%</td>
+            <td>{(data[4]/count*100).toFixed(3)}%</td>
+            <td>{(data[1]/count*100).toFixed(3)}%</td>
           </tr>
           <tr>
-            <td style={{textAlign: "left", fontSize: "small"}}>
+            <td style={{textAlign: "left", fontSize: "medium"}}>
               Satisfies both conditions above, jointly</td>
-            <td>{data[5]/count*100}%</td>
-            <td>{data[2]/count*100}%</td>
+            <td>{(data[5]/count*100).toFixed(3)}%</td>
+            <td>{(data[2]/count*100).toFixed(3)}%</td>
           </tr>
         </tbody>
       </table>

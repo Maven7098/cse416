@@ -66,6 +66,11 @@ function District({ activeRace, currentRace, width, height, districtData }) {
     ASIAN_MAJ,
     WHITE_MAJ,
     OTHER_MAJ,
+    HISPANIC_CALB,
+    BLACK_CALB,
+    ASIAN_CALB,
+    WHITE_CALB,
+    OTHER_CALB,
     ...popData
   } = districtData;
   // popData should be converted to Key/Value pairs of arrays to work w/ D3
