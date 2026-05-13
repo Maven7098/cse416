@@ -326,7 +326,7 @@ function GinglesData({
             height={height}
             xScale={xScale}
             yScale={yScale}
-            labelX={`${currentRace} Vote %`}
+            labelX={`${currentRace} Population %`}
             labelY="Democratic Vote %"
           />
         </g>
