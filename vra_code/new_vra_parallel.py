@@ -57,6 +57,12 @@ GROUPS = {
         "reg_dem_col": "WHITE_DEM",
         "reg_rep_col": "WHITE_REP",
     },
+    "Other": {
+        "pop_col": "OTHER",
+        "reg_total_col": "OTHER_REG",
+        "reg_dem_col": "OTHER_DEM",
+        "reg_rep_col": "OTHER_REP",
+    }
 }
 
 EFFECTIVENESS_THRESHOLD = float(sys.argv[5]) if len(sys.argv) > 5 else 0
@@ -518,10 +524,7 @@ if __name__ == "__main__":
     threshold = {}
 
     for group_name in GROUPS.keys():
-        # We do not need White files, so skip this
-        # White data are still needed for comparison box and whisker chart
-        if group_name == 'White':
-            continue
+        # Turns out we need White data, not Other data though
         render_minority_percentage_boxplot(vra_boxes, enacted_dots, group_name, "VRA")
         render_minority_percentage_boxplot(nonvra_boxes, enacted_dots, group_name, "NonVRA")
         render_minority_effectiveness_boxplot(group_name, vra_res["effectiveness"], nonvra_res["effectiveness"], baseline_counts)
@@ -539,22 +542,5 @@ if __name__ == "__main__":
         json.dump({k: vra_res[k] for k in ["dem_seats", "effectiveness", "majority", "district_shares", "interesting_plans"]}, f)
     with open(f"{OUTPUT_FILE}-NonVRA.json", "w") as f:
         json.dump({k: nonvra_res[k] for k in ["dem_seats", "effectiveness", "majority", "district_shares", "interesting_plans"]}, f)
-
-    # ---------------------------------
-    # Converts the interesting plans into geojsons, using the generated plan's assignment
-    # ---------------------------------
-    save_interesting_plans_as_geojsons(
-        base_gdf=gdf,
-        interesting_plans=vra_res["interesting_plans"],
-        ensemble_type="VRA"
-    )
-
-    save_interesting_plans_as_geojsons(
-        base_gdf=gdf,
-        interesting_plans=nonvra_res["interesting_plans"],
-        ensemble_type="NonVRA"
-    )
-    # ---------------------------------
-    # ---------------------------------
 
     print(f"Successfully collected {len(vra_res['plans'])} VRA and {len(nonvra_res['plans'])} Non-VRA plans.")

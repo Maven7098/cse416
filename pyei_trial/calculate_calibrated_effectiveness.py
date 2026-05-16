@@ -76,7 +76,7 @@ if __name__ == "__main__":
                 print(f"Warning: Columns {per_col} or {eff_col} not found in {input_file}")
 
         # Save to output file
-        output_file = input_file.replace(".csv", "_calibrated.csv")
+        output_file = input_file.replace(".csv", "-Calibrated.csv")
         df.to_csv(output_file, index=False)
         print(f"Results saved to {output_file}")
     else:

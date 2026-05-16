@@ -64,6 +64,11 @@ function MapNavbar({ activeState, activeRace, currentRace, setActiveRace }) {
                     Asian
                   </NavDropdown.Item>
                 )}
+                {activeState == "ga" && (
+                  <NavDropdown.Item onClick={() => setActiveRace("WHITE")}>
+                    White
+                  </NavDropdown.Item>
+                )}
               </NavDropdown>
             </div>
           </Navbar.Collapse>

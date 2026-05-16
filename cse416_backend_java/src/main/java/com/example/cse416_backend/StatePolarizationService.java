@@ -82,16 +82,18 @@ public class StatePolarizationService {
         JsonNode asianNode = payloadNode.get("Asian");
         JsonNode blackNode = payloadNode.get("Black");
         JsonNode hispanicNode = payloadNode.get("Hispanic");
+        JsonNode whiteNode = payloadNode.get("White");
         if (dataNode == null || !dataNode.isArray()) {
             throw new IOException("Invalid precincts_gingles payload shape for state: " + currentState);
         }
-        if (asianNode == null || blackNode == null || hispanicNode == null) {
+        if (asianNode == null || blackNode == null || hispanicNode == null || whiteNode == null) {
             throw new IOException("Invalid precincts_gingles payload line for state: " + currentState);
         }
         response.add(dataNode);
         response.add(asianNode);
         response.add(blackNode);
         response.add(hispanicNode);
+        response.add(whiteNode);
         return response;
     }
 }
