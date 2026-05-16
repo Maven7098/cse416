@@ -47,6 +47,9 @@ function GinglesData({
       case "ASIAN":
         precincts = d.ASIAN;
         break;
+      case "WHITE":
+        precincts = d.WHITE;
+        break;
     }
     return 100 * (precincts / d.TOTAL);
   });
@@ -79,6 +82,10 @@ function GinglesData({
         activeRaceA = a.ASIAN;
         activeRaceB = b.ASIAN;
         break;
+      case "WHITE":
+        activeRaceA = a.WHITE;
+        activeRaceB = b.WHITE;
+        break;
     }
     return 100 * (activeRaceA / a.TOTAL) - 100 * (activeRaceB / b.TOTAL);
   });
@@ -105,6 +112,9 @@ function GinglesData({
         break;
       case "ASIAN":
         precincts = d.ASIAN;
+        break;
+      case "WHITE":
+        precincts = d.WHITE;
         break;
     }
 
@@ -176,6 +186,9 @@ function GinglesData({
         case "ASIAN":
           precincts = precinct.ASIAN;
           break;
+        case "WHITE":
+          precincts = precinct.WHITE;
+          break;
       }
       return {
         x: (100 * precincts) / precinct.TOTAL,
@@ -195,6 +208,9 @@ function GinglesData({
           break;
         case "ASIAN":
           precincts = precinct.ASIAN;
+          break;
+        case "WHITE":
+          precincts = precinct.WHITE;
           break;
       }
       return {

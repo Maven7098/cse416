@@ -43,13 +43,16 @@ function GinglesTab({
   let currentLine = ginglesData[2]
   switch (activeRace) {
     case "HISPANIC":
-      currentLine = ginglesData[3];
+      currentLine = ginglesData[1];
       break;
     case "BLACK":
       currentLine = ginglesData[2];
       break;
     case "ASIAN":
-      currentLine = ginglesData[1];
+      currentLine = ginglesData[3];
+      break;
+    case "WHITE":
+      currentLine = ginglesData[4];
       break;
   }
 

@@ -84,6 +84,9 @@ function StateHeatmap({
       case "ASIAN":
         mapRace = feature.properties.ASIAN / feature.properties.TOTAL;
         break;
+      case "WHITE":
+        mapRace = feature.properties.WHITE / feature.properties.TOTAL;
+        break;
     }
 
     return {

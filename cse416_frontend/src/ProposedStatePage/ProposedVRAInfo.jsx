@@ -25,6 +25,10 @@ function ProposedVRAInfo({
       currentBoxandWhiskerData = boxandWhiskerData.ASIAN;
       currentMinorityEffectivenessData = minorityEffectivenessData.ASIAN;
       break;
+    case "WHITE":
+      currentBoxandWhiskerData = boxandWhiskerData.WHITE;
+      currentMinorityEffectivenessData = minorityEffectivenessData.WHITE;
+      break;
   }
 
   return (

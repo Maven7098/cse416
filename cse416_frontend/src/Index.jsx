@@ -28,6 +28,9 @@ export default function App() {
       case "ASIAN":
         setCurrentRace("Asian");
         break;
+      case "WHITE":
+        setCurrentRace("White");
+        break;
     }
   }, [activeRace]);
 

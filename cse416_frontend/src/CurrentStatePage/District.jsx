@@ -33,6 +33,12 @@ function District({ activeRace, currentRace, width, height, districtData }) {
       minorityEffective = districtData.ASIAN_DIST;
       minorityMajority = districtData.ASIAN_MAJ;
       break;
+    case "WHITE":
+      minorityCalculated = districtData.WHITE_EFF;
+      minorityCalibrated = districtData.WHITE_CALB;
+      minorityEffective = districtData.WHITE_DIST;
+      minorityMajority = districtData.WHITE_MAJ;
+      break;
   }
 
   // Process districtData to only leave numerical values

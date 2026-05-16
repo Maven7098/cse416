@@ -21,7 +21,7 @@ import java.nio.file.Paths;
  * Spring calls seedDatabase() automatically via the @EventListener(ApplicationReadyEvent.class)
  *
  * Iterates over every supported state ("ia", "ga"), ensemble count (256, 4096), VRA threshold
- * (Low, Medium, High), and race (Asian, Black, Hispanic), then loads the corresponding pre-
+ * (Low, Medium, High), and race (Asian, Black, Hispanic, White), then loads the corresponding pre-
  * computed JSON files from the assets directory and inserts them into MongoDB collections:
  *   - home_geojson        : state-level GeoJSON for the homepage map
  *   - box_data            : box-and-whisker + histogram data per ensemble variant
@@ -40,7 +40,7 @@ public class DataSeedService {
     private static final Logger logger = LoggerFactory.getLogger(DataSeedService.class);
     private static final String[] COUNTS = {"256", "4096"};
     private static final String[] THRESHOLDS = {"Low", "Medium", "High"};
-    private static final String[] RACES = {"Asian", "Black", "Hispanic"};
+    private static final String[] RACES = {"Asian", "Black", "Hispanic", "White"};
 
     @Value("${app.assets.path}")
     private String assetsPath;
@@ -331,6 +331,7 @@ public class DataSeedService {
         mergedPayload.put("Asian", buildPolarizationRacePayload(stateCode, "Asian"));
         mergedPayload.put("Black", buildPolarizationRacePayload(stateCode, "Black"));
         mergedPayload.put("Hispanic", buildPolarizationRacePayload(stateCode, "Hispanic"));
+        mergedPayload.put("White", buildPolarizationRacePayload(stateCode, "White"));
 
         PolarizationDataDocument doc = new PolarizationDataDocument(stateCode, mergedPayload);
         polarizationDataRepository.save(doc);
@@ -380,15 +381,19 @@ public class DataSeedService {
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles-Black-Line.json");
             String hispanicLineJson = loadJsonString(
                 "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles-Hispanic-Line.json");
+            String whiteLineJson = loadJsonString(
+                "assets/" + stateCode + "/" + stateCodeUpper + "-Polarization-Gingles-White-Line.json");
             if (ginglesJson != null && !ginglesJson.isEmpty()
             && asianLineJson != null && !asianLineJson.isEmpty()
             && blackLineJson != null && !blackLineJson.isEmpty()
-            && hispanicLineJson != null && !hispanicLineJson.isEmpty()) {
+            && hispanicLineJson != null && !hispanicLineJson.isEmpty()
+            && whiteLineJson != null && !whiteLineJson.isEmpty()) {
                 Document payloadDoc = new Document();
                 payloadDoc.put("Data", parseJsonAsArray(ginglesJson));
                 payloadDoc.put("Asian", Document.parse(asianLineJson));
                 payloadDoc.put("Black", Document.parse(blackLineJson));
                 payloadDoc.put("Hispanic", Document.parse(hispanicLineJson));
+                payloadDoc.put("White", Document.parse(whiteLineJson));
                 PrecinctsGinglesDocument doc = new PrecinctsGinglesDocument(stateCode, payloadDoc);
                 precinctsGinglesRepository.save(doc);
                 logger.info("  Seeded " + stateCodeUpper + " precincts_gingles document");

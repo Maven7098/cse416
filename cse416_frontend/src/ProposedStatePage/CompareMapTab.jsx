@@ -46,6 +46,9 @@ function CompareMapTab({ activeState, activeRace, currentRace, mode: currentMode
     case "ASIAN":
       currentVraImpactThresholdData = vraImpactThresholdTable?.Asian
       break;
+    case "WHITE":
+      currentVraImpactThresholdData = vraImpactThresholdTable?.White
+      break;
   }
   const currentCompareBoxandWhiskerData = compareBoxandWhiskerData?.[activeRace];
   const currentCompareHistogramData = compareHistogram?.[activeRace];

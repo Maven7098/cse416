@@ -77,6 +77,11 @@ function State({ width, height, activeState, activeRace, currentRace }) {
       minorityEffective = activeState.ASIAN_DIST;
       minorityMajority = activeState.ASIAN_MAJ;
       break;
+    case "WHITE":
+      minorityPercent = activeState.WHITE_PER;
+      minorityEffective = activeState.WHITE_DIST;
+      minorityMajority = activeState.WHITE_MAJ;
+      break;
   }
 
   // X axis is for groups since the barplot is vertical

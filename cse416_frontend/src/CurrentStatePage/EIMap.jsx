@@ -78,6 +78,19 @@ function EIMap({
           setCurrentOverlap(eiData.Asian.Trump.overlap.overlap)
           break;
       }
+      case "WHITE":
+      switch(currentMode){
+        case "D":
+          setCurrentEiData(eiData.White.Harris.chart)
+          setCurrentEiKdeData(eiData.White.Harris.kde)
+          setCurrentOverlap(eiData.White.Harris.overlap.overlap)
+          break;
+        case "R":
+          setCurrentEiData(eiData.White.Trump.chart)
+          setCurrentEiKdeData(eiData.White.Trump.kde)
+          setCurrentOverlap(eiData.White.Trump.overlap.overlap)
+          break;
+      }
       break;
     }
   }, [activeRace, currentMode]);
@@ -161,6 +174,14 @@ function EIMap({
           mapRaceVote = feature.properties.ASIAN_DEM;
         } else {
           mapRaceVote = feature.properties.ASIAN_REP;
+        }
+        break;
+      case "WHITE":
+        mapRace = feature.properties.WHITE;
+        if (currentMode == "D") {
+          mapRaceVote = feature.properties.WHITE_DEM;
+        } else {
+          mapRaceVote = feature.properties.WHITE_REP;
         }
         break;
     }
