@@ -12,7 +12,7 @@ import java.io.IOException;
 @Service
 public class ProposedCompareService {
 
-    private static final String[] RACES = {"Asian", "Black", "Hispanic"};
+    private static final String[] RACES = {"Asian", "Black", "Hispanic", "White"};
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final CompareDataRepository compareDataRepository;
@@ -22,9 +22,9 @@ public class ProposedCompareService {
     }
 
     // Returns:
-    // [0] VRA Impact Threshold Table (GUI-20): race-keyed {Black, Hispanic, Asian}
-    // [1] Compare-Box charts (GUI-21): race-keyed uppercase {ASIAN, BLACK, HISPANIC} mpld3 objects
-    // [2] Compare Histogram (GUI-22): race-keyed uppercase {ASIAN, BLACK, HISPANIC} mpld3 objects
+    // [0] VRA Impact Threshold Table (GUI-20): race-keyed {Black, Hispanic, Asian, White}
+    // [1] Compare-Box charts (GUI-21): race-keyed uppercase {ASIAN, BLACK, HISPANIC, WHITE} mpld3 objects
+    // [2] Compare Histogram (GUI-22): race-keyed uppercase {ASIAN, BLACK, HISPANIC, WHITE} mpld3 objects
     public ArrayNode getHomePayload(String currentState, String count, String threshold)
             throws IOException {
         ArrayNode response = objectMapper.createArrayNode();
@@ -46,7 +46,7 @@ public class ProposedCompareService {
         return response;
     }
 
-    // Remaps title-case keys (Asian, Black, Hispanic) to uppercase (ASIAN, BLACK, HISPANIC)
+    // Remaps title-case keys (Asian, Black, Hispanic, White) to uppercase (ASIAN, BLACK, HISPANIC, WHITE)
     private ObjectNode buildUppercaseRaceKeyedNode(org.bson.Document doc) throws IOException {
         ObjectNode node = objectMapper.createObjectNode();
         for (String race : RACES) {

@@ -18,7 +18,7 @@ function MapNavbar({ activeState, activeRace, currentRace, setActiveRace }) {
     case "ia":
       activeStateName = "Iowa";
       destination = "iowa";
-      setActiveRace("HISPANIC");
+      if (activeRace !== "HISPANIC" && activeRace !== "WHITE") setActiveRace("HISPANIC");
       break;
     case "ga":
       activeStateName = "Georgia";
@@ -64,11 +64,9 @@ function MapNavbar({ activeState, activeRace, currentRace, setActiveRace }) {
                     Asian
                   </NavDropdown.Item>
                 )}
-                {activeState == "ga" && (
-                  <NavDropdown.Item onClick={() => setActiveRace("WHITE")}>
-                    White
-                  </NavDropdown.Item>
-                )}
+                <NavDropdown.Item onClick={() => setActiveRace("WHITE")}>
+                  White
+                </NavDropdown.Item>
               </NavDropdown>
             </div>
           </Navbar.Collapse>

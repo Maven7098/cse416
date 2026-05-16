@@ -267,7 +267,10 @@ function EIMap({
               )}
             </section>
             <section>
-              <h5>{currentRace} Voting Overlap with Whites: {Number(currentOverlap).toFixed(5)}</h5>
+              {currentRace != "White" ?
+              <h5>{currentRace} Voting Overlap with Whites: {Number(currentOverlap).toFixed(5)}</h5> :
+              <h5>{currentRace} Voting Overlap with Non-Whites: {Number(currentOverlap).toFixed(5)}</h5>
+        }
             </section>
           </div>
         </div>

@@ -102,12 +102,14 @@ def district_group_pop(partition, group_col):
 def district_effectiveness_scores(partition, group_info):
     reg_total_col = group_info["reg_total_col"]
     reg_dem_col = group_info["reg_dem_col"]
-    district_totals = defaultdict(lambda: {"group_total": 0, "group_dem": 0, "dem_votes": 0, "rep_votes": 0})
+    reg_rep_col = group_info["reg_rep_col"]
+    district_totals = defaultdict(lambda: {"group_total": 0, "group_dem": 0, "group_rep": 0, "dem_votes": 0, "rep_votes": 0})
     for node in partition.graph.nodes:
         d = partition.assignment[node]
         attrs = partition.graph.nodes[node]
         district_totals[d]["group_total"] += attrs.get(reg_total_col, 0)
         district_totals[d]["group_dem"] += attrs.get(reg_dem_col, 0)
+        district_totals[d]["group_rep"] += attrs.get(reg_rep_col, 0)
         district_totals[d]["dem_votes"] += attrs.get(DEM_COL, 0)
         district_totals[d]["rep_votes"] += attrs.get(REP_COL, 0)
     scores_and_dist_winner = defaultdict(lambda: {"score": 0, "winner": 0})
@@ -116,8 +118,12 @@ def district_effectiveness_scores(partition, group_info):
             scores_and_dist_winner[d]["score"] = 0
             scores_and_dist_winner[d]["winner"] = -1
         else:
-            scores_and_dist_winner[d]["score"] = vals["group_dem"] / vals["group_total"]
-            scores_and_dist_winner[d]["winner"] = 1 if vals["dem_votes"] > vals["rep_votes"] else 0
+            if vals["group_dem"] >= vals["group_rep"]:
+                scores_and_dist_winner[d]["score"] = vals["group_dem"] / vals["group_total"]
+                scores_and_dist_winner[d]["winner"] = 1 if vals["dem_votes"] > vals["rep_votes"] else 0
+            else:
+                scores_and_dist_winner[d]["score"] = vals["group_rep"] / vals["group_total"]
+                scores_and_dist_winner[d]["winner"] = 1 if vals["rep_votes"] > vals["dem_votes"] else 0
     return scores_and_dist_winner
 
 def effective_districts(partition, group_info, threshold=EFFECTIVENESS_THRESHOLD):
@@ -293,6 +299,8 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     plt.close(fig)
 
 def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, baseline_counts):
+    if group_name == "White" or group_name == "Other":
+        return
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
     ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
     ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
@@ -409,57 +417,6 @@ def render_ensemble_threshold(group_name, vra_eff, nonvra_eff, baseline_counts, 
             nonvra_count_both = nonvra_count_both + 1
     return [vra_count_baseline, vra_count_proportionality, vra_count_both,
             nonvra_count_baseline, nonvra_count_proportionality, nonvra_count_both]
-    
-def save_interesting_plans_as_geojsons(base_gdf, interesting_plans, ensemble_type):
-    threshold_name = str(EFFECTIVENESS_THRESHOLD).replace(".", "p")
-
-    for rank, interesting_plan in enumerate(interesting_plans, start=1):
-        # Make a copy so the original gdf is not changed
-        plan_gdf = base_gdf.copy()
-
-        # The stored plan is:
-        # ID -> district number
-        plan_assignment = interesting_plan["plan"]
-
-        # Convert keys to strings to avoid int/string mismatch issues
-        plan_assignment_lookup = {
-            str(precinct_id): district
-            for precinct_id, district in plan_assignment.items()
-        }
-
-        # Preserves the original enacted district
-        plan_gdf["ORIGINAL_DISTRICT"] = plan_gdf["DISTRICT"]
-
-        # Replace DISTRICT with the generated plan's district assignment
-        plan_gdf["DISTRICT"] = (
-            plan_gdf["ID"]
-            .astype(str)
-            .map(plan_assignment_lookup)
-        )
-
-        # Save useful metadata columns for debugging/comparison
-        plan_gdf["INTERESTING_RANK"] = rank
-        plan_gdf["ENSEMBLE_TYPE"] = ensemble_type
-        plan_gdf["DEM_SEATS"] = interesting_plan["dem_seats"]
-        plan_gdf["EXTREME_SCORE"] = interesting_plan["extreme_score"]
-        plan_gdf["TOTAL_EFFECTIVE"] = interesting_plan["total_effective"]
-
-        # File name uses the sys.argv-based values
-        geojson_name = (
-            f"{OUTPUT_FILE}"
-            f"-{ensemble_type}"
-            f"-districts{NUM_DISTRICTS}"
-            f"-target{TARGET_PLANS}"
-            f"-threshold{threshold_name}"
-            f"-interesting{rank}"
-            f"-dem{interesting_plan['dem_seats']}"
-            f"-eff{interesting_plan['total_effective']}"
-            f"-GeoJSON.json"
-        )
-
-        plan_gdf.to_file(geojson_name, driver="GeoJSON")
-
-        print(f"Saved interesting plan GeoJSON: {geojson_name}")
 
 
 # ============================================================

@@ -63,7 +63,7 @@ public class ProposedDataService {
 
     private ObjectNode buildRaceKeyedObject(Document variantDoc, String keySuffix) throws IOException {
         ObjectNode output = objectMapper.createObjectNode();
-        for (String race : new String[]{"Asian", "Black", "Hispanic"}) {
+        for (String race : new String[]{"Asian", "Black", "Hispanic", "White"}) {
             Object raceData = variantDoc.get(race + keySuffix);
             if (raceData == null) continue;
             output.set(race.toUpperCase(), objectMapper.readTree(((Document) raceData).toJson()));

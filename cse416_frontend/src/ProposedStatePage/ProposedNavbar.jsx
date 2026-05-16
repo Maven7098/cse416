@@ -84,6 +84,9 @@ function ProposedNavbar({
                     Asian
                   </NavDropdown.Item>
                 )}
+                <NavDropdown.Item onClick={() => setActiveRace("WHITE")}>
+                  White
+                </NavDropdown.Item>
               </NavDropdown>
             </div>
           </Navbar.Collapse>
