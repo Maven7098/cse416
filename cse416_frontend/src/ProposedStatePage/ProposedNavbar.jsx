@@ -50,14 +50,14 @@ function ProposedNavbar({
             <div className="d-lg-flex align-items-lg-center w-100">
               <Nav className="mx-lg-auto">
                 <Nav.Link as={NavLink} end to={`/${destination}/proposed/vra`}>
-                  Proposed Districts with Voting Rights Act
+                  District Ensembles with Voting Rights Act
                 </Nav.Link>
                 <Nav.Link
                   as={NavLink}
                   end
                   to={`/${destination}/proposed/nonvra`}
                 >
-                  Proposed Districts with Race Blind Redistricting
+                  District Ensembles with Race Blind Redistricting
                 </Nav.Link>
                 <Nav.Link
                   as={NavLink}

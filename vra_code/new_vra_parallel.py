@@ -299,11 +299,14 @@ def render_minority_percentage_boxplot(district_share_boxes, enacted_dots, group
     plt.close(fig)
 
 def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, baseline_counts):
-    if group_name == "White" or group_name == "Other":
-        return
     fig, ax = plt.subplots(figsize=(5.46, 7.2))
-    ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
-    ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
+    
+    if group_name == "White":
+        # We cannot compare the White group with themselves, how can I compare with another minority group? For now, just show the White boxplots on the right and add a note in the title
+        ax.boxplot([vra_eff["White"], nonvra_eff["White"]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
+    else:
+        ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
+        ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
     scatter = ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow", edgecolor="black")
     
     labels = [f"Enacted {group_name}: {baseline_counts[group_name]}", f"Enacted White: {baseline_counts['White']}"]
