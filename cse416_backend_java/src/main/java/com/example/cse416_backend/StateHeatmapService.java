@@ -44,8 +44,8 @@ public class StateHeatmapService {
         ArrayNode response = objectMapper.createArrayNode();
         String stateCodeUpper = currentState.toUpperCase();
         
-        String precinctPath = "assets/" + currentState + "/" + stateCodeUpper + "-Precinct-GeoJSON.json";
-        String censusPath = "assets/" + currentState + "/" + stateCodeUpper + "-CensusBlock-GeoJSON.json";
+        String precinctPath = "assets/" + currentState + "/" + stateCodeUpper + "-Precinct.topo.json";
+        String censusPath = "assets/" + currentState + "/" + stateCodeUpper + "-CensusBlock.topo.json";
 
         // Heat map for Precinct (GUI-4)
         JsonNode currentPrecinct = objectMapper.readTree(getResource(precinctPath).getInputStream());

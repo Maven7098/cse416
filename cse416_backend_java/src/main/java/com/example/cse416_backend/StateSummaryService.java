@@ -43,7 +43,7 @@ public class StateSummaryService {
     // Return the State (IA or GA) District GeoJSON file from local storage
     private JsonNode getLocalPayload(String currentState) throws IOException {
         String stateCodeUpper = currentState.toUpperCase();
-        String resourcePath = "assets/" + currentState + "/" + stateCodeUpper + "-District-Current-GeoJSON.json";
+        String resourcePath = "assets/" + currentState + "/" + stateCodeUpper + "-District-Current.topo.json";
         
         // Read file 1 from src/main/resources/assets/ia/IA-Congress-District.json
         JsonNode currentDistrict = objectMapper.readTree(getResource(resourcePath).getInputStream());

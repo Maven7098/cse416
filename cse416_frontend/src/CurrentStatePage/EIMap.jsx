@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import * as topojson from "topojson-client";
 import "leaflet/dist/leaflet.css";
 import "../CSS/StateInfo.css";
 import "../CSS/mpld3.css";
@@ -7,8 +8,17 @@ import Legend from "./MapLegend.jsx";
 
 import Mpld3Chart from "../Chart/Mpld3Chart.jsx";
 
+// Helper function to decode TopoJSON if necessary
+const ensureGeoJSON = (data) => {
+  if (data && data.type === "Topology") {
+    const firstObjectName = Object.keys(data.objects)[0];
+    return topojson.feature(data, data.objects[firstObjectName]);
+  }
+  return data;
+};
+
 function EIMap({
-  precinctGeoJsonData,
+  precinctGeoJsonData: initialData,
   currentMode,
   eiData,
   activeRace,
@@ -16,9 +26,7 @@ function EIMap({
   latitude,
   longitude,
 }) {
-  if(eiData == []){
-    return <p>Nothing to see here...</p>
-  }
+  const [precinctGeoJsonData, setPrecinctGeoJsonData] = useState("");
 
   const resizeMap = (mapRef) => {
     const resizeObserver = new ResizeObserver(() =>
@@ -34,8 +42,14 @@ function EIMap({
   const [currentEiData, setCurrentEiData] = useState("");
   const [currentEiKdeData, setCurrentEiKdeData] = useState("");
   const [currentOverlap, setCurrentOverlap] = useState("");
+
+  useEffect(() => {
+    setPrecinctGeoJsonData(ensureGeoJSON(initialData));
+  }, [initialData]);
   
   useEffect(() => {
+    if (!eiData || eiData.length === 0) return;
+    
     switch (activeRace) {
     case "HISPANIC":
       switch(currentMode){
@@ -93,8 +107,11 @@ function EIMap({
       }
       break;
     }
-  }, [activeRace, currentMode]);
+  }, [activeRace, currentMode, eiData]);
   
+  if(!eiData || eiData.length === 0){
+    return <p>Nothing to see here...</p>
+  }
 
   // GUI-14 (TODO Next)
   const grades = [0, 20, 40, 60, 80, 100];
@@ -220,7 +237,7 @@ function EIMap({
           <div className="map">
             <MapContainer
               center={[latitude, longitude]}
-              key={JSON.stringify(precinctGeoJsonData)}
+              key={latitude + longitude}
               zoom={7}
               className="leaflet-container"
               ref={mapRef}
@@ -236,11 +253,13 @@ function EIMap({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               />
-              <GeoJSON
-                data={precinctGeoJsonData}
-                style={style}
-                key={JSON.stringify(precinctGeoJsonData)}
-              />
+              {precinctGeoJsonData && (
+                <GeoJSON
+                  data={precinctGeoJsonData}
+                  style={style}
+                  key={activeRace + currentMode + (precinctGeoJsonData ? "-loaded" : "-loading")}
+                />
+              )}
             </MapContainer>
           </div>
         </div>

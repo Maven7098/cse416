@@ -94,7 +94,7 @@ public class DataSeedService {
             logger.info("Seeding home_geojson collection...");
 
             if (homeGeoJsonRepository.findBycurrentState("ia").isEmpty()) {
-                String iaJsonString = loadJsonString("assets/ia/IA-State-GeoJSON.json");
+                String iaJsonString = loadJsonString("assets/ia/IA-State.topo.json");
                 if (iaJsonString != null && !iaJsonString.isEmpty()) {
                     HomeGeoJsonDocument iaDoc = new HomeGeoJsonDocument();
                     iaDoc.setcurrentState("ia");
@@ -107,7 +107,7 @@ public class DataSeedService {
             }
 
             if (homeGeoJsonRepository.findBycurrentState("ga").isEmpty()) {
-                String gaJsonString = loadJsonString("assets/ga/GA-State-GeoJSON.json");
+                String gaJsonString = loadJsonString("assets/ga/GA-State.topo.json");
                 if (gaJsonString != null && !gaJsonString.isEmpty()) {
                     HomeGeoJsonDocument gaDoc = new HomeGeoJsonDocument();
                     gaDoc.setcurrentState("ga");
