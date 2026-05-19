@@ -220,6 +220,8 @@ function State({ width, height, activeState, activeRace, currentRace }) {
           {allShapes}
         </g>
       </svg>
+      <h5> Sample Ensemble Sets Generated: 256_Low, 256_Medium, 256_High (Total: 768)</h5>
+      <h5> Production Ensemble Sets Generated: 4096_Low, 4096_Medium, 4096_High (Total: 12,288)</h5>
     </div>
   );
 }

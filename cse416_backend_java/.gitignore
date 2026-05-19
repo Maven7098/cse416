@@ -46,3 +46,6 @@ build/
 # Large files in assets
 src/main/resources/assets/ga/*
 src/main/resources/assets/ia/*
+
+# node_modules for mapshaper
+src/main/resources/assets/node_modules

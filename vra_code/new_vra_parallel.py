@@ -303,17 +303,22 @@ def render_minority_effectiveness_boxplot(group_name, vra_eff, nonvra_eff, basel
     
     if group_name == "White":
         # We cannot compare the White group with themselves, how can I compare with another minority group? For now, just show the White boxplots on the right and add a note in the title
-        ax.boxplot([vra_eff["White"], nonvra_eff["White"]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
+        ax.boxplot([vra_eff["White"], nonvra_eff["White"]], label=["VRA-Constrained", "Race-Blind"], widths=0.3, showfliers=False)
+        scatter = ax.scatter([1], [baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow", edgecolor="black")
     else:
         ax.boxplot([vra_eff[group_name], nonvra_eff[group_name]], label=["VRA-Constrained", "Race-Blind"], positions=[1, 1.4], widths=0.3, showfliers=False)
         ax.boxplot([vra_eff["White"], nonvra_eff["White"]], positions=[2.6, 3], widths=0.3, showfliers=False)
-    scatter = ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow", edgecolor="black")
+        scatter = ax.scatter([1.2, 2.8], [baseline_counts[group_name], baseline_counts["White"]], marker="o", label="Enacted Plan", color="lightyellow", edgecolor="black")
     
     labels = [f"Enacted {group_name}: {baseline_counts[group_name]}", f"Enacted White: {baseline_counts['White']}"]
     mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(scatter, labels=labels))
 
     ax.set_title(f"{group_name} Effectiveness Distribution")
-    ax.set_xticks([1.2, 2.8], [f"{group_name} Voters", "White Voters"])
+    ax.set_ylabel("Number of Effective Districts")
+    if group_name == "White":
+        ax.set_xticks([1], ["White Voters"])
+    else:
+        ax.set_xticks([1.2, 2.8], [f"{group_name} Voters", "White Voters"])
     ax.legend(); ax.grid(True, axis="y", alpha=0.3)
     ax.set_ylim(bottom=0)
     ax.yaxis.get_major_locator().set_params(integer=True)
@@ -405,18 +410,18 @@ def render_ensemble_threshold(group_name, vra_eff, nonvra_eff, baseline_counts, 
     print(pop_group)
     print(POP_COL)
     for d in vra_eff[group_name]:
-        if d > baseline_counts:
+        if d >= baseline_counts:
             vra_count_baseline = vra_count_baseline + 1
-        if d > int(pop_group / pop_total * NUM_DISTRICTS):
+        if d >= int(pop_group / pop_total * NUM_DISTRICTS):
             vra_count_proportionality = vra_count_proportionality + 1
-        if d > baseline_counts and d > int(pop_group / pop_total * NUM_DISTRICTS):
+        if d >= baseline_counts and d >= int(pop_group / pop_total * NUM_DISTRICTS):
             vra_count_both = vra_count_both + 1
     for d in nonvra_eff[group_name]:
-        if d > baseline_counts:
+        if d >= baseline_counts:
             nonvra_count_baseline = nonvra_count_baseline + 1
-        if d > int(pop_group / pop_total * NUM_DISTRICTS):
+        if d >= int(pop_group / pop_total * NUM_DISTRICTS):
             nonvra_count_proportionality = nonvra_count_proportionality + 1
-        if d > baseline_counts and d > int(pop_group / pop_total * NUM_DISTRICTS):
+        if d >= baseline_counts and d >= int(pop_group / pop_total * NUM_DISTRICTS):
             nonvra_count_both = nonvra_count_both + 1
     return [vra_count_baseline, vra_count_proportionality, vra_count_both,
             nonvra_count_baseline, nonvra_count_proportionality, nonvra_count_both]

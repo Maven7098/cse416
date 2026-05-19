@@ -7,6 +7,23 @@ import District from "./District.jsx";
 import Legend from "./MapLegend.jsx"
 
 import axios from "axios";
+import * as topojson from "topojson-client";
+
+// Client-side cache for GeoJSON data to prevent re-fetching
+const dataCache = {
+  districts: {},
+  heatmaps: {},
+};
+
+// Helper function to decode TopoJSON if necessary
+const ensureGeoJSON = (data) => {
+  if (data && data.type === "Topology") {
+    // If it's TopoJSON, convert the first available object to GeoJSON
+    const firstObjectName = Object.keys(data.objects)[0];
+    return topojson.feature(data, data.objects[firstObjectName]);
+  }
+  return data;
+};
 
 function StateInfo({
   activeState,
@@ -22,13 +39,25 @@ function StateInfo({
 
   // Set District Info GeoJSON Data
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/district?currentState=${activeState}`)
-      .then((response) => {
-        setDistrictGeoJsonData(response.data[0]);
-        setCurrentState(response.data[1].data[0]);
-      })
-      .catch((error) => console.log(error.response?.data ?? error.message));
+    // Check cache first
+    if (dataCache.districts[activeState]) {
+      setDistrictGeoJsonData(dataCache.districts[activeState].geoJson);
+      setCurrentState(dataCache.districts[activeState].state);
+    } else {
+      setDistrictGeoJsonData("");
+      axios
+        .get(`http://localhost:8080/district?currentState=${activeState}`)
+        .then((response) => {
+          const decodedGeoJSON = ensureGeoJSON(response.data[0]);
+          dataCache.districts[activeState] = {
+            geoJson: decodedGeoJSON,
+            state: response.data[1].data[0],
+          };
+          setDistrictGeoJsonData(decodedGeoJSON);
+          setCurrentState(response.data[1].data[0]);
+        })
+        .catch((error) => console.log(error.response?.data ?? error.message));
+    }
     // If Active State changes, then also reset districtData
     setDistrictData("");
   }, [activeState]);
@@ -38,24 +67,34 @@ function StateInfo({
 
   // Set the Precinct and Census Block GeoJSON Data
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/heatmap?currentState=${activeState}`)
-      .then((response) => {
-        const payload = Array.isArray(response.data) ? response.data : [];
-        const normalized = Array.isArray(payload[0]) ? payload[0] : payload;
-        setPrecinctGeoJsonData(
-          normalized[0] && typeof normalized[0] === "object"
-            ? normalized[0]
-            : "",
-        );
-        setCensusBlockGeoJsonData(
-          normalized[1] && typeof normalized[1] === "object"
-            ? normalized[1]
-            : "",
-        );
-      })
-      .catch((error) => console.log(error.response?.data ?? error.message));
-  }, [activeState]);
+    if (currentMode === "District") return; // Only fetch if heatmap is needed
+
+    // Check cache first
+    if (dataCache.heatmaps[activeState]) {
+      setPrecinctGeoJsonData(dataCache.heatmaps[activeState].precincts);
+      setCensusBlockGeoJsonData(dataCache.heatmaps[activeState].censusBlocks);
+    } else {
+      setPrecinctGeoJsonData("");
+      setCensusBlockGeoJsonData("");
+      axios
+        .get(`http://localhost:8080/heatmap?currentState=${activeState}`)
+        .then((response) => {
+          const payload = Array.isArray(response.data) ? response.data : [];
+          const normalized = Array.isArray(payload[0]) ? payload[0] : payload;
+          
+          const pData = ensureGeoJSON(normalized[0]);
+          const cData = ensureGeoJSON(normalized[1]);
+
+          dataCache.heatmaps[activeState] = {
+            precincts: pData,
+            censusBlocks: cData,
+          };
+          setPrecinctGeoJsonData(pData);
+          setCensusBlockGeoJsonData(cData);
+        })
+        .catch((error) => console.log(error.response?.data ?? error.message));
+    }
+  }, [activeState, currentMode]);
 
   const resizeMap = (mapRef) => {
     const resizeObserver = new ResizeObserver(() =>
@@ -108,17 +147,17 @@ function StateInfo({
       });
     }
     // Send properties of the feature to Population.jsx
-    layer.on("click", function (e) {
+    layer.on("click", function () {
       setDistrictData(feature.properties);
       this.closePopup();
     });
 
-    layer.on("mouseover", function (e) {
+    layer.on("mouseover", function () {
       layer.setStyle({ weight: 6 });
       clearTimeout(closePopupTimeout); // Cancel any pending close
       this.openPopup();
     });
-    layer.on("mouseout", function (e) {
+    layer.on("mouseout", function () {
       layer.setStyle({ weight: 2 });
       // Delay close to allow transition to popup without it closing
       closePopupTimeout = setTimeout(() => {
@@ -180,8 +219,8 @@ function StateInfo({
   ];
 
   const width = 820;
-  const heightState = 500;
-  const heightDistrict = 523;
+  const heightState = 448;
+  const heightDistrict = 535;
 
   return (
     // Load the GeoJSON for the districting map
@@ -195,7 +234,7 @@ function StateInfo({
           {currentMode == "District" ? <h3>Select District</h3> : <h3>{currentRace} {currentMode} Heatmap</h3>}
           <MapContainer
             center={[latitude, longitude]}
-            key={JSON.stringify(districtGeoJsonData)}
+            key={activeState}
             zoom={7}
             className="leaflet-container"
             ref={mapRef}
@@ -206,29 +245,29 @@ function StateInfo({
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            {currentMode == "District" && <GeoJSON
+            {currentMode == "District" && districtGeoJsonData && <GeoJSON
               data={districtGeoJsonData}
               style={districtWindow}
               onEachFeature={onEachFeature}
-              key={JSON.stringify(districtGeoJsonData)}
+              key={activeState + "-districts"}
             /> }
-            {currentMode == "Precinct" &&
+            {currentMode == "Precinct" && precinctGeoJsonData &&
               <>
                 <Legend grades={grades} colors={colors} title={currentRace} />
                 <GeoJSON
                   data={precinctGeoJsonData}
                   style={precinctHeatmap}
-                  key={JSON.stringify(precinctGeoJsonData)}
+                  key={activeState + "-precincts"}
                 />
               </>
             }
-            { currentMode == "Census Block" &&
+            { currentMode == "Census Block" && censusBlockGeoJsonData &&
               <>
                 <Legend grades={grades} colors={colors} title={currentRace} />
                 <GeoJSON
                   data={censusBlockGeoJsonData}
                   style={precinctHeatmap}
-                  key={JSON.stringify(censusBlockGeoJsonData)}
+                  key={activeState + "-census-blocks"}
                 />
               </>
             }
