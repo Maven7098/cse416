@@ -1,0 +1,58 @@
+services:
+  # MongoDB Database Service
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - app-network
+
+  # Spring Boot Backend Service
+  backend:
+    build:
+      context: ./cse416_backend_java
+      dockerfile: Dockerfile
+    container_name: cse416-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_MONGODB_URI=mongodb://mongodb:27017/test
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/test
+    volumes:
+      # Mount resources folder containing the 1.7GB data assets
+      # This prevents baking huge datasets into the image and enables fast seeding.
+      - ./cse416_backend_java/src/main/resources:/app/src/main/resources
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # React + Vite Frontend Service
+  frontend:
+    build:
+      context: ./cse416_frontend
+      dockerfile: Dockerfile
+    container_name: cse416-frontend
+    ports:
+      - "5173:80" # Maps host port 5173 to Nginx port 80 to satisfy CORS rules
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
